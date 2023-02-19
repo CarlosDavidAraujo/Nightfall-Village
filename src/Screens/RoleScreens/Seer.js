@@ -1,45 +1,96 @@
-import React, { useState } from 'react';
-import { View, Text, Button } from 'react-native';
+import React, { useEffect, useState, useContext } from 'react';
+import { GameContext } from '../../Context/GameContext';
+import { Text } from 'react-native';
+import styled from 'styled-components/native';
+import PlayersButtonList from '../../Components/Buttons/PlayersButtomList';
+import SkillButton from '../../Components/Buttons/SkillButton';
+import ConditionalMessage from '../../Components/Texts/ConditionalMessage';
+import RoleTitle from '../../Components/Texts/RoleTitle';
+import prayIcon from '../../Images/pray.png'
+import seerImg from '../../Images/seer.png'
 
-export default function Seer({ playerList, currentPlayer }) {
-  const [message, setMessage] = useState();
-  const [skillWasUsed, setSkillWasUsed] = useState(false);
-  const [playersToChoose, setPlayersToChoose] = useState(null);
-  const [playerWasChoosen, setPlayerWasChoosen] = useState(false);
+const Container = styled.View`
+    flex: 1;
+    align-items: center;
+`;
+
+const SkillsContainer = styled.View`
+    align-items: center;
+    height: 35%;
+    justify-content: space-evenly;
+`;
+
+const RoleImage = styled.Image`
+  width: 250px;
+  height: 250px;
+`;
+
+export default function Seer({
+  setHandleConfirm,
+  setPassCondition,
+  targetPlayer,
+  setTargetPlayer,
+}) {
+
+  const { currentGame } = useContext(GameContext);
+  const playerList = currentGame.getPlayers();
+  const currentPlayer = currentGame.getCurrentPlayer();
+  const seer = currentPlayer.getRole();
+  const [discoveredPlayer, setDiscoveredPlayer] = useState();
+  const [showPlayers, setShowPlayers] = useState(false);
+  const [skillWasChosen, setSkillWasChosen] = useState(false);
 
   function handleRevelar() {
-    setPlayersToChoose(playerList);
-    setSkillWasUsed(true);
+    setDiscoveredPlayer(seer.revelar(targetPlayer));
+    setShowPlayers(false);
+    setTargetPlayer(null);
+    setPassCondition(true);
   }
 
-  function handleChoosePlayer(otherPlayer) {
-    setMessage(currentPlayer.getRole().revelar(otherPlayer));
-    setPlayerWasChoosen(true);
+  function handleShowPlayers() {
+    setSkillWasChosen(true);
+    setShowPlayers(true);
+    setPassCondition(false);
   }
 
-  function isNotCurrentPlayer(player) {
-    return player.getName() !== currentPlayer.getName();
-  }
+  useEffect(() => {
+    setHandleConfirm(() => handleRevelar);
+  }, [targetPlayer])
 
   return (
-    <View>
-      {!skillWasUsed && (
-        <>
-          <Button title="Revelação" onPress={handleRevelar} />
-        </>
-      )}
-      {playersToChoose &&
-        playersToChoose.map((player, i) =>
-          isNotCurrentPlayer(player) &&
-          !playerWasChoosen && (
-            <Button
-              key={i}
-              title={player.getName()}
-              onPress={() => handleChoosePlayer(player)}
-            />
-          )
-        )}
-      {message && <Text>{message}</Text>}
-    </View>
+    <Container>
+
+      <RoleTitle currentPlayer={currentPlayer} />
+      <RoleImage source={seerImg} />
+      <ConditionalMessage
+        showChooseSkill={!skillWasChosen}
+        showSelectPlayer={showPlayers}
+        selectPlayerMessage='Selecione um jogador para ver sua função'
+        showAlert={discoveredPlayer}
+        alertMessage={discoveredPlayer}
+      />
+
+      {!skillWasChosen &&
+        <SkillsContainer>
+          <SkillButton
+            onPress={() => handleShowPlayers()}
+            skillName='Revelar'
+            skillDescription='Você pode ver a função de outro jogador.'
+            skillIcon={prayIcon}
+          />
+        </SkillsContainer>
+      }
+
+      {showPlayers &&
+        <PlayersButtonList
+          playerList={playerList}
+          currentPlayer={currentPlayer}
+          numColumns={3}
+          targetPlayer={targetPlayer}
+          setTargetPlayer={setTargetPlayer}
+        />
+      }
+
+    </Container>
   );
 }

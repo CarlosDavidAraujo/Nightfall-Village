@@ -2,12 +2,20 @@ import React, { useContext } from "react";
 import Game from "../Classes/Game";
 import { GameContext } from "../Context/GameContext";
 import { Button, View, Text } from "react-native";
+import DefaultButton from "../Components/Buttons/DefaultButton";
+import styled from "styled-components/native";
 
-export default function VillageNews({route, navigation}) {
+const Container = styled.View`
+  flex: 1;
+  justify-content: space-around;
+
+`;
+
+export default function VillageNews({ route, navigation }) {
   const { currentGame, setCurrentGame } = useContext(
     GameContext
   );
-  const {previousScreen} = route.params
+  const { previousScreen } = route.params
 
   const winner = currentGame.getWinnerTeam();
 
@@ -22,19 +30,19 @@ export default function VillageNews({route, navigation}) {
   }
 
   return (
-    <View>
-      {winner ? (
-        <Button onPress={() => handleEndGame()} title="Novo jogo" />
-      ) : previousScreen === "PlayerAction" ? (
-        <Button onPress={() => handleScreenChange()} title="Reunir a vila" />
-      ) : previousScreen === "Votes" ? (
-        <Button onPress={() => handleScreenChange()} title="Adormecer" />
-      ) : null}
+    <Container>
       <View>
         {currentGame.getNews().map((message, i) => (
           <Text key={i}>{message}</Text>
         ))}
       </View>
-    </View>
+      {winner ? (
+        <DefaultButton onPress={() => handleEndGame()} title="Novo jogo" />
+      ) : previousScreen === "PlayerAction" ? (
+        <DefaultButton onPress={() => handleScreenChange()} title="Reunir a vila" />
+      ) : previousScreen === "Votes" ? (
+        <DefaultButton onPress={() => handleScreenChange()} title="Adormecer" />
+      ) : null}
+    </Container>
   );
 }

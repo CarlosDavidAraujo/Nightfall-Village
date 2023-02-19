@@ -28,6 +28,8 @@ export default class Game {
   }
 
   setPlayers(players) {
+
+    this.players = [];
     //adiciona todos os jogadores ao array <players>, esses players são definidos na tela <DefinePlayers>
     players.forEach((player) => {
       this.players.push(new Player(player));
@@ -189,16 +191,20 @@ export default class Game {
   //adiciona os papéis selecionados à lista de <roles> com suas respectivas quantidades
   //esta é uma função auxiliar da função logo abaixo
   setRoles(selectedRoles) {
-    for (const roleName in selectedRoles) {
-      // itera sobre cada papel único selecionado
-      for (let i = 0; i < selectedRoles[roleName]; i++) {
-        //itera sobre a quantidade de cada pepel único selecionado
-        const role = new this.roleMap[roleName]();
-        this.roles.push(role);
-      }
-    }
+    // reinicia a lista de roles
+    this.roles = [];
 
-    //this.roles = _.shuffle(this.roles); //por fim embaralha a lista <roles>
+    // itera sobre cada objeto de papel único selecionado
+    selectedRoles.forEach(selectedRole => {
+      const { role, count } = selectedRole;
+      // itera sobre a quantidade de cada papel único selecionado
+      for (let i = 0; i < count; i++) {
+        const newRole = new this.roleMap[role]();
+        this.roles.push(newRole);
+      }
+    });
+
+    //this.roles = _.shuffle(this.roles); // por fim, embaralha a lista <roles>
   }
 
   assignRoleToPlayer(selectedRoles) {
@@ -207,15 +213,5 @@ export default class Game {
       //associa cada jogador a um papel
       player.setRole(this.roles[i]);
     });
-  }
-
-  playersMatchRoles(selectedRoles) {
-    //verifica se as quantidades de papéis e jogadores são iguais
-    let error = false;
-    const totalRoles = Object.values(selectedRoles).reduce((a, b) => a + b, 0);
-    if (totalRoles !== this.players.length) {
-      error = true;
-    }
-    return error;
   }
 }

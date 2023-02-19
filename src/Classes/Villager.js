@@ -5,8 +5,8 @@ export default class Villager extends Role {
     super("Aldeão", "Villagers");
   }
 
-  bisbilhotar(playerList, game) {
-    const deathChance = 0.5;
+  espiar(playerList, game) {
+    const deathChance = 0.1;
     const discoverChance = 0.1;
     const randomNumber = Math.random();
     let message = "";
@@ -30,7 +30,6 @@ export default class Villager extends Role {
 
   orar(otherPlayer) {
     const chance = Math.random();
-
     if (chance <= 0.1) {
       otherPlayer.setProtected(true);
     }

@@ -6,7 +6,6 @@ export default class Seer extends Role {
   }
 
   revelar(otherPlayer) {
-    return `A verdade foi revelada! O papel de ${otherPlayer.getName()} é ${otherPlayer.getRoleName()}. 
-        Fique atento à sua jogada!`;
+    return `A verdade foi revelada! O papel de ${otherPlayer.getName()} é ${otherPlayer.getRoleName()}. Fique atento à sua jogada!`;
   }
 }

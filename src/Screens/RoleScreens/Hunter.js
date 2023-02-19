@@ -1,52 +1,91 @@
-import React, { useState } from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import { useEffect, useState, useContext } from 'react';
+import { GameContext } from '../../Context/GameContext';
+import SkillButton from '../../Components/Buttons/SkillButton';
+import PlayersButtonList from '../../Components/Buttons/PlayersButtomList';
+import ConditionalMessage from '../../Components/Texts/ConditionalMessage';
+import RoleTitle from '../../Components/Texts/RoleTitle';
+import hunterImg from '../../Images/hunter.png';
+import styled from 'styled-components/native';
 
-export default function Hunter({ currentGame, playerList, currentPlayer }) {
-  const [skillWasUsed, setSkillWasUsed] = useState(false);
+const Container = styled.View`
+    flex: 1;
+    align-items: center;
+`;
+
+const SkillsContainer = styled.View`
+    align-items: center;
+    height: 35%;
+    justify-content: space-evenly;
+`;
+
+const RoleImage = styled.Image`
+  width: 250;
+  height: 250;
+`;
+
+export default function Hunter({
+  passTurn,
+  setHandleConfirm,
+  setPassCondition,
+  targetPlayer,
+  setTargetPlayer
+}) {
+
+  const { currentGame } = useContext(GameContext);
+  const playerList = currentGame.getPlayers();
+  const currentPlayer = currentGame.getCurrentPlayer();
+  const hunter = currentPlayer.getRole();
+  const [showPlayers, setShowPlayers] = useState(false);
   const [skillWasChosen, setSkillWasChosen] = useState(false);
-  const [targetPlayer, setTargetPlayer] = useState();
 
   function handleAtirar() {
-    currentPlayer.getRole().atirar(targetPlayer, currentGame);
-    setSkillWasUsed(true);
+    hunter.atirar(targetPlayer, currentGame);
+    setSkillWasChosen(true);
+    passTurn();
   }
 
-  function isCurrentPlayer(player) {
-    return player.getName() === currentPlayer.getName();
+  function handleShowPlayers() {
+    setSkillWasChosen(true);
+    setShowPlayers(true);
+    setPassCondition(false);
   }
+
+  useEffect(()=>{
+    setHandleConfirm(()=> handleAtirar);
+  },[targetPlayer]);
 
   return (
-    <View>
-      {!skillWasUsed && (
-        <View>
-          <Text>
-            Clique em atirar, em seguida escolha o jogador que deseja eliminar,
-            mas cuidado para não escolher um incocente. Você pode terminar a vez
-            se não tiver certeza do seu alvo.
-          </Text>
-          <TouchableOpacity onPress={() => setSkillWasChosen(true)}>
-            <Text>Atirar</Text>
-          </TouchableOpacity>
-          {playerList.map(
-            (player, i) =>
-              !isCurrentPlayer(player) && (
-                <TouchableOpacity
-                  key={i}
-                  onPress={() => setTargetPlayer(player)}
-                  disabled={isCurrentPlayer(player) || !skillWasChosen}
-                  style={
-                    targetPlayer === player ? { backgroundColor: "yellow" } : {}
-                  }
-                >
-                  <Text>{player.getName()}</Text>
-                </TouchableOpacity>
-              )
-          )}
-          <TouchableOpacity onPress={() => handleAtirar()}>
-            <Text>Confirmar</Text>
-          </TouchableOpacity>
-        </View>
-      )}
-    </View>
+    <Container>
+
+      <RoleTitle currentPlayer={currentPlayer} />
+      <RoleImage source={hunterImg} />
+      <ConditionalMessage
+        showChooseSkill={!skillWasChosen}
+        showSelectPlayer={showPlayers}
+        selectPlayerMessage='Selecione um jogador para eliminar'
+      />
+
+      {!skillWasChosen &&
+        <SkillsContainer>
+          <SkillButton
+            onPress={() => handleShowPlayers()}
+            skillName='Atirar'
+            skillDescription='Você escolhe um jogador. Ele é eliminado do jogo'
+            skillIcon={hunterImg}
+          />
+        </SkillsContainer>
+      }
+
+      {showPlayers &&
+        <PlayersButtonList
+          playerList={playerList}
+          currentPlayer={currentPlayer}
+          numColumns={3}
+          targetPlayer={targetPlayer}
+          setTargetPlayer={setTargetPlayer}
+        />
+      }
+
+    </Container>
   );
 }

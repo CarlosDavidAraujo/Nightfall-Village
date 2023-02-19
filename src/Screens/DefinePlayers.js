@@ -1,8 +1,34 @@
 import React, { useContext, useState } from "react";
 import { GameContext } from "../Context/GameContext";
-import { View, Button, Text } from "react-native";
+import { ImageBackground } from "react-native";
+import AddPlayerButton from "../Components/Buttons/AddPlayerButton";
 import bgImg from "../Images/playerSelection.png";
-import PlusIcon from "../Components/PlusIcon";
+import PlayerCard from "../Components/Cards/PlayerCard";
+import { FlatList } from "react-native";
+import styled from "styled-components/native";
+import DefaultButton from "../Components/Buttons/DefaultButton";
+
+const Container = styled.View`
+    flex: 1;
+    align-items: center;
+    background-color: #C2BB93;
+`;
+
+const Background = styled.ImageBackground`
+    flex: 1;
+    align-items: center;
+    padding: 40px 10px;
+`;
+
+const Content = styled.View`
+    flex: 1;
+    margin-top: 10%;
+`;
+
+const ErrorText = styled.Text`
+    color: white;
+    font-size: 18px;
+`;
 
 export default function DefinePlayers({ navigation }) {
     const { currentGame } = useContext(GameContext);
@@ -14,9 +40,9 @@ export default function DefinePlayers({ navigation }) {
     ]);
     const [errorMessage, setErrorMessage] = useState("");
 
-    const handlePlayerChange = (e, index) => {
+    const handlePlayerChange = (text, index) => {
         const updatedPlayers = [...players];
-        updatedPlayers[index] = e.nativeEvent.text;
+        updatedPlayers[index] = text;
         setPlayers(updatedPlayers);
     };
 
@@ -32,33 +58,40 @@ export default function DefinePlayers({ navigation }) {
     function handleDefinePlayers() {
         if (players.length >= 4) {
             currentGame.setPlayers(players);
-            navigation.navigate("DefineRoles");
+            navigation.navigate("DefineRoles", {
+                playerList: currentGame.getPlayers()
+            });
         } else {
             setErrorMessage("É necessário ter pelo menos 4 jogadores.");
         }
     }
 
     return (
-        <View>
-            <Button
-                title="Confirmar"
-                onPress={() => handleDefinePlayers()}
-            />
-            <View>
-                {players.map((player, i) => (
-                    <View
-                        key={i}
-                        player={player}
-                        onChange={(e) => handlePlayerChange(e, i)}
-                        onClick={() => handleRemovePlayer(i)}
+
+        <Container>
+            <Background source={bgImg} resizeMode={'cover'}>
+                <DefaultButton title="Confirmar" onPress={() => handleDefinePlayers()}style={{alignSelf: 'flex-end'}}/>
+                <Content>
+                    <FlatList
+                        data={[...players, 'add']}
+                        numColumns={3}
+                        keyExtractor={(item, index) => index.toString()}
+                        renderItem={({ item, index }) =>
+                            item === 'add' ? (
+                                <AddPlayerButton onPress={() => handleAddPlayer()} />
+                            ) : (
+                                <PlayerCard
+                                    value={item}
+                                    onPress={() => handleRemovePlayer(index)}
+                                    onChangeText={(text) => handlePlayerChange(text, index)}
+                                />
+                            )
+                        }
                     />
-                ))}
-                <View onPress={handleAddPlayer}>
-                    <PlusIcon />
-                    <Text>Adicionar jogador</Text>
-                </View>
-            </View>
-            <Text>{errorMessage && <p>{errorMessage}</p>}</Text>
-        </View>
+                </Content>
+                {errorMessage && <ErrorText style={{ fontFamily: 'NewRocker_400Regular' }}>{errorMessage}</ErrorText>}
+            </Background>
+        </Container >
+
     );
 }

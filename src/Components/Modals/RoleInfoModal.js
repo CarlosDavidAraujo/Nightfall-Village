@@ -1,19 +1,18 @@
 import { View } from "react-native";
 import Modal from "react-native-modal";
-import { RoleScreenContainer, RoleImage, SkillsContainer, Title, SubTitle, DefaultText } from "../../Styles";
+import { RoleImage, SkillsContainer, Title, SubTitle, DefaultText, FlexStartContainer } from "../../Styles";
 import { dark, invertTheme } from "../../Themes/Dark";
 import CloseButton from "../Buttons/CloseButton";
 import SkillButton from "../Buttons/SkillButton";
 
-export default function RoleInfoModal({ isVisible, setIsVisible, role }) {
+export default function RoleInfoModal({ isVisible, onClose, role }) {
     return (
         <View>
             <Modal
                 isVisible={isVisible}
-                
                 style={{ backgroundColor: invertTheme(dark).bg, padding: 10 }} >
-                <RoleScreenContainer>
-                    <CloseButton onPress={() => setIsVisible(false)} />
+                <FlexStartContainer>
+                    <CloseButton onPress={onClose} />
                     <Title>{role.getName()}</Title>
                     <RoleImage source={role.getRoleImg()} />
                     <DefaultText>{`Você faz parte do time dos "${role.getTeam()}". Seu objetivo é ${role.getObjective()}.`}</DefaultText>
@@ -32,7 +31,7 @@ export default function RoleInfoModal({ isVisible, setIsVisible, role }) {
                             disabled={true}
                         />
                     </SkillsContainer>
-                </RoleScreenContainer >
+                </FlexStartContainer >
             </Modal>
         </View>
     )

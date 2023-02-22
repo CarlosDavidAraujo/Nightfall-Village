@@ -5,7 +5,7 @@ import Villager from "./RoleScreens/Villager";
 import Werewolf from "./RoleScreens/Werewolf";
 import { GameContext } from "../Context/GameContext";
 import ActionButtons from "../Components/Buttons/ActionButtons";
-import { ScreenContainer } from "../Styles";
+import { SpaceAroundContainer } from "../Styles";
 import { dark, invertTheme } from "../Themes/Dark";
 
 export default function PlayerAction({ navigation }) {
@@ -55,9 +55,12 @@ export default function PlayerAction({ navigation }) {
   function passTurn() {
     currentGame.setNextPlayer();
 
-    if (currentGame.noNextPlayer()) {
-      currentGame.removePlayers();
-      currentGame.clearPlayersProtection();
+    if (currentGame.noNextPlayer()) { //nao ha mais nenhum jogador para agir entao:
+      currentGame.setMostVotedPlayerByWerewolfs(); //decide a vitima dos lobisomens
+      currentGame.removePlayers(); //remove a vitima
+      currentGame.clearPlayersVotes(); //limpa os votos
+      currentGame.clearPlayersProtection(); //limpa as proteçoes
+      currentGame.clearPlayersDeathMarks(); //limpa as marcas de morte
       navigation.navigate("VillageNews", {
         previousScreen: 'PlayerAction'
       });
@@ -69,7 +72,7 @@ export default function PlayerAction({ navigation }) {
   }
 
   return (
-    <ScreenContainer style={{backgroundColor: invertTheme(dark).bg}}>
+    <SpaceAroundContainer style={{backgroundColor: invertTheme(dark).bg}}>
       {roleScreens[currentPlayer.getRoleName()]}
       <ActionButtons
         showPass={passCondition}
@@ -79,6 +82,6 @@ export default function PlayerAction({ navigation }) {
         confirmText='Confirmar'
         onConfirm={() => handleConfirm()}
       />
-    </ScreenContainer>
+    </SpaceAroundContainer>
   );
 }

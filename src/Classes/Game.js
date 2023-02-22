@@ -10,7 +10,7 @@ export default class Game {
   constructor() {
     this.players = []; //armazena os jogadores vivos
     this.currentPlayerIndex = 0; //index do jogador atual
-    this.playersToRemove = []; //jogadores marcados para remover (se estiverem protegidos, nao serâo)
+    this.mostVotedPlayers = []; // guarda os jogadores mais votados
     this.deadPlayers = [] //jogadores que ja foram eliminados
     this.roles = []; //armazena os papéis que foram selecionados
     this.news = new News(); //gerenciador mensagens dos eventos do jogo
@@ -79,11 +79,18 @@ export default class Game {
     });
   }
 
+  clearPlayersDeathMarks() {
+    //reseta as marcas de morte de todos os jogadores
+    this.players.forEach((player) => {
+      player.setMarkedForDeath(false);
+    });
+  }
+
   decreaseTurnsToBlockPlayers() { //diminui a contagem de turnos que faltam para o cada jogador ter suas habilidades bloqueadas
     this.players.forEach(player => {
       const turnsToBlock = player.getTurnsToBlock();
-      if (turnsToBlock === 0) { //se ja estiver zerado volta a contagem para mil, liberando o jogador para usar habilidades
-        player.setTurnsToBlock(1000);
+      if (turnsToBlock === 0) { //se ja estiver zerado libera o jogador para usar habilidades
+        player.setBlockedSkill(0, 1000);
       } else {                                // se nao diminui a contagem
         player.setTurnsToBlock(turnsToBlock - 1);
       }
@@ -106,88 +113,76 @@ export default class Game {
     return this.deadPlayers;
   }
 
-  //adiciona jogadores a lista negra <playersToRemove>,
-  //mas antes verifica se o jogador ja esta na lista, para evitar adicioná-lo mais de uma vez
-  addPlayerToRemove(player) {
-    if (!this.playersToRemove.includes(player)) {
-      this.playersToRemove.push(player);
-    }
-  }
-
-  noPlayerDied() {
-    //verifica se nenhum jogador foi marcado para morrer
-    return this.playersToRemove.length === 0;
-  }
-
   //remove jogadores da partida
   removePlayers() {
-    if (this.noPlayerDied()) {
-      //se não há ninguém para ser removido, retorna a mensagem do evento
+    const alivePlayers = this.players.filter(player => !player.isMarkedForDeath() || player.isProtected());
+    if (alivePlayers.length === this.players.length) { //se o tamanho se manteve o mesmo quer dizer que nao houveram mortes
       return this.news.setNews("Noite de paz na vila.");
     }
 
-    //atualiza a lista de <players> vivos com aqueles que não estão na lista <playersToRemove> ou que estão protegidos
-    const updatedPlayers = this.players.filter(
-      (player) => !this.playersToRemove.includes(player) || player.isProtected()
-    );
-    this.players = updatedPlayers;
-
-    //adiciona as mensagens de eventos
-    this.playersToRemove.forEach(player => {
-      if (player.isProtected()) {
-        //mensagem se alguém foi protegido
-        this.news.addNews("Preces protegeram moradores.");
-      } else {
-        //mensagem dos que morreram
-        this.news.addNews(`${player.getName()} morreu esta noite!`);
-        this.deadPlayers.push(player); //adiciona os jogadoes eliminados a lista de deadPlayers
+    this.players.forEach(player => {
+      if (player.isMarkedForDeath() && player.isProtected()) { //se estava marcado para morrer, foi protegido adiciona noticia de que alguem foi salvo
+        this.news.addNews('Preces protegeram morador(es).');
+      }
+      else if (player.isMarkedForDeath()) { //se estava marcado sem protecao, adiciona a noticia da eliminacao
+        this.news.addNews(`${player.getName()} morreu esta noite. Deve ficar calado até o fim do jogo.`);
+        this.deadPlayers.push(player); //adiciona a lista de jogadores mortos
       }
     });
 
-    //ao final de tudo limpa a lista <playersToRemove> para que não haja inconsistências
-    //em verificações da função <noPlayerDied()> nas rodadas futuras
-    this.playersToRemove = [];
+    //atualiza a lista de <players> com os que ficaram vivos
+    this.players = alivePlayers;
   }
 
-  mostVotedPlayer() {
-    //retorna o jogador mais votado pela vila
+  setMostVotedPlayers() {
+    //define os jogadores mais votados pela vila
     let maxVotes = 0;
-    let mostVotedPlayers = [];
-
     this.players.forEach((player) => {
-      if (player.getVotesCount() > maxVotes) {
+      if (player.getVotesCount() > maxVotes) { //se os votos forem maiores armazena apenas um jogador
         maxVotes = player.getVotesCount();
-        mostVotedPlayers = [player];
-      } else if (player.getVotesCount() === maxVotes) {
-        mostVotedPlayers.push(player);
-      }
+        this.mostVotedPlayers = [player];
+      } else if (player.getVotesCount() === maxVotes && maxVotes > 0) { //quando empatar adiciona mais um jogador a lista de mais votados, 
+        this.mostVotedPlayers.push(player);                             //execeto quando maxvotes for igual a zero, pois isso adicionaria todos os jogadores, 
+      }                                                                 //mesmo que ninguem tivesse sido votado  
     });
-
-    //verifica se a lista <mostVotedPlayers> tem mais de um jogador, ou seja,
-    //se houve empate, e retorna null, assim ninguém é eliminado em caso de empate na votação
-    if (mostVotedPlayers.length > 1) {
-      return null;
-    }
-
-    //se não houve empate retorna o jogador mais votado
-    return mostVotedPlayers[0];
   }
 
-  //funciona semelhante a função removePlayers, mas com algumas mudanças
+  //remove o jogador mais votado pela vila
   removeMostVotedPlayer() {
-    const mostVotedPlayer = this.mostVotedPlayer(); //verifica o jogador mais votado
-
-    if (!mostVotedPlayer) {
-      //se não há, retorna a noticia de que a aldeia ficou indecisa na votação
+    this.setMostVotedPlayers(); //define o jogador mais votado
+    if (this.mostVotedPlayers.length != 1) { //se houve empate ninguem morre
       return this.news.setNews("A aldeia ficou indecisa!");
     }
 
-    //se há, atualiza a lista de <players> e seta a noticia de quem foi escolhido
-    const updatedPlayers = this.players.filter(
-      (player) => player.getName() !== mostVotedPlayer.getName()
-    );
-    this.players = updatedPlayers;
-    this.news.setNews(`${mostVotedPlayer.getName()} foi morto pela aldeia`);
+    //se não há empate atualiza a lista de jogadores vivos removendo o jogador mais votado
+    const mostVotedPlayer = this.mostVotedPlayers[0];
+    const alivePlayers = this.players.filter(player => player.getName() !== mostVotedPlayer.getName());
+    this.players = alivePlayers;
+    this.news.addNews(`${this.mostVotedPlayers[0].getName()} foi morto pela aldeia. Deve ficar calado até o fim do jogo.`);
+    this.mostVotedPlayers = []; //ao final reseta a lista de mais votados
+  }
+
+  //remove o jogador mais votado pelos lobisomens
+  setMostVotedPlayerByWerewolfs() {
+    this.setMostVotedPlayers(); //define os mais votados
+    if (this.mostVotedPlayers.length === 0) { //faz nada se ninguem foi morto por lobisomens
+      return
+    }
+    this.resolveTieBreak(); //desempata a votacao, assim não morrerá mais de um jogador por turno devorado por lobisomens 
+    const mostVotedPlayer = this.mostVotedPlayers[0];
+    mostVotedPlayer.setMarkedForDeath(true);
+    this.mostVotedPlayers = []; //ao final reseta a lista de mais votados
+  }
+
+  resolveTieBreak() {
+    // verifica se a lista <mostVotedPlayers> tem mais de um jogador, ou seja,
+    // se houve empate, e escolhe um jogador aleatoriamente a partir dos jogadores
+    // com o mesmo número de votos. Importante! essa funçao so deve ser usada para desempatar o voto dos lobisomens durante a etapa em que usam a habilidade devorar
+    if (this.mostVotedPlayers.length > 1) {
+      const randomIndex = Math.floor(Math.random() * this.mostVotedPlayers.length);
+      const mostVotedPlayer = this.mostVotedPlayers[randomIndex];
+      this.mostVotedPlayers = [mostVotedPlayer];
+    }
   }
 
   getNews() {

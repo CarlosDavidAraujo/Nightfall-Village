@@ -1,12 +1,16 @@
 import { ScrollView, View } from "react-native"
 import { SimpleGrid } from "react-native-super-grid";
 import DefaultButton from "./DefaultButton";
-import clawIcon from '../../../assets/images/claw.png';
+import { useRoute } from "@react-navigation/native";
 
 export default function PlayersButtonList({ playerList, currentPlayer, targetPlayer, setTargetPlayer, inverted }) {
-
+    const route = useRoute();
     const isAlliedWerewolf = (otherPlayer) => {
         return currentPlayer.getRoleName() === 'Lobisomem' && otherPlayer.getRoleName() === 'Lobisomem'
+    }
+
+    const currentPlayerIsWerewolf = () => {
+        return currentPlayer.getRoleName() === 'Lobisomem';
     }
 
     const playerListWithoutCurrentPlayer = playerList.filter(player => player.getName() !== currentPlayer.getName())
@@ -23,7 +27,10 @@ export default function PlayersButtonList({ playerList, currentPlayer, targetPla
                             disabled={isAlliedWerewolf(item)}
                             inverted={inverted === (targetPlayer !== item)}
                             title={item.getName()}
-                            icon={isAlliedWerewolf(item) && clawIcon}
+                            showWolfIcon={isAlliedWerewolf(item)}
+                            showVotesIcon={!isAlliedWerewolf(item) && currentPlayerIsWerewolf() && route.name === 'PlayerAction'}
+                            voteCount={item.getVotesCount()}
+                            style={{height: 50}}
                         />
                     }
                 />

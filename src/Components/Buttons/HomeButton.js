@@ -1,30 +1,25 @@
-import { useContext } from "react";
-import Game from "../../Classes/Game";
-import { GameContext } from "../../Context/GameContext";
-import { useRoute, useNavigation } from "@react-navigation/native";
+import { useState } from "react";
 import DefaultButton from "./DefaultButton";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faHome } from "@fortawesome/free-solid-svg-icons";
+import { dark } from "../../Themes/Dark";
+import MenuModal from "../Modals/MenuModal";
 
 export default function HomeButton() {
-    const navigation = useNavigation();
-    const route = useRoute();
-    const { setCurrentGame } = useContext(GameContext);
-
-    if (route.name === 'GameMenu') {
-        return null;
-    }
-
-    function handleRestart() {
-        setCurrentGame(new Game());
-        navigation.navigate('GameMenu')
-    }
+    const [isModalVisible, setIsModalVisible] = useState(false);
 
     return (
-            <DefaultButton  
-            title={<FontAwesomeIcon icon={ faHome} />} 
-            onPress={() => handleRestart()} inverted={true}
+        <>
+        <DefaultButton  
+            title={<FontAwesomeIcon icon={ faHome} color={dark.color}/>} 
+            onPress={() => setIsModalVisible(true)}
             style={{with: 50, height: 40}}
             />
+            <MenuModal 
+            isVisible={isModalVisible} 
+            onClose={() => setIsModalVisible(false)}
+            />
+        </>
+            
     );
 }

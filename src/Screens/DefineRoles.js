@@ -5,7 +5,7 @@ import bgImg from "../../assets/images/playersUnited.png";
 import RoleCard from "../Components/Cards/RoleCard";
 import { ThemeProvider } from "styled-components/native";
 import DefaultButton from "../Components/Buttons/DefaultButton";
-import { BackgroundImage, DefaultText, NavigationContainer, ScreenContainer, SubTitle } from "../Styles";
+import { BackgroundImage, DefaultText, SpaceBetweenContainer, SubTitle } from "../Styles";
 import { dark } from "../Themes/Dark";
 import { SimpleGrid } from "react-native-super-grid";
 
@@ -88,7 +88,7 @@ export default function DefineRoles({ navigation }) {
 
   return (
     <BackgroundImage source={bgImg}>
-      <ScreenContainer>
+      <SpaceBetweenContainer>
         <ScrollView style={{ width: '100%' }}>
           <ThemeProvider theme={dark}>
             <SubTitle>Papéis Adicionados</SubTitle>
@@ -125,11 +125,8 @@ export default function DefineRoles({ navigation }) {
         <ThemeProvider theme={dark}>
           <DefaultText>{errorMessage}</DefaultText>
         </ThemeProvider>
-        <NavigationContainer>
-          <DefaultButton title="Voltar" onPress={returnToPreviousScreen} />
-          <DefaultButton title='Confirmar' onPress={() => startGame()} />
-        </NavigationContainer>
-      </ScreenContainer>
+          <DefaultButton title='Confirmar' onPress={() => startGame()} style={{width: '100%', marginTop: 20}}/>
+      </SpaceBetweenContainer>
     </BackgroundImage>
   );
 }

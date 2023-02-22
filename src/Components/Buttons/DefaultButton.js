@@ -1,7 +1,8 @@
-import  { ThemeProvider } from "styled-components/native";
+import { ThemeProvider } from "styled-components/native";
 import { dark, invertTheme } from "../../Themes/Dark";
 import { DefaultText, ButtonContainer } from "../../Styles";
-import { Image } from "react-native";
+import VoteIcon from "../CustomIcons/VoteIcon";
+import PawIcon from "../CustomIcons/PawIcon";
 
 export default function DefaultButton({
   onPress,
@@ -9,10 +10,12 @@ export default function DefaultButton({
   style,
   disabled,
   inverted,
-  icon
+  showWolfIcon,
+  showVotesIcon,
+  voteCount
 }) {
 
-  const theme = inverted? invertTheme(dark) : dark
+  const theme = inverted ? invertTheme(dark) : dark
 
   return (
     <ThemeProvider theme={theme}>
@@ -20,9 +23,10 @@ export default function DefaultButton({
         onPress={onPress}
         style={style}
         disabled={disabled}
-      >    
+      >
+        {showWolfIcon && <PawIcon theme={theme}/>}
+        {showVotesIcon && <VoteIcon>{voteCount}</VoteIcon>}
         <DefaultText >{title}</DefaultText>
-        <Image source={icon} style={{position: 'absolute', top: -20}}/>
       </ButtonContainer>
     </ThemeProvider>
   )

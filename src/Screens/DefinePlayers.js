@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { GameContext } from "../Context/GameContext";
-import { BackgroundImage, DefaultText, NavigationContainer, ScreenContainer, SubTitle } from "../Styles";
+import { BackgroundImage, DefaultText, SpaceBetweenContainer, SubTitle } from "../Styles";
 import AddPlayerButton from "../Components/Buttons/AddPlayerButton";
 import bgImg from "../../assets/images/playersUnited.png";
 import PlayerCard from "../Components/Cards/PlayerCard";
@@ -51,11 +51,6 @@ export default function DefinePlayers({ navigation }) {
         });
     }
 
-    const returnToPreviousScreen = () => {
-        currentGame.clearPlayers();
-        navigation.navigate("GameMenu");
-    };
-
     const emptyName = () => {
         let result = false;
         players.forEach(player => {
@@ -68,7 +63,7 @@ export default function DefinePlayers({ navigation }) {
 
     return (
         <BackgroundImage source={bgImg}>
-            <ScreenContainer style={{}}>
+            <SpaceBetweenContainer>
                 <ThemeProvider theme={dark}>
                     <SubTitle>Adicione jogadores</SubTitle>
                 </ThemeProvider>
@@ -94,11 +89,8 @@ export default function DefinePlayers({ navigation }) {
                 <ThemeProvider theme={dark}>
                     <DefaultText style={{ marginBottom: 10 }}>{errorMessage}</DefaultText>
                 </ThemeProvider>
-                <NavigationContainer>
-                    <DefaultButton title="Voltar" onPress={() => returnToPreviousScreen()} />
-                    <DefaultButton title="Confirmar" onPress={() => handleDefinePlayers()} />
-                </NavigationContainer>
-            </ScreenContainer >
+                <DefaultButton title="Confirmar" onPress={() => handleDefinePlayers()} style={{width: '100%'}}/>
+            </SpaceBetweenContainer>
         </BackgroundImage >
     );
 }

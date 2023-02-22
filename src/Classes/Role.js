@@ -1,5 +1,5 @@
 export default class Role {
-  constructor(name, team, roleImg, objective, firstSkillName, firstSkillDescription, firstSkillIcon, firstSkillLocked, secondSkillName, secondSkillDescription, secondSkillIcon) {
+  constructor(name, team, roleImg, objective, firstSkillName, firstSkillDescription, firstSkillIcon, secondSkillName, secondSkillDescription, secondSkillIcon) {
     this.name = name;
     this.fakeName = this.name;
     this.turnsWithFakeName = 0;
@@ -9,7 +9,6 @@ export default class Role {
     this.firstSkillName = firstSkillName;
     this.firstSkillIcon = firstSkillIcon;
     this.firstSkillDescription = firstSkillDescription;
-    this.firstSkillLocked = firstSkillLocked;
     this.secondSkillName = secondSkillName;
     this.secondSkillDescription = secondSkillDescription;
     this.secondSkillIcon = secondSkillIcon;
@@ -57,14 +56,6 @@ export default class Role {
 
   getFirstSkillIcon() {
     return this.firstSkillIcon;
-  }
-
-  getFirstSkillLocked() {
-    return this.firstSkillLocked;
-  }
-
-  setFirstSkillLocked(value) {
-    this.firstSkillLocked = value;
   }
 
   getSecondSkillName() {

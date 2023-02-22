@@ -17,6 +17,7 @@ export default function SkillButton({ onPress, skillName, skillDescription, skil
 const IconContainer = styled.View`
     align-items: center; 
     margin-right: 2%;
+    width: 100px;
 `;
 
 const Image = styled.Image`

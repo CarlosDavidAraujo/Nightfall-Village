@@ -3,7 +3,7 @@ import { GameContext } from '../../Context/GameContext';
 import PlayersButtonList from '../../Components/Buttons/PlayersButtonList';
 import SkillButton from '../../Components/Buttons/SkillButton';
 import ConditionalMessage from '../../Components/Texts/ConditionalMessage';
-import { RoleScreenContainer, SkillsContainer, RoleImage, Title } from '../../Styles';
+import { SkillsContainer, RoleImage, Title, FlexStartContainer } from '../../Styles';
 
 export default function Seer({
   setHandleConfirm,
@@ -30,8 +30,8 @@ export default function Seer({
     setPassCondition(true);
   }
 
-  function handleVislumbrar() {
-    setDiscoveredPlayer(seer.vislumbrar(targetPlayer));
+  function handleContactar() {
+    setDiscoveredPlayer(seer.contactar(targetPlayer));
     setShowDeadPlayers(false);
     setTargetPlayer(null);
     setPassCondition(true);
@@ -53,11 +53,11 @@ export default function Seer({
     if (chosenSkill === 1) {
       return setHandleConfirm(() => handleRevelar);
     }
-    setHandleConfirm(() => handleVislumbrar);
+    setHandleConfirm(() => handleContactar);
   }, [targetPlayer]);
 
   return (
-    <RoleScreenContainer>
+    <FlexStartContainer>
 
       <Title>{currentPlayer.getRoleName()}</Title>
       <RoleImage source={seer.getRoleImg()} />
@@ -79,8 +79,8 @@ export default function Seer({
             skillName={seer.getFirstSkillName()}
             skillDescription={seer.getFirstSkillDescription()}
             skillIcon={seer.getFirstSkillIcon()}
-            disabled={currentPlayer.isSkillsBlocked()}
-            skillUsed={currentPlayer.isSkillsBlocked()}
+            disabled={currentPlayer.isFirstSkillBlocked()}
+            skillUsed={currentPlayer.isFirstSkillBlocked()}
           />
 
           <SkillButton
@@ -88,8 +88,8 @@ export default function Seer({
             skillName={seer.getSecondSkillName()}
             skillDescription={seer.getSecondSkillDescription()}
             skillIcon={seer.getSecondSkillIcon()}
-            disabled={currentPlayer.isSkillsBlocked() || deadPlayers.length === 0}
-            skillUsed={currentPlayer.isSkillsBlocked() || deadPlayers.length === 0}
+            disabled={currentPlayer.isSecondSkillBlocked() || currentGame.getDeadPlayers().length === 0}
+            skillUsed={currentPlayer.isSecondSkillBlocked() || currentGame.getDeadPlayers().length === 0}
           />
         </SkillsContainer>
       }
@@ -114,6 +114,6 @@ export default function Seer({
         />
       }
 
-    </RoleScreenContainer>
+    </FlexStartContainer>
   );
 }

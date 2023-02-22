@@ -3,7 +3,7 @@ import { GameContext } from '../../Context/GameContext';
 import SkillButton from '../../Components/Buttons/SkillButton';
 import PlayersButtonList from '../../Components/Buttons/PlayersButtonList';
 import ConditionalMessage from '../../Components/Texts/ConditionalMessage';
-import { RoleImage, RoleScreenContainer, SkillsContainer, Title } from '../../Styles';
+import { FlexStartContainer, RoleImage, SkillsContainer, Title } from '../../Styles';
 
 export default function WereWolf({
   passTurn,
@@ -21,12 +21,13 @@ export default function WereWolf({
   const [skillWasChosen, setSkillWasChosen] = useState(false);
 
   function handleDevorar() {
-    werewolf.devorar(targetPlayer, currentGame);
+    werewolf.devorar(targetPlayer);
+    setTargetPlayer(null);
     passTurn();
   }
 
   function handleTransmutar() {
-    werewolf.transmutar();
+    werewolf.transmutar(currentPlayer);
     passTurn();
   }
 
@@ -41,7 +42,7 @@ export default function WereWolf({
   }, [targetPlayer]);
 
   return (
-    <RoleScreenContainer>
+    <FlexStartContainer>
 
       <Title>{currentPlayer.getRoleName()}</Title>
       <RoleImage source={werewolf.getRoleImg()} />
@@ -58,17 +59,17 @@ export default function WereWolf({
             skillName={werewolf.getFirstSkillName()}
             skillDescription={werewolf.getFirstSkillDescription()}
             skillIcon={werewolf.getFirstSkillIcon()}
-            disabled={currentPlayer.isSkillsBlocked()}
-            skillUsed={currentPlayer.isSkillsBlocked()}
+            disabled={currentPlayer.isFirstSkillBlocked()}
+            skillUsed={currentPlayer.isFirstSkillBlocked()}
           />
 
           <SkillButton
             onPress={() => handleTransmutar()}
             skillName={werewolf.getSecondSkillName()}
             skillDescription={werewolf.getSecondSkillDescription()}
-            skillIcon={werewolf.getFirstSkillIcon()}
-            disabled={currentPlayer.isSkillsBlocked()}
-            skillUsed={currentPlayer.isSkillsBlocked()}
+            skillIcon={werewolf.getSecondSkillIcon()}
+            disabled={currentPlayer.isSecondSkillBlocked()}
+            skillUsed={currentPlayer.isSecondSkillBlocked()}
           />
         </SkillsContainer>
       }
@@ -83,6 +84,6 @@ export default function WereWolf({
         />
       }
 
-    </RoleScreenContainer>
+    </FlexStartContainer>
   );
 }

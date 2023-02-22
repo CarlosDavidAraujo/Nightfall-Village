@@ -64,7 +64,7 @@ export default function RoleCard({
 
        <RoleInfoModal
         isVisible={isModalVisible}
-        setIsVisible={setIsModalVisible}
+        onClose={() => setIsModalVisible(false)}
         role={role}
       /> 
     </CardContainer>

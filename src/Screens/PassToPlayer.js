@@ -4,7 +4,7 @@ import DefaultButton from "../Components/Buttons/DefaultButton";
 import { GameContext } from "../Context/GameContext";
 import bgImg from '../../assets/images/passTo.png'
 import door from '../../assets/images/door.png';
-import { BackgroundImage, RotatedText, ScreenContainer, Title } from "../Styles";
+import { BackgroundImage, RotatedText, SpaceAroundContainer, Title } from "../Styles";
 import { dark } from "../Themes/Dark";
 
 export default function PassToPlayer({ navigation, route }) {
@@ -23,7 +23,7 @@ export default function PassToPlayer({ navigation, route }) {
 
   return (
     <BackgroundImage source={ready ? door : bgImg}>
-      <ScreenContainer>
+      <SpaceAroundContainer>
         {ready ? (
           <>
             <ThemeProvider theme={dark}>
@@ -41,7 +41,7 @@ export default function PassToPlayer({ navigation, route }) {
         ) : (
           <>
             <ThemeProvider theme={dark}>
-              <RotatedText style={{ position: 'absolute', top: '39.5%' }}>
+              <RotatedText style={{ position: 'absolute', top: '35.5%' }}>
                 Passe para {currentPlayerName}
               </RotatedText>
             </ThemeProvider>
@@ -53,7 +53,7 @@ export default function PassToPlayer({ navigation, route }) {
             />
           </>
         )}
-      </ScreenContainer>
+      </SpaceAroundContainer>
     </BackgroundImage>
   );
 }

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import DefaultButton from "../Components/Buttons/DefaultButton";
-import { BackgroundImage, ScreenContainer, SubTitle } from "../Styles";
+import { BackgroundImage, SpaceAroundContainer, SubTitle } from "../Styles";
 import village from '../../assets/images/votation.png';
 import { dark } from "../Themes/Dark";
 import { ThemeProvider } from "styled-components/native";
@@ -23,7 +23,7 @@ export default function Clock({ navigation }) {
     return (
         <ThemeProvider theme={dark}>
             <BackgroundImage source={village}>
-                <ScreenContainer>
+                <SpaceAroundContainer>
                     <SubTitle>Tempo restante: {seconds} segundos</SubTitle>
                     <DefaultButton
                         inverted={true}
@@ -32,7 +32,7 @@ export default function Clock({ navigation }) {
                             previousScreen: 'Clock' 
                         })}
                     />
-                </ScreenContainer>
+                </SpaceAroundContainer>
             </BackgroundImage>
         </ThemeProvider>
     )

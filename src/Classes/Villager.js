@@ -11,17 +11,16 @@ export default class Villager extends Role {
       villagerImg,
       'descobrir quem são os lobisomens e tentar proteger seus aliados',
       'Espiar',
-      'Você tem 10% de chance de descobrir um lobisomem. Se conseguir, há 15% de chance dele te matar.',
+      'Você tem 5% de chance de descobrir um lobisomem. Se conseguir, há 15% de chance dele te matar.',
       firstSkillIcon,
-      false,
       'Rezar',
-      'Escolha outro jogador. Ele tem 10% de chance de ser protegido.',
+      'Escolha outro jogador. Ele tem 5% de chance de ser protegido.',
       secondSkillIcon
       );
   }
 
   espiar(playerList, game) {
-    const deathChance = 0.1;
+    const deathChance = 0.05;
     const discoverChance = 0.15;
     const randomNumber = Math.random();
     let message = "";
@@ -34,7 +33,7 @@ export default class Villager extends Role {
         game.addPlayerToRemove(game.getCurrentPlayer());
       } else {
         discoveredWereWolf = playerList.find(
-          (player) => player.getRoleName() === "Lobisomem"
+          (player) => player.getRole().getFakeName() === "Lobisomem"
         );
         message = `${discoveredWereWolf.getName()} é um lobisomem entre nós!`;
       }
@@ -45,7 +44,7 @@ export default class Villager extends Role {
 
   orar(otherPlayer) {
     const chance = Math.random();
-    if (chance <= 0.1) {
+    if (chance <= 0.05) {
       otherPlayer.setProtected(true);
     }
   }

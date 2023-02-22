@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import Game from "../Classes/Game";
 import { GameContext } from "../Context/GameContext";
 import DefaultButton from "../Components/Buttons/DefaultButton";
-import { ScreenContainer, SubTitle } from "../Styles";
+import { SpaceAroundContainer, SubTitle } from "../Styles";
 import { dark, invertTheme } from "../Themes/Dark";
 
 export default function VillageNews({ route, navigation }) {
@@ -35,7 +35,7 @@ export default function VillageNews({ route, navigation }) {
   }
 
   return (
-    <ScreenContainer style={{ backgroundColor: invertTheme(dark).bg }}>
+    <SpaceAroundContainer style={{ backgroundColor: invertTheme(dark).bg }}>
       {currentGame.getNews().map((message, i) => (
         <SubTitle key={i}>{message}</SubTitle>
       ))}
@@ -46,6 +46,6 @@ export default function VillageNews({ route, navigation }) {
       ) : previousScreen === "Votes" ? (
         <DefaultButton onPress={() => nightFall()} title="Adormecer" />
       ) : null}
-    </ScreenContainer>
+    </SpaceAroundContainer>
   );
 }

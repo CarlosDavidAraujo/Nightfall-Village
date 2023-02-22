@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import { GameContext } from "../Context/GameContext";
-import { BackgroundImage, ScreenContainer, SubTitle, VoteButtonsContainer } from "../Styles";
+import { BackgroundImage, SpaceAroundContainer, SubTitle, VoteButtonsContainer } from "../Styles";
 import DefaultButton from "../Components/Buttons/DefaultButton";
 import PlayersButtonList from "../Components/Buttons/PlayersButtonList";
 import votationImg from '../../assets/images/votation.png';
@@ -34,7 +34,7 @@ export default function Votes({ navigation }) {
 
     return (
         <BackgroundImage source={votationImg}>
-            <ScreenContainer>
+            <SpaceAroundContainer>
                 <ThemeProvider theme={dark}>
                 <SubTitle style={{ marginTop: 160}}>{currentPlayer.getName()}, escolha seu voto</SubTitle>
                 </ThemeProvider>
@@ -49,7 +49,7 @@ export default function Votes({ navigation }) {
                     <DefaultButton title="Abster-se" onPress={() => passVotation()} inverted={true} />
                     <DefaultButton title="Confirmar" onPress={() => handleVote()} disabled={!targetPlayer} inverted={true}/>
                 </VoteButtonsContainer>
-            </ScreenContainer>
+            </SpaceAroundContainer>
         </BackgroundImage>
     );
 }

@@ -3,7 +3,7 @@ import SkillButton from '../../Components/Buttons/SkillButton';
 import PlayersButtonList from '../../Components/Buttons/PlayersButtonList';
 import { GameContext } from '../../Context/GameContext';
 import ConditionalMessage from '../../Components/Texts/ConditionalMessage';
-import { RoleImage, RoleScreenContainer, SkillsContainer, Title } from '../../Styles';
+import { FlexStartContainer, RoleImage, SkillsContainer, Title } from '../../Styles';
 
 export default function Villager({
   setHandleConfirm,
@@ -19,6 +19,7 @@ export default function Villager({
   const [discoveredWereWolf, setDiscoveredWereWolf] = useState();
   const [showPlayers, setShowPlayers] = useState(false);
   const [skillWasChosen, setSkillWasChosen] = useState(false);
+  
 
   function handleEspiar() {
     const newDiscoveredWereWolf = villager.espiar(playerList, currentGame);
@@ -46,7 +47,7 @@ export default function Villager({
   }, [targetPlayer]);
 
   return (
-    <RoleScreenContainer>
+    <FlexStartContainer>
       <Title>{currentPlayer.getRoleName()}</Title>
       <RoleImage source={villager.getRoleImg()} />
       <ConditionalMessage
@@ -64,16 +65,16 @@ export default function Villager({
             skillIcon={villager.getFirstSkillIcon()}
             skillName={villager.getFirstSkillName()}
             skillDescription={villager.getFirstSkillDescription()}
-            disabled={currentPlayer.isSkillsBlocked()}
-            skillUsed={currentPlayer.isSkillsBlocked()}
+            disabled={currentPlayer.isFirstSkillBlocked()}
+            skillUsed={currentPlayer.isFirstSkillBlocked()}
           />
           <SkillButton
             onPress={() => handleShowPlayers()}
             skillIcon={villager.getSecondSkillIcon()}
             skillName={villager.getSecondSkillName()}
             skillDescription={villager.getSecondSkillDescription()}
-            disabled={currentPlayer.isSkillsBlocked()}
-            skillUsed={currentPlayer.isSkillsBlocked()}
+            disabled={currentPlayer.isSecondSkillBlocked()}
+            skillUsed={currentPlayer.isSecondSkillBlocked()}
           />
         </SkillsContainer>
       }
@@ -88,6 +89,6 @@ export default function Villager({
         />
       }
 
-    </RoleScreenContainer >
+    </FlexStartContainer >
   );
 }

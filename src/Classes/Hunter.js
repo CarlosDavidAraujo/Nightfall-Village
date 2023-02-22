@@ -1,6 +1,7 @@
 import Role from "./Role";
 import hunterImg from '../../assets/images/hunter.png';
 import firstSkillIcon from '../../assets/images/target.png';
+import secondSkillIcon from '../../assets/images/trap.png';
 
 export default class Hunter extends Role {
   constructor() {
@@ -12,21 +13,19 @@ export default class Hunter extends Role {
       'Atirar',
       'Uma vez por jogo você escolhe um jogador. Ele é eliminado.',
       firstSkillIcon,
-      false,
       'Capturar',
-      'Impede um jogador de usar habilidades na próxima rodada.',
-      firstSkillIcon
+      'Impede um jogador de usar habilidades na próxima rodada. Recarrega após um turno.',
+      secondSkillIcon
     );
   }
 
-  atirar(otherPlayer, game) {
-    if (!this.firstSkillLocked) {
-      game.addPlayerToRemove(otherPlayer);
-      this.firstSkillLocked = true;
-    }
+  atirar(otherPlayer, currentPlayer) {
+      otherPlayer.setMarkedForDeath(true);
+      currentPlayer.setPermaBlockedSkill(1); //bloqueia atirar ate o final do jogo
   }
 
-  capturar(otherPlayer) {
-    otherPlayer.setTurnsToBlock(1); //o jogador tera as habilidades bloqueadas no proximo turno
+  capturar(otherPlayer, currentPlayer) {
+    otherPlayer.setBlockedSkill(3, 1); //o jogador tera as habilidades bloqueadas no proximo turno
+    currentPlayer.setBlockedSkill(2 ,1);// o caçador fica um turno sem poder usar capturar novamente
   }
 }

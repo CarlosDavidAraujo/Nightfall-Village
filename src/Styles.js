@@ -8,7 +8,7 @@ export const ButtonContainer = styled.TouchableOpacity`
     padding: 5px 10px;
     align-items: center;
     justify-content: center;
-    opacity: ${props => props.disabled? 0.4 : 1};
+    opacity: ${props => props.disabled? 0.7 : 1};
 `;
 
 export const NavigationContainer = styled.View`
@@ -73,17 +73,25 @@ export const BackgroundImage = styled.ImageBackground`
     object-fit: cover;
 `;
 
-export const ScreenContainer = styled.View`
+export const SpaceAroundContainer = styled.View`
     flex: 1;
     align-items: center;
     justify-content: space-around;
     padding: 10px;
-    padding-top: 100px;
+
 `;
 
-export const RoleScreenContainer = styled.View`
+export const SpaceBetweenContainer = styled.View`
     flex: 1;
     align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+`;
+
+export const FlexStartContainer = styled.View`
+    flex: 1;
+    align-items: center;
+    justify-content: flex-start;
 `;
 
 export const SkillsContainer = styled.View`

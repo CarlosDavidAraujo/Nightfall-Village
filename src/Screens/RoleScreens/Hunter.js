@@ -3,7 +3,7 @@ import { GameContext } from '../../Context/GameContext';
 import SkillButton from '../../Components/Buttons/SkillButton';
 import PlayersButtonList from '../../Components/Buttons/PlayersButtonList';
 import ConditionalMessage from '../../Components/Texts/ConditionalMessage';
-import { RoleImage, RoleScreenContainer, SkillsContainer, Title } from '../../Styles';
+import { FlexStartContainer, RoleImage, SkillsContainer, Title } from '../../Styles';
 
 export default function Hunter({
   passTurn,
@@ -23,12 +23,14 @@ export default function Hunter({
 
 
   function handleAtirar() {
-    hunter.atirar(targetPlayer, currentGame);
+    hunter.atirar(targetPlayer, currentPlayer);
+    setTargetPlayer(null);
     passTurn();
   }
 
   function handleCapturar() {
-    hunter.capturar(targetPlayer);
+    hunter.capturar(targetPlayer, currentPlayer);
+    setTargetPlayer(null);
     passTurn();
   }
 
@@ -46,7 +48,7 @@ export default function Hunter({
   }, [targetPlayer]);
 
   return (
-    <RoleScreenContainer>
+    <FlexStartContainer>
 
       <Title>{currentPlayer.getRoleName()}</Title>
       <RoleImage source={hunter.getRoleImg()} />
@@ -66,8 +68,8 @@ export default function Hunter({
             skillName={hunter.getFirstSkillName()}
             skillDescription={hunter.getFirstSkillDescription()}
             skillIcon={hunter.getFirstSkillIcon()}
-            disabled={hunter.getFirstSkillLocked() || currentPlayer.isSkillsBlocked()}
-            skillUsed={hunter.getFirstSkillLocked()}
+            disabled={currentPlayer.isFirstSkillBlocked()}
+            skillUsed={currentPlayer.isFirstSkillBlocked()}
           />
           <SkillButton
             onPress={() => {
@@ -77,8 +79,8 @@ export default function Hunter({
             skillName={hunter.getSecondSkillName()}
             skillDescription={hunter.getSecondSkillDescription()}
             skillIcon={hunter.getSecondSkillIcon()}
-            disabled={hunter.getFirstSkillLocked() || currentPlayer.isSkillsBlocked()}
-            skillUsed={hunter.getFirstSkillLocked() || currentPlayer.isSkillsBlocked()}
+            disabled={currentPlayer.isSecondSkillBlocked()}
+            skillUsed={currentPlayer.isSecondSkillBlocked()}
           />
         </SkillsContainer>
       }
@@ -93,6 +95,6 @@ export default function Hunter({
         />
       }
 
-    </RoleScreenContainer>
+    </FlexStartContainer>
   );
 }

@@ -1,6 +1,7 @@
 import Role from "./Role";
 import seerImg from '../../assets/images/seer.png';
 import firstSkillIcon from '../../assets/images/seerEye.png';
+import secondSkillIcon from '../../assets/images/tarot.png';
 
 export default class Seer extends Role {
   constructor() {
@@ -12,10 +13,9 @@ export default class Seer extends Role {
       'Revelar',
       'Você pode ver a função de outro jogador.',
       firstSkillIcon,
-      false,
-      'Vislumbrar',
-      'Você pode ver a função de alguém que ja morreu.',
-      firstSkillIcon
+      'Contactar',
+      'Você pode ver a função de um jogador que ja morreu.',
+      secondSkillIcon
     );
   }
 
@@ -23,7 +23,7 @@ export default class Seer extends Role {
     return `A verdade foi revelada! O papel de ${otherPlayer.getName()} é ${otherPlayer.getRole().getFakeName()}. Fique atento à sua jogada!`;
   }
 
-  vislumbrar(otherPlayer) {
+  contactar(otherPlayer) {
     return `A verdade foi revelada! O papel de ${otherPlayer.getName()} era ${otherPlayer.getRoleName()}.`;
   }
 

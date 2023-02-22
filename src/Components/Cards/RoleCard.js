@@ -1,15 +1,11 @@
-import styled from "styled-components/native";
-
-const Container = styled.TouchableOpacity`
-  padding: 10px;
-  background-color: #f5deb3;
-  border: 3px solid black;
-  align-items: center;
-  width: 32%;
-`;
+import { useState } from "react";
+import styled, { ThemeProvider } from "styled-components/native";
+import { DefaultText, CardContainer, ButtonContainer } from "../../Styles";
+import { dark, invertTheme } from "../../Themes/Dark";
+import RoleInfoModal from "../Modals/RoleInfoModal";
 
 const InfoButton = styled.TouchableOpacity`
-  background-color: transparent;
+  background-color: ${props => props.theme.bg};
   border: none;
   width: 23px;
   align-self: flex-end;
@@ -19,64 +15,59 @@ const InfoButton = styled.TouchableOpacity`
   aspect-ratio: 1/1;
 `;
 
-const RoleImgContainer = styled.View`
-  border: 3px solid black;
-  border-radius: 2px;
-  padding: 5px;
-  margin-top: 5px;
-`;
-
 const RoleImg = styled.Image`
   width: 70px;
   height: 70px;
 `;
 
-const Text = styled.Text`
-  font-size: 20px;
-  align-self: center;
-`;
-
 const AmountController = styled.View`
   flex-direction: row;
   justify-content: space-between;
+  align-items: center;
   width: 100%;
-`;
-
-const ButonController = styled.TouchableOpacity`
-  width: 30px;
+  margin-top: 10;
 `;
 
 export default function RoleCard({
-  roleName,
   count,
   onDecrease,
   onIncrease,
   onPress,
-  img,
   selected,
-  style
+  role
 }) {
+
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+
   return (
-    <Container onPress={onPress} style={style}>
-      <InfoButton>
-        <Text style={{ fontFamily: 'NewRocker_400Regular', color: '#f5deb3' }}>i</Text>
-      </InfoButton>
-      <RoleImgContainer>
-        <RoleImg source={img} />
-      </RoleImgContainer>
-      <Text style={{ fontFamily: 'NewRocker_400Regular' }}>{roleName}</Text>
+    <CardContainer onPress={onPress} style={{ height: 'auto' }}>
+      <ThemeProvider theme={invertTheme(dark)}>
+        <InfoButton onPress={() => setIsModalVisible(true)}>
+          <DefaultText theme={dark}>i</DefaultText>
+        </InfoButton>
+      </ThemeProvider>
+      <RoleImg source={role.getRoleImg()} /> 
+      <DefaultText>{role.getName()}</DefaultText>
+
       {selected && (
         <AmountController>
-          <ButonController onPress={onDecrease} >
-            <Text style={{ fontFamily: 'NewRocker_400Regular' }}>-</Text>
-          </ButonController>
-          <Text style={{ fontFamily: 'NewRocker_400Regular' }}>{count}</Text>
-          <ButonController onPress={onIncrease} >
-            <Text style={{ fontFamily: 'NewRocker_400Regular' }}>+</Text>
-          </ButonController>
+          <ButtonContainer onPress={onDecrease} >
+            <DefaultText>-</DefaultText>
+          </ButtonContainer>
+          <DefaultText>{count}</DefaultText>
+          <ButtonContainer onPress={onIncrease}>
+            <DefaultText>+</DefaultText>
+          </ButtonContainer>
         </AmountController>
       )}
-    </Container>
+
+       <RoleInfoModal
+        isVisible={isModalVisible}
+        setIsVisible={setIsModalVisible}
+        role={role}
+      /> 
+    </CardContainer>
   );
 }
 

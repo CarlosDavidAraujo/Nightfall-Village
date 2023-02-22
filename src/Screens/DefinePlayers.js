@@ -1,42 +1,22 @@
 import React, { useContext, useState } from "react";
 import { GameContext } from "../Context/GameContext";
-import { ImageBackground } from "react-native";
+import { BackgroundImage, DefaultText, NavigationContainer, ScreenContainer, SubTitle } from "../Styles";
 import AddPlayerButton from "../Components/Buttons/AddPlayerButton";
-import bgImg from "../Images/playerSelection.png";
+import bgImg from "../../assets/images/playersUnited.png";
 import PlayerCard from "../Components/Cards/PlayerCard";
-import { FlatList } from "react-native";
-import styled from "styled-components/native";
+import { ThemeProvider } from "styled-components/native";
 import DefaultButton from "../Components/Buttons/DefaultButton";
-
-const Container = styled.View`
-    flex: 1;
-    align-items: center;
-    background-color: #C2BB93;
-`;
-
-const Background = styled.ImageBackground`
-    flex: 1;
-    align-items: center;
-    padding: 40px 10px;
-`;
-
-const Content = styled.View`
-    flex: 1;
-    margin-top: 10%;
-`;
-
-const ErrorText = styled.Text`
-    color: white;
-    font-size: 18px;
-`;
+import { dark } from "../Themes/Dark";
+import { ScrollView } from "react-native";
+import { SimpleGrid } from "react-native-super-grid";
 
 export default function DefinePlayers({ navigation }) {
     const { currentGame } = useContext(GameContext);
     const [players, setPlayers] = useState([
-        "jogador 1",
-        "jogador 2",
-        "jogador 3",
-        "jogador 4",
+        "Jogador 1",
+        "Jogador 2",
+        "Jogador 3",
+        "Jogador 4",
     ]);
     const [errorMessage, setErrorMessage] = useState("");
 
@@ -47,7 +27,7 @@ export default function DefinePlayers({ navigation }) {
     };
 
     const handleAddPlayer = () => {
-        setPlayers([...players, `jogador ${players.length + 1}`]);
+        setPlayers([...players, `Jogador ${players.length + 1}`]);
     };
 
     const handleRemovePlayer = (index) => {
@@ -56,27 +36,49 @@ export default function DefinePlayers({ navigation }) {
     };
 
     function handleDefinePlayers() {
-        if (players.length >= 4) {
-            currentGame.setPlayers(players);
-            navigation.navigate("DefineRoles", {
-                playerList: currentGame.getPlayers()
-            });
-        } else {
-            setErrorMessage("É necessário ter pelo menos 4 jogadores.");
+        if (emptyName() && players.length < 4) {
+            return setErrorMessage("Dê um nome para cada jogador! É necessário ter pelo menos 4 jogadores!");
         }
+        else if (players.length < 4) {
+            return setErrorMessage("É necessário ter pelo menos 4 jogadores!");
+        }
+        else if (emptyName()) {
+            return setErrorMessage("Dê um nome para cada jogador!");
+        }
+        currentGame.setPlayers(players);
+        navigation.navigate("DefineRoles", {
+            playerList: currentGame.getPlayers()
+        });
+    }
+
+    const returnToPreviousScreen = () => {
+        currentGame.clearPlayers();
+        navigation.navigate("GameMenu");
+    };
+
+    const emptyName = () => {
+        let result = false;
+        players.forEach(player => {
+            if (player === '') {
+                result = true;
+            }
+        });
+        return result
     }
 
     return (
-
-        <Container>
-            <Background source={bgImg} resizeMode={'cover'}>
-                <DefaultButton title="Confirmar" onPress={() => handleDefinePlayers()}style={{alignSelf: 'flex-end'}}/>
-                <Content>
-                    <FlatList
+        <BackgroundImage source={bgImg}>
+            <ScreenContainer style={{}}>
+                <ThemeProvider theme={dark}>
+                    <SubTitle>Adicione jogadores</SubTitle>
+                </ThemeProvider>
+                <ScrollView style={{ width: '100%' }}>
+                    <SimpleGrid
+                        itemDimension={90}
+                        maxItemsPerRow={3}
                         data={[...players, 'add']}
-                        numColumns={3}
-                        keyExtractor={(item, index) => index.toString()}
-                        renderItem={({ item, index }) =>
+                        spacing={5}
+                        renderItem={({ item, index }) => (
                             item === 'add' ? (
                                 <AddPlayerButton onPress={() => handleAddPlayer()} />
                             ) : (
@@ -86,12 +88,17 @@ export default function DefinePlayers({ navigation }) {
                                     onChangeText={(text) => handlePlayerChange(text, index)}
                                 />
                             )
-                        }
+                        )}
                     />
-                </Content>
-                {errorMessage && <ErrorText style={{ fontFamily: 'NewRocker_400Regular' }}>{errorMessage}</ErrorText>}
-            </Background>
-        </Container >
-
+                </ScrollView>
+                <ThemeProvider theme={dark}>
+                    <DefaultText style={{ marginBottom: 10 }}>{errorMessage}</DefaultText>
+                </ThemeProvider>
+                <NavigationContainer>
+                    <DefaultButton title="Voltar" onPress={() => returnToPreviousScreen()} />
+                    <DefaultButton title="Confirmar" onPress={() => handleDefinePlayers()} />
+                </NavigationContainer>
+            </ScreenContainer >
+        </BackgroundImage >
     );
 }

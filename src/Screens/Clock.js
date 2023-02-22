@@ -1,8 +1,11 @@
-import { useContext, useState, useEffect } from "react"
-import { GameContext } from "../Context/GameContext"
-import { View, Text, Button } from "react-native";
+import { useState, useEffect } from "react"
+import DefaultButton from "../Components/Buttons/DefaultButton";
+import { BackgroundImage, ScreenContainer, SubTitle } from "../Styles";
+import village from '../../assets/images/votation.png';
+import { dark } from "../Themes/Dark";
+import { ThemeProvider } from "styled-components/native";
 
-export default function Clock({navigation}) {
+export default function Clock({ navigation }) {
     const [seconds, setSeconds] = useState(120);
 
     useEffect(() => {
@@ -18,12 +21,20 @@ export default function Clock({navigation}) {
     }, [seconds]);
 
     return (
-        <View>
-            <Text>Tempo restante: {seconds} segundos</Text>
-            <Button
-                title="Iniciar votação"
-                onPress={() => navigation.navigate('Votes')} />
-        </View>
+        <ThemeProvider theme={dark}>
+            <BackgroundImage source={village}>
+                <ScreenContainer>
+                    <SubTitle>Tempo restante: {seconds} segundos</SubTitle>
+                    <DefaultButton
+                        inverted={true}
+                        title="Iniciar votação"
+                        onPress={() => navigation.navigate('PassToPlayer', {
+                            previousScreen: 'Clock' 
+                        })}
+                    />
+                </ScreenContainer>
+            </BackgroundImage>
+        </ThemeProvider>
     )
 }
 

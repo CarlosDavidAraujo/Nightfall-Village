@@ -1,26 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Image, Text } from 'react-native';
-import villagerImg from '../../Images/villager.png';
-import prayIcon from '../../Images/pray.png';
-import keyHole from '../../Images/keyhole.png';
-import styled from 'styled-components/native';
 import SkillButton from '../../Components/Buttons/SkillButton';
-import PlayersButtonList from '../../Components/Buttons/PlayersButtomList';
+import PlayersButtonList from '../../Components/Buttons/PlayersButtonList';
 import { GameContext } from '../../Context/GameContext';
 import ConditionalMessage from '../../Components/Texts/ConditionalMessage';
-import RoleTitle from '../../Components/Texts/RoleTitle';
-
-
-const Container = styled.View`
-    flex: 1;
-    align-items: center;
-`;
-
-const SkillsContainer = styled.View`
-    align-items: center;
-    height: 35%;
-    justify-content: space-evenly;
-`;
+import { RoleImage, RoleScreenContainer, SkillsContainer, Title } from '../../Styles';
 
 export default function Villager({
   setHandleConfirm,
@@ -39,6 +22,9 @@ export default function Villager({
 
   function handleEspiar() {
     const newDiscoveredWereWolf = villager.espiar(playerList, currentGame);
+    if (!newDiscoveredWereWolf) {
+      return passTurn();
+    }
     setDiscoveredWereWolf(newDiscoveredWereWolf);
     setSkillWasChosen(true);
   }
@@ -57,14 +43,12 @@ export default function Villager({
   useEffect(() => {
     setHandleConfirm(() => handleRezar);
     setPassCondition(!skillWasChosen || discoveredWereWolf);
-    console.log(targetPlayer);
   }, [targetPlayer]);
 
   return (
-    <Container>
-
-      <RoleTitle currentPlayer={currentPlayer}/>
-      <Image source={villagerImg} style={{ width: 250, height: 250 }} />
+    <RoleScreenContainer>
+      <Title>{currentPlayer.getRoleName()}</Title>
+      <RoleImage source={villager.getRoleImg()} />
       <ConditionalMessage
         showChooseSkill={!skillWasChosen}
         showSelectPlayer={showPlayers}
@@ -77,15 +61,19 @@ export default function Villager({
         <SkillsContainer>
           <SkillButton
             onPress={() => handleEspiar()}
-            skillName='Espiar'
-            skillIcon={keyHole}
-            skillDescription='Há uma pequena chance de você descobrir um lobisomem, mas uma pequena chance de você morrer.'
+            skillIcon={villager.getFirstSkillIcon()}
+            skillName={villager.getFirstSkillName()}
+            skillDescription={villager.getFirstSkillDescription()}
+            disabled={currentPlayer.isSkillsBlocked()}
+            skillUsed={currentPlayer.isSkillsBlocked()}
           />
           <SkillButton
             onPress={() => handleShowPlayers()}
-            skillName='Rezar'
-            skillIcon={prayIcon}
-            skillDescription='Escolha outro jogador. Há uma pequena chance dele ser protegido esta noite.'
+            skillIcon={villager.getSecondSkillIcon()}
+            skillName={villager.getSecondSkillName()}
+            skillDescription={villager.getSecondSkillDescription()}
+            disabled={currentPlayer.isSkillsBlocked()}
+            skillUsed={currentPlayer.isSkillsBlocked()}
           />
         </SkillsContainer>
       }
@@ -94,12 +82,12 @@ export default function Villager({
         <PlayersButtonList
           playerList={playerList}
           currentPlayer={currentPlayer}
-          numColumns={3}
           targetPlayer={targetPlayer}
           setTargetPlayer={setTargetPlayer}
+          inverted={true}
         />
       }
-      
-    </Container >
+
+    </RoleScreenContainer >
   );
 }

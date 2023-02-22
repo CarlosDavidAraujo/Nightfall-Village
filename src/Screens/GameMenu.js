@@ -1,29 +1,24 @@
-import React, { useContext } from "react";
-import styled from 'styled-components/native';
-import { ImageBackground, Text } from "react-native";
-import bgImg from '../Images/menuImage.png';
+import { ThemeProvider } from 'styled-components/native';
+import bgImg from '../../assets/images/homeScreen.png';
 import DefaultButton from "../Components/Buttons/DefaultButton";
-import Title from "../Components/Texts/Title";
-
-const Container = styled.View`
-    flex: 1;
-    align-items: center;
-    justify-content: space-around;
-`;
-
+import { ScreenContainer, Title } from '../Styles';
+import { BackgroundImage } from "../Styles";
+import { dark } from '../Themes/Dark';
 
 
 export default function GameMenu({ navigation }) {
     return (
-        <ImageBackground source={bgImg} resizeMode={'cover'} style={{flex: 1}}>
-            <Container>
-                <Title>Nightfall Village</Title>
-                <DefaultButton
-                    onPress={() => navigation.navigate('DefinePlayers')}
-                    title="Iniciar Novo Jogo"
-                    
-                />
-            </Container>
-        </ImageBackground>
+        <BackgroundImage source={bgImg}>
+            <ScreenContainer>
+                <ThemeProvider theme={dark}>
+                    <Title style={{marginTop: -100}}>Nightfall Village</Title>
+                    <DefaultButton
+                        onPress={() => navigation.navigate('DefinePlayers')}
+                        title="Iniciar Novo Jogo"
+                    />
+                </ThemeProvider>
+            </ScreenContainer>
+        </BackgroundImage>
     );
 }
+

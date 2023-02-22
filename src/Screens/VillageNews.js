@@ -1,15 +1,9 @@
 import React, { useContext } from "react";
 import Game from "../Classes/Game";
 import { GameContext } from "../Context/GameContext";
-import { Button, View, Text } from "react-native";
 import DefaultButton from "../Components/Buttons/DefaultButton";
-import styled from "styled-components/native";
-
-const Container = styled.View`
-  flex: 1;
-  justify-content: space-around;
-
-`;
+import { ScreenContainer, SubTitle } from "../Styles";
+import { dark, invertTheme } from "../Themes/Dark";
 
 export default function VillageNews({ route, navigation }) {
   const { currentGame, setCurrentGame } = useContext(
@@ -24,25 +18,34 @@ export default function VillageNews({ route, navigation }) {
     navigation.navigate("GameMenu");
   }
 
-  function handleScreenChange() {
+  function gatherVillagers() {
     currentGame.clearTurnNews();
-    navigation.navigate(previousScreen === "Votes" ? "PassToPlayer" : "Clock");
+    navigation.navigate("Clock", {
+      previousScreen: 'VillageNews'
+    });
+  }
+
+  function nightFall() {
+    currentGame.clearTurnNews();
+    currentGame.decreaseTurnsToBlockPlayers();
+    currentGame.decreaseTurnsWithFakeName();
+    navigation.navigate("PassToPlayer", {
+      previousScreen: 'VillageNews'
+    });
   }
 
   return (
-    <Container>
-      <View>
-        {currentGame.getNews().map((message, i) => (
-          <Text key={i}>{message}</Text>
-        ))}
-      </View>
+    <ScreenContainer style={{ backgroundColor: invertTheme(dark).bg }}>
+      {currentGame.getNews().map((message, i) => (
+        <SubTitle key={i}>{message}</SubTitle>
+      ))}
       {winner ? (
         <DefaultButton onPress={() => handleEndGame()} title="Novo jogo" />
       ) : previousScreen === "PlayerAction" ? (
-        <DefaultButton onPress={() => handleScreenChange()} title="Reunir a vila" />
+        <DefaultButton onPress={() => gatherVillagers()} title="Reunir a vila" />
       ) : previousScreen === "Votes" ? (
-        <DefaultButton onPress={() => handleScreenChange()} title="Adormecer" />
+        <DefaultButton onPress={() => nightFall()} title="Adormecer" />
       ) : null}
-    </Container>
+    </ScreenContainer>
   );
 }

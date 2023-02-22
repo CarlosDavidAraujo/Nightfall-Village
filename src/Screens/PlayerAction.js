@@ -4,17 +4,9 @@ import Seer from "./RoleScreens/Seer";
 import Villager from "./RoleScreens/Villager";
 import Werewolf from "./RoleScreens/Werewolf";
 import { GameContext } from "../Context/GameContext";
-import { View, Text, Button } from "react-native";
-import styled from "styled-components/native";
 import ActionButtons from "../Components/Buttons/ActionButtons";
-
-const Container = styled.View`
-  flex: 1;
-  background-color: #f5deb3;
-  padding: 50px 20px 20px 20px;
-  justify-content: space-between;
-  align-items: center; 
-`;
+import { ScreenContainer } from "../Styles";
+import { dark, invertTheme } from "../Themes/Dark";
 
 export default function PlayerAction({ navigation }) {
   const { currentGame } = useContext(GameContext);
@@ -61,7 +53,7 @@ export default function PlayerAction({ navigation }) {
   };
 
   function passTurn() {
-    currentGame.passToNextPlayer();
+    currentGame.setNextPlayer();
 
     if (currentGame.noNextPlayer()) {
       currentGame.removePlayers();
@@ -77,7 +69,7 @@ export default function PlayerAction({ navigation }) {
   }
 
   return (
-    <Container>
+    <ScreenContainer style={{backgroundColor: invertTheme(dark).bg}}>
       {roleScreens[currentPlayer.getRoleName()]}
       <ActionButtons
         showPass={passCondition}
@@ -87,6 +79,6 @@ export default function PlayerAction({ navigation }) {
         confirmText='Confirmar'
         onConfirm={() => handleConfirm()}
       />
-    </Container>
+    </ScreenContainer>
   );
 }

@@ -1,37 +1,55 @@
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { GameContext } from "../Context/GameContext";
-import { View, Text, Button } from "react-native";
+import { BackgroundImage, ScreenContainer, SubTitle, VoteButtonsContainer } from "../Styles";
+import DefaultButton from "../Components/Buttons/DefaultButton";
+import PlayersButtonList from "../Components/Buttons/PlayersButtonList";
+import votationImg from '../../assets/images/votation.png';
+import { ThemeProvider } from "styled-components/native";
+import { dark } from "../Themes/Dark";
 
-export default function Votes({navigation}) {
-    const { currentGame, playerList } = useContext(GameContext);
-    const [currentPlayer, setCurrentPlayer] = useState(currentGame.getCurrentPlayer());
+export default function Votes({ navigation }) {
+    const { currentGame } = useContext(GameContext);
+    const currentPlayer = currentGame.getCurrentPlayer();
+    const [targetPlayer, setTargetPlayer] = useState();
+    const playerList = currentGame.getPlayers();
 
-    function handleVote(player) {
-        if (player) {
-            player.addVote();
-        }
+    function handleVote() {
+        targetPlayer.addVote();
+        passVotation();
+    }
 
-        currentGame.passToNextPlayer();
-        setCurrentPlayer(currentGame.getCurrentPlayer());
+    function passVotation() {
+        currentGame.setNextPlayer();
 
         if (currentGame.noNextPlayer()) {
             currentGame.removeMostVotedPlayer();
             currentGame.clearPlayersVotes();
-            navigation.navigate("VillageNews", {previousScreen: 'Votes'});
+            return navigation.navigate("VillageNews", { previousScreen: 'Votes' });
         }
+
+        navigation.navigate('PassToPlayer', {
+            previousScreen: 'Votes'
+        });
     }
 
     return (
-        <View>
-            <Text>{currentPlayer.getName()}, escolha seu voto</Text>
-            {playerList.map((player, i) => (
-                <Button
-                    title={player.getName()}
-                    key={i}
-                    onPress={() => handleVote(player)}
+        <BackgroundImage source={votationImg}>
+            <ScreenContainer>
+                <ThemeProvider theme={dark}>
+                <SubTitle style={{ marginTop: 160}}>{currentPlayer.getName()}, escolha seu voto</SubTitle>
+                </ThemeProvider>
+                <PlayersButtonList
+                    playerList={playerList}
+                    currentPlayer={currentPlayer}
+                    targetPlayer={targetPlayer}
+                    setTargetPlayer={setTargetPlayer}
+                    inverted={false}
                 />
-            ))}
-            <Button title="Abster-se" onPress={() => handleVote(null)} />
-        </View>
+                <VoteButtonsContainer>
+                    <DefaultButton title="Abster-se" onPress={() => passVotation()} inverted={true} />
+                    <DefaultButton title="Confirmar" onPress={() => handleVote()} disabled={!targetPlayer} inverted={true}/>
+                </VoteButtonsContainer>
+            </ScreenContainer>
+        </BackgroundImage>
     );
 }

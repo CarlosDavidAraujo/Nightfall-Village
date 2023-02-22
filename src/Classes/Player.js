@@ -4,6 +4,7 @@ export default class Player {
       this.votesCount = 0;
       this.protected = false;
       this.role = null;
+      this.turnsToBlock = 1000; //as habilidades sao bloqueadas se chegar a zero
     }
   
     getName() {
@@ -41,5 +42,18 @@ export default class Player {
     isProtected() {
       return this.protected;
     }
+
+    getTurnsToBlock() {
+      return this.turnsToBlock;
+    }
+
+    setTurnsToBlock(value) {
+      this.turnsToBlock = value;
+    }
+
+    isSkillsBlocked() {
+      return this.turnsToBlock === 0;
+    }
+
   }
   

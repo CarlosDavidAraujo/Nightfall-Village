@@ -1,29 +1,9 @@
-import React, { useEffect, useState, useContext } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { GameContext } from '../../Context/GameContext';
-import { Text } from 'react-native';
-import styled from 'styled-components/native';
-import PlayersButtonList from '../../Components/Buttons/PlayersButtomList';
+import PlayersButtonList from '../../Components/Buttons/PlayersButtonList';
 import SkillButton from '../../Components/Buttons/SkillButton';
 import ConditionalMessage from '../../Components/Texts/ConditionalMessage';
-import RoleTitle from '../../Components/Texts/RoleTitle';
-import prayIcon from '../../Images/pray.png'
-import seerImg from '../../Images/seer.png'
-
-const Container = styled.View`
-    flex: 1;
-    align-items: center;
-`;
-
-const SkillsContainer = styled.View`
-    align-items: center;
-    height: 35%;
-    justify-content: space-evenly;
-`;
-
-const RoleImage = styled.Image`
-  width: 250px;
-  height: 250px;
-`;
+import { RoleScreenContainer, SkillsContainer, RoleImage, Title } from '../../Styles';
 
 export default function Seer({
   setHandleConfirm,
@@ -34,15 +14,25 @@ export default function Seer({
 
   const { currentGame } = useContext(GameContext);
   const playerList = currentGame.getPlayers();
+  const deadPlayers = currentGame.getDeadPlayers();
   const currentPlayer = currentGame.getCurrentPlayer();
   const seer = currentPlayer.getRole();
   const [discoveredPlayer, setDiscoveredPlayer] = useState();
   const [showPlayers, setShowPlayers] = useState(false);
+  const [showDeadPlayers, setShowDeadPlayers] = useState(false);
   const [skillWasChosen, setSkillWasChosen] = useState(false);
+  const [chosenSkill, setChosenSkill] = useState();
 
   function handleRevelar() {
     setDiscoveredPlayer(seer.revelar(targetPlayer));
     setShowPlayers(false);
+    setTargetPlayer(null);
+    setPassCondition(true);
+  }
+
+  function handleVislumbrar() {
+    setDiscoveredPlayer(seer.vislumbrar(targetPlayer));
+    setShowDeadPlayers(false);
     setTargetPlayer(null);
     setPassCondition(true);
   }
@@ -53,18 +43,27 @@ export default function Seer({
     setPassCondition(false);
   }
 
+  function handleShowDeadPlayers() {
+    setSkillWasChosen(true);
+    setShowDeadPlayers(true);
+    setPassCondition(false);
+  }
+
   useEffect(() => {
-    setHandleConfirm(() => handleRevelar);
-  }, [targetPlayer])
+    if (chosenSkill === 1) {
+      return setHandleConfirm(() => handleRevelar);
+    }
+    setHandleConfirm(() => handleVislumbrar);
+  }, [targetPlayer]);
 
   return (
-    <Container>
+    <RoleScreenContainer>
 
-      <RoleTitle currentPlayer={currentPlayer} />
-      <RoleImage source={seerImg} />
+      <Title>{currentPlayer.getRoleName()}</Title>
+      <RoleImage source={seer.getRoleImg()} />
       <ConditionalMessage
         showChooseSkill={!skillWasChosen}
-        showSelectPlayer={showPlayers}
+        showSelectPlayer={showPlayers || showDeadPlayers}
         selectPlayerMessage='Selecione um jogador para ver sua função'
         showAlert={discoveredPlayer}
         alertMessage={discoveredPlayer}
@@ -73,10 +72,24 @@ export default function Seer({
       {!skillWasChosen &&
         <SkillsContainer>
           <SkillButton
-            onPress={() => handleShowPlayers()}
-            skillName='Revelar'
-            skillDescription='Você pode ver a função de outro jogador.'
-            skillIcon={prayIcon}
+            onPress={() => {
+              handleShowPlayers();
+              setChosenSkill(1);
+            } }
+            skillName={seer.getFirstSkillName()}
+            skillDescription={seer.getFirstSkillDescription()}
+            skillIcon={seer.getFirstSkillIcon()}
+            disabled={currentPlayer.isSkillsBlocked()}
+            skillUsed={currentPlayer.isSkillsBlocked()}
+          />
+
+          <SkillButton
+            onPress={() => handleShowDeadPlayers()}
+            skillName={seer.getSecondSkillName()}
+            skillDescription={seer.getSecondSkillDescription()}
+            skillIcon={seer.getSecondSkillIcon()}
+            disabled={currentPlayer.isSkillsBlocked() || deadPlayers.length === 0}
+            skillUsed={currentPlayer.isSkillsBlocked() || deadPlayers.length === 0}
           />
         </SkillsContainer>
       }
@@ -85,12 +98,22 @@ export default function Seer({
         <PlayersButtonList
           playerList={playerList}
           currentPlayer={currentPlayer}
-          numColumns={3}
           targetPlayer={targetPlayer}
           setTargetPlayer={setTargetPlayer}
+          inverted={true}
         />
       }
 
-    </Container>
+      {showDeadPlayers &&
+        <PlayersButtonList
+          playerList={deadPlayers}
+          currentPlayer={currentPlayer}
+          targetPlayer={targetPlayer}
+          setTargetPlayer={setTargetPlayer}
+          inverted={true}
+        />
+      }
+
+    </RoleScreenContainer>
   );
 }

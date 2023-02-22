@@ -1,27 +1,9 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { GameContext } from '../../Context/GameContext';
 import SkillButton from '../../Components/Buttons/SkillButton';
-import PlayersButtonList from '../../Components/Buttons/PlayersButtomList';
+import PlayersButtonList from '../../Components/Buttons/PlayersButtonList';
 import ConditionalMessage from '../../Components/Texts/ConditionalMessage';
-import RoleTitle from '../../Components/Texts/RoleTitle';
-import werewolfImg from '../../Images/werewolf.png';
-import styled from 'styled-components/native';
-
-const Container = styled.View`
-    flex: 1;
-    align-items: center;
-`;
-
-const SkillsContainer = styled.View`
-    align-items: center;
-    height: 35%;
-    justify-content: space-evenly;
-`;
-
-const RoleImage = styled.Image`
-  width: 250;
-  height: 250;
-`;
+import { RoleImage, RoleScreenContainer, SkillsContainer, Title } from '../../Styles';
 
 export default function WereWolf({
   passTurn,
@@ -43,6 +25,11 @@ export default function WereWolf({
     passTurn();
   }
 
+  function handleTransmutar() {
+    werewolf.transmutar();
+    passTurn();
+  }
+
   function handleShowPlayers() {
     setSkillWasChosen(true);
     setShowPlayers(true);
@@ -54,10 +41,10 @@ export default function WereWolf({
   }, [targetPlayer]);
 
   return (
-    <Container>
+    <RoleScreenContainer>
 
-      <RoleTitle currentPlayer={currentPlayer} />
-      <RoleImage source={werewolfImg} />
+      <Title>{currentPlayer.getRoleName()}</Title>
+      <RoleImage source={werewolf.getRoleImg()} />
       <ConditionalMessage
         showChooseSkill={!skillWasChosen}
         showSelectPlayer={showPlayers}
@@ -68,9 +55,20 @@ export default function WereWolf({
         <SkillsContainer>
           <SkillButton
             onPress={() => handleShowPlayers()}
-            skillName='Devorar'
-            skillDescription='Você escolhe um jogador para devorar. Ele é eliminado do jogo'
-            skillIcon={werewolfImg}
+            skillName={werewolf.getFirstSkillName()}
+            skillDescription={werewolf.getFirstSkillDescription()}
+            skillIcon={werewolf.getFirstSkillIcon()}
+            disabled={currentPlayer.isSkillsBlocked()}
+            skillUsed={currentPlayer.isSkillsBlocked()}
+          />
+
+          <SkillButton
+            onPress={() => handleTransmutar()}
+            skillName={werewolf.getSecondSkillName()}
+            skillDescription={werewolf.getSecondSkillDescription()}
+            skillIcon={werewolf.getFirstSkillIcon()}
+            disabled={currentPlayer.isSkillsBlocked()}
+            skillUsed={currentPlayer.isSkillsBlocked()}
           />
         </SkillsContainer>
       }
@@ -79,12 +77,12 @@ export default function WereWolf({
         <PlayersButtonList
           playerList={playerList}
           currentPlayer={currentPlayer}
-          numColumns={3}
           targetPlayer={targetPlayer}
           setTargetPlayer={setTargetPlayer}
+          inverted={true}
         />
       }
 
-    </Container>
+    </RoleScreenContainer>
   );
 }

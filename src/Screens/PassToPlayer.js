@@ -1,48 +1,36 @@
-import React, { useContext, useState, useEffect } from "react";
-import styled from "styled-components/native";
+import { useContext, useState, useEffect } from "react";
+import { ThemeProvider } from "styled-components/native";
 import DefaultButton from "../Components/Buttons/DefaultButton";
 import { GameContext } from "../Context/GameContext";
-import bgImg from '../Images/passTo.png'
-import door from '../Images/door.png';
-import Title from "../Components/Texts/Title";
+import bgImg from '../../assets/images/passTo.png'
+import door from '../../assets/images/door.png';
+import { BackgroundImage, RotatedText, ScreenContainer, Title } from "../Styles";
+import { dark } from "../Themes/Dark";
 
-const Container = styled.View`
-  flex: 1;
-`;
-
-const ImageBackground = styled.ImageBackground`
-  flex: 1;
-  align-items: center;
-  justify-content: space-evenly;
-  width: 100%;
-  object-fit: cover;
-`;
-
-const PassText = styled.Text`
-  position: absolute;
-  top: 34.5%;
-  transform: rotateX(30deg) rotateY(-20deg) rotateZ(-13deg); 
-  color: white;
-  font-size: 30px;
-`;
-
-
-export default function PassToPlayer({ navigation }) {
-  const { currentGame, setScreen } = useContext(GameContext);
+export default function PassToPlayer({ navigation, route }) {
+  const { currentGame  } = useContext(GameContext);
   const [ready, setReady] = useState(false);
   const currentPlayerName = currentGame.getCurrentPlayer().getName();
+  const { previousScreen } = route.params;
+
+  function passVoteToNextPlayer() {
+    navigation.navigate('Votes');
+  }
 
   useEffect(() => {
     setReady(false);
   }, [currentGame.getCurrentPlayer()]);
 
   return (
-
-    <Container>
-      <ImageBackground source={ready ? door : bgImg} resizeMode='cover'>
+    <BackgroundImage source={ready ? door : bgImg}>
+      <ScreenContainer>
         {ready ? (
           <>
-            <Title style={{color: '#f5deb3'}}>{currentPlayerName}</Title>
+            <ThemeProvider theme={dark}>
+              <Title>
+                {currentPlayerName}
+              </Title>
+            </ThemeProvider>
             <DefaultButton
               inverted={true}
               title="Mostrar função"
@@ -52,20 +40,21 @@ export default function PassToPlayer({ navigation }) {
           </>
         ) : (
           <>
-            <PassText style={{
-              fontFamily: 'NewRocker_400Regular', color: '#f5deb3'
-            }}>Passe para {currentPlayerName}</PassText>
-
+            <ThemeProvider theme={dark}>
+              <RotatedText style={{ position: 'absolute', top: '39.5%' }}>
+                Passe para {currentPlayerName}
+              </RotatedText>
+            </ThemeProvider>
             <DefaultButton
-            inverted={true}
+              inverted={true}
               title="Clique quando estiver pronto"
-              onPress={() => setReady(true)}
+              onPress={previousScreen === 'Votes' || previousScreen === 'Clock'? () => passVoteToNextPlayer() : () => setReady(true)}
               style={{ position: 'absolute', bottom: '20%' }}
             />
           </>
         )}
-      </ImageBackground >
-    </Container>
+      </ScreenContainer>
+    </BackgroundImage>
   );
 }
 

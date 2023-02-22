@@ -11,15 +11,19 @@ export default class Game {
     this.players = []; //armazena os jogadores vivos
     this.currentPlayerIndex = 0; //index do jogador atual
     this.playersToRemove = []; //jogadores marcados para remover (se estiverem protegidos, nao serâo)
+    this.deadPlayers = [] //jogadores que ja foram eliminados
     this.roles = []; //armazena os papéis que foram selecionados
     this.news = new News(); //gerenciador mensagens dos eventos do jogo
-    this.roleMap = {
-      //mapa de todos os papéis do jogo
-      Aldeão: Villager,
-      Vidente: Seer,
-      Lobisomem: Werewolf,
-      Caçador: Hunter
-    };
+    this.roleMap = [ //mapa de todos os papéis do jogo
+      new Villager(),
+      new Seer(),
+      new Werewolf(),
+      new Hunter()
+    ];
+  }
+
+  getRoleMap() {
+    return this.roleMap;
   }
 
   getPlayers() {
@@ -46,17 +50,19 @@ export default class Game {
     return this.players[this.currentPlayerIndex];
   }
 
-  passToNextPlayer() {
+  setNextPlayer() {
     //avança para o próximo jogador da lista
     this.currentPlayerIndex++;
   }
 
   noNextPlayer() {
     //verifica se já passou a vez do último jogador da lista <players> voltando para o primeiro jogador
+    let result = false;
     if (this.currentPlayerIndex > this.players.length - 1) {
       this.currentPlayerIndex = 0;
-      return true;
+      result = true;
     }
+    return result;
   }
 
   clearPlayersProtection() {
@@ -71,6 +77,33 @@ export default class Game {
     this.players.forEach((player) => {
       player.clearVotes();
     });
+  }
+
+  decreaseTurnsToBlockPlayers() { //diminui a contagem de turnos que faltam para o cada jogador ter suas habilidades bloqueadas
+    this.players.forEach(player => {
+      const turnsToBlock = player.getTurnsToBlock();
+      if (turnsToBlock === 0) { //se ja estiver zerado volta a contagem para mil, liberando o jogador para usar habilidades
+        player.setTurnsToBlock(1000);
+      } else {                                // se nao diminui a contagem
+        player.setTurnsToBlock(turnsToBlock - 1);
+      }
+    });
+  }
+
+  decreaseTurnsWithFakeName() { //diminui a contagem de turnos que faltam para o cada jogador perder um nome falso do seu papel
+    this.players.forEach(player => {
+      const turnsWithFakeName = player.getRole().getTurnsWithFakeName();
+      if (turnsWithFakeName === 0) { //se estiver zerado volta seta o nome falso com o nome verdareiro
+        const trueName = player.getRoleName();
+        player.getRole().setFakeName(trueName);
+      } else {                                // se nao diminui a contagem
+        player.getRole().setTurnsWithFakeName(turnsWithFakeName - 1);
+      }
+    });
+  }
+
+  getDeadPlayers() {
+    return this.deadPlayers;
   }
 
   //adiciona jogadores a lista negra <playersToRemove>,
@@ -100,13 +133,14 @@ export default class Game {
     this.players = updatedPlayers;
 
     //adiciona as mensagens de eventos
-    this.playersToRemove.forEach((player) => {
+    this.playersToRemove.forEach(player => {
       if (player.isProtected()) {
         //mensagem se alguém foi protegido
         this.news.addNews("Preces protegeram moradores.");
       } else {
         //mensagem dos que morreram
         this.news.addNews(`${player.getName()} morreu esta noite!`);
+        this.deadPlayers.push(player); //adiciona os jogadoes eliminados a lista de deadPlayers
       }
     });
 
@@ -171,17 +205,17 @@ export default class Game {
     let winner = null;
 
     const remainingVillagers = this.players.filter(
-      (player) => player.getRole().getTeam() === "Villagers"
+      (player) => player.getRole().getTeam() === "Aldeões"
     );
     const remainingWerewolves = this.players.filter(
-      (player) => player.getRole().getTeam() === "WereWolfs"
+      (player) => player.getRole().getTeam() === "Lobisomens"
     );
 
     if (remainingVillagers.length === 0) {
-      this.news.setNews("Os lobisomens venceram");
+      this.news.setNews("Os lobisomens venceram!");
       winner = true;
     } else if (remainingWerewolves.length === 0) {
-      this.news.setNews("Os aldeões venceram");
+      this.news.setNews("Os aldeões venceram!");
       winner = true;
     }
 
@@ -199,19 +233,19 @@ export default class Game {
       const { role, count } = selectedRole;
       // itera sobre a quantidade de cada papel único selecionado
       for (let i = 0; i < count; i++) {
-        const newRole = new this.roleMap[role]();
-        this.roles.push(newRole);
+        this.roles.push(role);
       }
     });
 
-    //this.roles = _.shuffle(this.roles); // por fim, embaralha a lista <roles>
+    this.roles = _.shuffle(this.roles); // por fim, embaralha a lista <roles>
   }
 
   assignRoleToPlayer(selectedRoles) {
     this.setRoles(selectedRoles); //seta a lista <roles>
     this.players.forEach((player, i) => {
       //associa cada jogador a um papel
-      player.setRole(this.roles[i]);
+      const roleCopy = _.cloneDeep(this.roles[i]);//cria uma copia da instacia de role do array <roles> para garantir que cada jogador nao esteja manipulando a mesma instancia de role
+      player.setRole(roleCopy);
     });
   }
 }

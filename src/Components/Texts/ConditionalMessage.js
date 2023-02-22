@@ -1,30 +1,24 @@
 import { StyleSheet, Text, View } from "react-native"
+import { SubTitle } from "../../Styles";
 
 export default function ConditionalMessage({ showChooseSkill, showSelectPlayer, selectPlayerMessage, showAlert, alertMessage }) {
     return (
         <View>
             {showChooseSkill &&
-                <Text style={styles.title}>
+                <SubTitle >
                     Selecione uma habilidade
-                </Text>
+                </SubTitle>
             }
             {showSelectPlayer &&
-                <Text style={styles.title}>
+                <SubTitle >
                     {selectPlayerMessage}
-                </Text>
+                </SubTitle>
             }
             {showAlert &&
-                <Text style={styles.title}>
+                <SubTitle >
                     {alertMessage}
-                </Text>
+                </SubTitle>
             }
         </View>
     )
 }
-
-const styles = StyleSheet.create({
-    title: {
-        fontFamily: 'NewRocker_400Regular',
-        fontSize: 30
-    }
-});

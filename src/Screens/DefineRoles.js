@@ -1,60 +1,38 @@
-import React, { useContext, useState } from "react";
-import { View, Button, Text, StyleSheet, FlatList, ImageBackground } from "react-native";
+import { useContext, useState } from "react";
+import { ScrollView } from "react-native";
 import { GameContext } from "../Context/GameContext";
-import bgImg from "../Images/playerSelection.png";
-import villager from "../Images/villager.png";
-import seer from "../Images/seer.png";
-import hunter from "../Images/hunter.png";
-import werewolf from "../Images/werewolf.png";
+import bgImg from "../../assets/images/playersUnited.png";
 import RoleCard from "../Components/Cards/RoleCard";
-import styled from "styled-components/native";
+import { ThemeProvider } from "styled-components/native";
 import DefaultButton from "../Components/Buttons/DefaultButton";
+import { BackgroundImage, DefaultText, NavigationContainer, ScreenContainer, SubTitle } from "../Styles";
+import { dark } from "../Themes/Dark";
+import { SimpleGrid } from "react-native-super-grid";
 
-const Container = styled.View`
-    flex: 1;
-    align-items: center;
-    padding: 40px 10px;
-`;
 
-const Content = styled.View`
-    flex: 1;
-`;
 
-const NavigationButtons = styled.View`
-    flex-direction: row;
-    justify-content: space-between;
-`;
-
-const ErrorText = styled.Text`
-    color: white;
-    font-size: 18px;
-`;
-
-const allRoles = ["Aldeão", "Vidente", "Lobisomem", "Caçador"];
-
-export default function DefineRoles({ route, navigation }) {
-  const { currentGame, setScreen } = useContext(GameContext);
-  const {playerList} = route.params;
+export default function DefineRoles({ navigation }) {
+  const { currentGame } = useContext(GameContext);
   const [errorMessage, setErrorMessage] = useState();
+  const roleMap = currentGame.getRoleMap();
   const [selectedRoles, setSelectedRoles] = useState([
-    { role: "Aldeão", count: 2 },
-    { role: "Vidente", count: 1 },
-    { role: "Lobisomem", count: 1 }
+    { role: roleMap[0], count: 2 },
+    { role: roleMap[1], count: 1 },
+    { role: roleMap[2], count: 1 }
   ]);
-
-  const roleIcons = {
-    Aldeão: villager,
-    Vidente: seer,
-    Lobisomem: werewolf,
-    Caçador: hunter,
-  };
+  const allRolesNotSelected = roleMap.filter(role => {
+    return !selectedRoles.some(selectedRole => selectedRole.role.getName() === role.getName());
+  });
 
   const handleIncreaseRoleCount = (roleIndex) => {
     setSelectedRoles((prevSelectedRoles) => {
       const newSelectedRoles = [...prevSelectedRoles];
+      const { role } = newSelectedRoles[roleIndex];
+      const roleObject = roleMap.find(r => r.getName() === role.getName());
+      const newCount = newSelectedRoles[roleIndex].count + 1;
       newSelectedRoles[roleIndex] = {
-        ...newSelectedRoles[roleIndex],
-        count: newSelectedRoles[roleIndex].count + 1,
+        role: roleObject,
+        count: newCount,
       };
       return newSelectedRoles;
     });
@@ -63,23 +41,26 @@ export default function DefineRoles({ route, navigation }) {
   const handleDecreaseRoleCount = (roleIndex) => {
     setSelectedRoles((prevSelectedRoles) => {
       const newSelectedRoles = [...prevSelectedRoles];
-      if (newSelectedRoles[roleIndex].count > 0) {
+      const { role } = newSelectedRoles[roleIndex];
+      const roleObject = roleMap.find(r => r.getName() === role.getName());
+      const newCount = newSelectedRoles[roleIndex].count - 1;
+      if (newCount >= 0) {
         newSelectedRoles[roleIndex] = {
-          ...newSelectedRoles[roleIndex],
-          count: newSelectedRoles[roleIndex].count - 1,
+          role: roleObject,
+          count: newCount,
         };
       }
-      if (newSelectedRoles[roleIndex].count === 0) {
+      if (newCount === 0) {
         newSelectedRoles.splice(roleIndex, 1);
       }
       return newSelectedRoles;
     });
   };
 
-  const handleAddRole = (roleName) => {
-    const index = selectedRoles.findIndex((r) => r.role === roleName);
+  const handleAddRole = (role) => {
+    const index = selectedRoles.findIndex((element) => element.role.getName() === role.getName());
     if (index === -1) {
-      setSelectedRoles([...selectedRoles, { role: roleName, count: 1 }]);
+      setSelectedRoles([...selectedRoles, { role: role, count: 1 }]);
     }
   };
 
@@ -91,7 +72,7 @@ export default function DefineRoles({ route, navigation }) {
     });
     if (totalRoles !== currentGame.getPlayers().length) {
       return setErrorMessage(
-        "A quantidade de jogadores e papéis devems ser iguais"
+        "A quantidade de jogadores e papéis devem ser iguais"
       );
     }
     currentGame.assignRoleToPlayer(selectedRoles);
@@ -106,54 +87,50 @@ export default function DefineRoles({ route, navigation }) {
   };
 
   return (
-    <ImageBackground source={bgImg} resizeMode='cover' style={{flex: 1}}>
-      <Container>
-        {errorMessage && <ErrorText style={{ fontFamily: 'NewRocker_400Regular' }}>{errorMessage}</ErrorText>}
-        <Text>Funções selecionadas</Text>
-        <Content>
-          <FlatList
-            ItemSeparatorComponent={() => <View style={{ height: 5 }} />}
+    <BackgroundImage source={bgImg}>
+      <ScreenContainer>
+        <ScrollView style={{ width: '100%' }}>
+          <ThemeProvider theme={dark}>
+            <SubTitle>Papéis Adicionados</SubTitle>
+          </ThemeProvider>
+          <SimpleGrid
+            itemDimension={110}
             data={selectedRoles}
-            numColumns={3}
-            keyExtractor={(item) => item}
+            spacing={5}
             renderItem={({ item, index }) =>
               <RoleCard
-                style={{
-                  marginLeft: index % 3 !== 0 ? 5 : 0,
-                }}
-                roleName={item.role}
+                role={item.role}
                 count={item.count}
                 onIncrease={() => handleIncreaseRoleCount(index)}
                 onDecrease={() => handleDecreaseRoleCount(index)}
-                img={roleIcons[item.role]}
                 selected={true}
               />
             }
           />
-          <Text>Todas as funções</Text>
-          <FlatList
-            ItemSeparatorComponent={() => <View style={{ height: 5 }} />}
-            data={(allRoles)}
-            numColumns={3}
-            keyExtractor={(item) => item}
-            renderItem={({ item, index }) =>
+          <ThemeProvider theme={dark}>
+            <SubTitle style={{ marginTop: 50, marginBottom: 10 }}>Adicionar Papéis</SubTitle>
+          </ThemeProvider>
+          <SimpleGrid
+            itemDimension={110}
+            data={allRolesNotSelected}
+            spacing={5}
+            renderItem={({ item }) =>
               <RoleCard
-                style={{
-                  marginLeft: index % 3 !== 0 ? 5 : 0,
-                }}
-                roleName={item}
-                img={roleIcons[item]}
+                role={item}
                 onPress={() => handleAddRole(item)}
               />
             }
           />
-          <NavigationButtons>
-            <DefaultButton title="Voltar" onPress={returnToPreviousScreen} />
-            <DefaultButton title='Confirmar' onPress={() => startGame()} />
-          </NavigationButtons>
-        </Content>
-      </Container>
-    </ImageBackground>
+        </ScrollView>
+        <ThemeProvider theme={dark}>
+          <DefaultText>{errorMessage}</DefaultText>
+        </ThemeProvider>
+        <NavigationContainer>
+          <DefaultButton title="Voltar" onPress={returnToPreviousScreen} />
+          <DefaultButton title='Confirmar' onPress={() => startGame()} />
+        </NavigationContainer>
+      </ScreenContainer>
+    </BackgroundImage>
   );
 }
 

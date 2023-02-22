@@ -1,27 +1,9 @@
 import { useEffect, useState, useContext } from 'react';
 import { GameContext } from '../../Context/GameContext';
 import SkillButton from '../../Components/Buttons/SkillButton';
-import PlayersButtonList from '../../Components/Buttons/PlayersButtomList';
+import PlayersButtonList from '../../Components/Buttons/PlayersButtonList';
 import ConditionalMessage from '../../Components/Texts/ConditionalMessage';
-import RoleTitle from '../../Components/Texts/RoleTitle';
-import hunterImg from '../../Images/hunter.png';
-import styled from 'styled-components/native';
-
-const Container = styled.View`
-    flex: 1;
-    align-items: center;
-`;
-
-const SkillsContainer = styled.View`
-    align-items: center;
-    height: 35%;
-    justify-content: space-evenly;
-`;
-
-const RoleImage = styled.Image`
-  width: 250;
-  height: 250;
-`;
+import { RoleImage, RoleScreenContainer, SkillsContainer, Title } from '../../Styles';
 
 export default function Hunter({
   passTurn,
@@ -37,10 +19,16 @@ export default function Hunter({
   const hunter = currentPlayer.getRole();
   const [showPlayers, setShowPlayers] = useState(false);
   const [skillWasChosen, setSkillWasChosen] = useState(false);
+  const [chosenSkill, setChosenSkill] = useState();
+
 
   function handleAtirar() {
     hunter.atirar(targetPlayer, currentGame);
-    setSkillWasChosen(true);
+    passTurn();
+  }
+
+  function handleCapturar() {
+    hunter.capturar(targetPlayer);
     passTurn();
   }
 
@@ -50,15 +38,18 @@ export default function Hunter({
     setPassCondition(false);
   }
 
-  useEffect(()=>{
-    setHandleConfirm(()=> handleAtirar);
-  },[targetPlayer]);
+  useEffect(() => {
+    if (chosenSkill === 1) {
+      return setHandleConfirm(() => handleAtirar);
+    }
+    setHandleConfirm(() => handleCapturar);
+  }, [targetPlayer]);
 
   return (
-    <Container>
+    <RoleScreenContainer>
 
-      <RoleTitle currentPlayer={currentPlayer} />
-      <RoleImage source={hunterImg} />
+      <Title>{currentPlayer.getRoleName()}</Title>
+      <RoleImage source={hunter.getRoleImg()} />
       <ConditionalMessage
         showChooseSkill={!skillWasChosen}
         showSelectPlayer={showPlayers}
@@ -68,10 +59,26 @@ export default function Hunter({
       {!skillWasChosen &&
         <SkillsContainer>
           <SkillButton
-            onPress={() => handleShowPlayers()}
-            skillName='Atirar'
-            skillDescription='Você escolhe um jogador. Ele é eliminado do jogo'
-            skillIcon={hunterImg}
+            onPress={() => {
+              setChosenSkill(1);
+              handleShowPlayers();
+            }}
+            skillName={hunter.getFirstSkillName()}
+            skillDescription={hunter.getFirstSkillDescription()}
+            skillIcon={hunter.getFirstSkillIcon()}
+            disabled={hunter.getFirstSkillLocked() || currentPlayer.isSkillsBlocked()}
+            skillUsed={hunter.getFirstSkillLocked()}
+          />
+          <SkillButton
+            onPress={() => {
+              setChosenSkill(2);
+              handleShowPlayers();
+            }}
+            skillName={hunter.getSecondSkillName()}
+            skillDescription={hunter.getSecondSkillDescription()}
+            skillIcon={hunter.getSecondSkillIcon()}
+            disabled={hunter.getFirstSkillLocked() || currentPlayer.isSkillsBlocked()}
+            skillUsed={hunter.getFirstSkillLocked() || currentPlayer.isSkillsBlocked()}
           />
         </SkillsContainer>
       }
@@ -80,12 +87,12 @@ export default function Hunter({
         <PlayersButtonList
           playerList={playerList}
           currentPlayer={currentPlayer}
-          numColumns={3}
           targetPlayer={targetPlayer}
           setTargetPlayer={setTargetPlayer}
+          inverted={true}
         />
       }
 
-    </Container>
+    </RoleScreenContainer>
   );
 }

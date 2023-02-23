@@ -96,12 +96,15 @@ export const FlexStartContainer = styled.View`
 
 export const SkillsContainer = styled.View`
     align-items: center;
-    height: 35%;
-    justify-content: space-evenly;
 `;
 
 export const RoleImage = styled.Image`
-    width: 250px;
-    height: 250px;
+  height: 100%;
+  width: 100%;
+`;
+
+export const RoleImageContainer = styled.View`
+    width: 50%;
+    aspect-ratio: 1;
 `;
 

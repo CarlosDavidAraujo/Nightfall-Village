@@ -3,7 +3,7 @@ import { GameContext } from '../../Context/GameContext';
 import SkillButton from '../../Components/Buttons/SkillButton';
 import PlayersButtonList from '../../Components/Buttons/PlayersButtonList';
 import ConditionalMessage from '../../Components/Texts/ConditionalMessage';
-import { FlexStartContainer, RoleImage, SkillsContainer, Title } from '../../Styles';
+import { FlexStartContainer, RoleImage, RoleImageContainer, SkillsContainer, Title } from '../../Styles';
 
 export default function WereWolf({
   passTurn,
@@ -45,7 +45,9 @@ export default function WereWolf({
     <FlexStartContainer>
 
       <Title>{currentPlayer.getRoleName()}</Title>
-      <RoleImage source={werewolf.getRoleImg()} />
+      <RoleImageContainer>
+        <RoleImage source={werewolf.getRoleImg()} />
+      </RoleImageContainer>
       <ConditionalMessage
         showChooseSkill={!skillWasChosen}
         showSelectPlayer={showPlayers}

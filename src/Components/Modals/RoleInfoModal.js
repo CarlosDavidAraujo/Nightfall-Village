@@ -1,6 +1,6 @@
 import { View } from "react-native";
 import Modal from "react-native-modal";
-import { RoleImage, SkillsContainer, Title, SubTitle, DefaultText, FlexStartContainer } from "../../Styles";
+import { RoleImage, SkillsContainer, Title, SubTitle, DefaultText, FlexStartContainer, RoleImageContainer } from "../../Styles";
 import { dark, invertTheme } from "../../Themes/Dark";
 import CloseButton from "../Buttons/CloseButton";
 import SkillButton from "../Buttons/SkillButton";
@@ -14,7 +14,9 @@ export default function RoleInfoModal({ isVisible, onClose, role }) {
                 <FlexStartContainer>
                     <CloseButton onPress={onClose} />
                     <Title>{role.getName()}</Title>
-                    <RoleImage source={role.getRoleImg()} />
+                    <RoleImageContainer>
+                        <RoleImage source={role.getRoleImg()} />
+                    </RoleImageContainer>
                     <DefaultText>{`Você faz parte do time dos "${role.getTeam()}". Seu objetivo é ${role.getObjective()}.`}</DefaultText>
                     <SubTitle style={{ marginTop: '5%' }}>Habilidades</SubTitle>
                     <SkillsContainer>

@@ -29,6 +29,7 @@ export default function ButtonWithShadow({ onPress, children, style, inverted, d
 const Container = styled.Pressable`
   position: relative;
   flex-direction: row;
+  margin-top: 4%;
   opacity: ${props => props.skillUsed? 0.6 : 1};
   transform: ${({ isPressed, inverted }) => isPressed || !inverted ? 'translate(5px, 5px)' : 'translate(0, 0)'};
 `;

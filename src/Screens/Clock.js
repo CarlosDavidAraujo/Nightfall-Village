@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import DefaultButton from "../Components/Buttons/DefaultButton";
 import { BackgroundImage, SpaceAroundContainer, SubTitle } from "../Styles";
-import village from '../../assets/images/votation.png';
+import village from '../../assets/images/votation2.png';
 import { dark } from "../Themes/Dark";
 import { ThemeProvider } from "styled-components/native";
 

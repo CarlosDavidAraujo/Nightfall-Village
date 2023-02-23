@@ -158,7 +158,8 @@ export default class Game {
     const mostVotedPlayer = this.mostVotedPlayers[0];
     const alivePlayers = this.players.filter(player => player.getName() !== mostVotedPlayer.getName());
     this.players = alivePlayers;
-    this.news.addNews(`${this.mostVotedPlayers[0].getName()} foi morto pela aldeia. Deve ficar calado até o fim do jogo.`);
+    this.deadPlayers.push(mostVotedPlayer);
+    this.news.addNews(`${mostVotedPlayer.getName()} foi morto pela aldeia. Deve ficar calado até o fim do jogo.`);
     this.mostVotedPlayers = []; //ao final reseta a lista de mais votados
   }
 

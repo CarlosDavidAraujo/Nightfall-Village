@@ -16,13 +16,14 @@ export default function SkillButton({ onPress, skillName, skillDescription, skil
 
 const IconContainer = styled.View`
     align-items: center; 
-    margin-right: 2%;
-    width: 100px;
+    margin-right: 4%;
+    width: 27%;
+    aspect-ratio: 1;
 `;
 
 const Image = styled.Image`
-    height: 70;
-    width: 70;
+    height: 80%;
+    width: 80%;
 `;
 
 

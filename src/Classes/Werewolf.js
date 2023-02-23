@@ -14,7 +14,7 @@ export default class WereWolf extends Role {
       'Você e outros lobisomens votam em um jogador para elimina-lo do jogo. Em caso de empate, a vítima é aleatória.', //descricao hab 1
       firstSkillIcon, //icone hab 1
       'Transmutar', //nome hab 2
-      'Os outros jogadores te verão como aldeão neste turno e no seguinte. Devorar é bloqueada enquanto estiver transmutado', //descricao hab 2
+      'Os outros te verão como aldeão neste e no próximo turno. Bloqueia devorar enquanto transmutado.', //descricao hab 2
       secondtSkillIcon //icone hab 2
     );
   }

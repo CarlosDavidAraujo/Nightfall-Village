@@ -3,7 +3,7 @@ import { GameContext } from "../Context/GameContext";
 import { BackgroundImage, SpaceAroundContainer, SubTitle, VoteButtonsContainer } from "../Styles";
 import DefaultButton from "../Components/Buttons/DefaultButton";
 import PlayersButtonList from "../Components/Buttons/PlayersButtonList";
-import votationImg from '../../assets/images/votation.png';
+import votationImg from '../../assets/images/votation2.png';
 import { ThemeProvider } from "styled-components/native";
 import { dark } from "../Themes/Dark";
 

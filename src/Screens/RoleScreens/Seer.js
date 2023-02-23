@@ -3,7 +3,7 @@ import { GameContext } from '../../Context/GameContext';
 import PlayersButtonList from '../../Components/Buttons/PlayersButtonList';
 import SkillButton from '../../Components/Buttons/SkillButton';
 import ConditionalMessage from '../../Components/Texts/ConditionalMessage';
-import { SkillsContainer, RoleImage, Title, FlexStartContainer } from '../../Styles';
+import { SkillsContainer, RoleImage, Title, FlexStartContainer, RoleImageContainer } from '../../Styles';
 
 export default function Seer({
   setHandleConfirm,
@@ -60,7 +60,9 @@ export default function Seer({
     <FlexStartContainer>
 
       <Title>{currentPlayer.getRoleName()}</Title>
-      <RoleImage source={seer.getRoleImg()} />
+      <RoleImageContainer>
+        <RoleImage source={seer.getRoleImg()} />
+      </RoleImageContainer>
       <ConditionalMessage
         showChooseSkill={!skillWasChosen}
         showSelectPlayer={showPlayers || showDeadPlayers}
@@ -75,7 +77,7 @@ export default function Seer({
             onPress={() => {
               handleShowPlayers();
               setChosenSkill(1);
-            } }
+            }}
             skillName={seer.getFirstSkillName()}
             skillDescription={seer.getFirstSkillDescription()}
             skillIcon={seer.getFirstSkillIcon()}

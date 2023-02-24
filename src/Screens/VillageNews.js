@@ -26,9 +26,7 @@ export default function VillageNews({ route, navigation }) {
   }
 
   function nightFall() {
-    currentGame.clearTurnNews();
-    currentGame.decreaseTurnsToBlockPlayers();
-    currentGame.decreaseTurnsWithFakeName();
+    currentGame.endTurn();
     navigation.navigate("PassToPlayer", {
       previousScreen: 'VillageNews'
     });
@@ -36,7 +34,7 @@ export default function VillageNews({ route, navigation }) {
 
   return (
     <SpaceAroundContainer style={{ backgroundColor: invertTheme(dark).bg }}>
-      {currentGame.getNews().map((message, i) => (
+      {currentGame.getTurnNews().map((message, i) => (
         <SubTitle key={i}>{message}</SubTitle>
       ))}
       {winner ? (

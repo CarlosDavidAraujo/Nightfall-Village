@@ -1,8 +1,11 @@
 export default class Role {
   constructor(name, team, roleImg, objective, firstSkillName, firstSkillDescription, firstSkillIcon, secondSkillName, secondSkillDescription, secondSkillIcon) {
+    this.player = null;
     this.name = name;
-    this.fakeName = this.name;
-    this.turnsWithFakeName = 0;
+    this.fakeName = {
+      name: this.name,
+      duration: 1000
+    };
     this.team = team;
     this.roleImg = roleImg;
     this.objective = objective;
@@ -14,24 +17,42 @@ export default class Role {
     this.secondSkillIcon = secondSkillIcon;
   }
 
+  getPlayer() {
+    return this.player;
+  }
+
+  setPlayer(player) {
+    this.player = player;
+  }
+
   getName() {
     return this.name;
   }
 
+  //retorna uma nome falso para a role
   getFakeName() {
-    return this.fakeName;
+    return this.fakeName.name;
   }
 
-  setFakeName(value) {
-    this.fakeName = value;
+  //atribui um nome falso à role e por quanto tempo durará
+  setFakeName(value, duration) {
+    this.fakeName.name = value;
+    this.fakeName.duration = duration;
   }
 
-  getTurnsWithFakeName() {
-    return this.turnsWithFakeName;
+  //verifica se está com um nome falso
+  hasFakeName() {
+    return this.fakeName.name !== this.name;
   }
 
-  setTurnsWithFakeName(value) {
-    this.turnsWithFakeName = value;
+  //auto explicativo hehe
+  decreaseFakeNameDuration() {
+    if (this.fakeName.duration <= 0) { //quando a duraçao acabar devolve o nome original
+      this.fakeName.name = this.name;
+      this.fakeName.duration = 1000;
+    }
+
+    this.fakeName.duration--;
   }
 
   getTeam() {

@@ -81,8 +81,8 @@ export default function Seer({
             skillName={seer.getFirstSkillName()}
             skillDescription={seer.getFirstSkillDescription()}
             skillIcon={seer.getFirstSkillIcon()}
-            disabled={currentPlayer.isFirstSkillBlocked()}
-            skillUsed={currentPlayer.isFirstSkillBlocked()}
+            disabled={currentPlayer.isSkillBlocked(1)}
+            skillUsed={currentPlayer.isSkillBlocked(1)}
           />
 
           <SkillButton
@@ -90,8 +90,8 @@ export default function Seer({
             skillName={seer.getSecondSkillName()}
             skillDescription={seer.getSecondSkillDescription()}
             skillIcon={seer.getSecondSkillIcon()}
-            disabled={currentPlayer.isSecondSkillBlocked() || currentGame.getDeadPlayers().length === 0}
-            skillUsed={currentPlayer.isSecondSkillBlocked() || currentGame.getDeadPlayers().length === 0}
+            disabled={currentPlayer.isSkillBlocked(2) || currentGame.getDeadPlayers().length === 0}
+            skillUsed={currentPlayer.isSkillBlocked(2) || currentGame.getDeadPlayers().length === 0}
           />
         </SkillsContainer>
       }

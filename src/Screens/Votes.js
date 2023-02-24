@@ -36,20 +36,29 @@ export default function Votes({ navigation }) {
         <BackgroundImage source={votationImg}>
             <SpaceAroundContainer>
                 <ThemeProvider theme={dark}>
-                <SubTitle style={{ marginTop: 160}}>{currentPlayer.getName()}, escolha seu voto</SubTitle>
+                    {currentPlayer.isVoteBlocked() ? (
+                        <>
+                            <SubTitle style={{ marginTop: 160 }}>Seus votos estão bloqueados neste turno</SubTitle>
+                            <DefaultButton title="Passar a vez" onPress={() => passVotation()} inverted={true} />
+                        </>
+                    ) : (
+                        <>
+                            <SubTitle style={{ marginTop: 160 }}>{currentPlayer.getName()}, escolha seu voto</SubTitle>
+                            <PlayersButtonList
+                                playerList={playerList}
+                                currentPlayer={currentPlayer}
+                                targetPlayer={targetPlayer}
+                                setTargetPlayer={setTargetPlayer}
+                                inverted={false}
+                            />
+                            <VoteButtonsContainer>
+                                <DefaultButton title="Abster-se" onPress={() => passVotation()} inverted={true} />
+                                <DefaultButton title="Confirmar" onPress={() => handleVote()} disabled={!targetPlayer} inverted={true} />
+                            </VoteButtonsContainer>
+                        </>
+                    )}
                 </ThemeProvider>
-                <PlayersButtonList
-                    playerList={playerList}
-                    currentPlayer={currentPlayer}
-                    targetPlayer={targetPlayer}
-                    setTargetPlayer={setTargetPlayer}
-                    inverted={false}
-                />
-                <VoteButtonsContainer>
-                    <DefaultButton title="Abster-se" onPress={() => passVotation()} inverted={true} />
-                    <DefaultButton title="Confirmar" onPress={() => handleVote()} disabled={!targetPlayer} inverted={true}/>
-                </VoteButtonsContainer>
             </SpaceAroundContainer>
-        </BackgroundImage>
+        </BackgroundImage >
     );
 }

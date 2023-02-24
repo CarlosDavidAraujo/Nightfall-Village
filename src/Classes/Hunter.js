@@ -19,13 +19,14 @@ export default class Hunter extends Role {
     );
   }
 
-  atirar(otherPlayer, currentPlayer) {
+  atirar(otherPlayer) {
       otherPlayer.setMarkedForDeath(true);
-      currentPlayer.setPermaBlockedSkill(1); //bloqueia atirar ate o final do jogo
+      this.player.blockSkill(1, 1000); //bloqueia atirar ate o final do jogo
   }
 
-  capturar(otherPlayer, currentPlayer) {
-    otherPlayer.setBlockedSkill(3, 1); //o jogador tera as habilidades bloqueadas no proximo turno
-    currentPlayer.setBlockedSkill(2 ,1);// o caçador fica um turno sem poder usar capturar novamente
+  capturar(otherPlayer) {
+    otherPlayer.blockSkill(1, 1);
+    otherPlayer.blockSkill(2, 1); //bloqueia as duas habilidades do alvo por 1 turno
+    this.player.blockSkill(2, 1); //bloqueia a propria habilidade por 1 turno
   }
 }

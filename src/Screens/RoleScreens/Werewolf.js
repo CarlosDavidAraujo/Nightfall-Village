@@ -27,7 +27,7 @@ export default function WereWolf({
   }
 
   function handleTransmutar() {
-    werewolf.transmutar(currentPlayer);
+    werewolf.transmutar();
     passTurn();
   }
 
@@ -61,8 +61,8 @@ export default function WereWolf({
             skillName={werewolf.getFirstSkillName()}
             skillDescription={werewolf.getFirstSkillDescription()}
             skillIcon={werewolf.getFirstSkillIcon()}
-            disabled={currentPlayer.isFirstSkillBlocked()}
-            skillUsed={currentPlayer.isFirstSkillBlocked()}
+            disabled={currentPlayer.isSkillBlocked(1)}
+            skillUsed={currentPlayer.isSkillBlocked(1)}
           />
 
           <SkillButton
@@ -70,8 +70,8 @@ export default function WereWolf({
             skillName={werewolf.getSecondSkillName()}
             skillDescription={werewolf.getSecondSkillDescription()}
             skillIcon={werewolf.getSecondSkillIcon()}
-            disabled={currentPlayer.isSecondSkillBlocked()}
-            skillUsed={currentPlayer.isSecondSkillBlocked()}
+            disabled={currentPlayer.isSkillBlocked(2)}
+            skillUsed={currentPlayer.isSkillBlocked(2)}
           />
         </SkillsContainer>
       }

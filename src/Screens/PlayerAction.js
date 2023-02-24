@@ -7,6 +7,7 @@ import { GameContext } from "../Context/GameContext";
 import ActionButtons from "../Components/Buttons/ActionButtons";
 import { SpaceAroundContainer } from "../Styles";
 import { dark, invertTheme } from "../Themes/Dark";
+import Crusader from "./RoleScreens/Crusader";
 
 export default function PlayerAction({ navigation }) {
   const { currentGame } = useContext(GameContext);
@@ -43,11 +44,20 @@ export default function PlayerAction({ navigation }) {
     ),
     Caçador: (
       <Hunter
-      passTurn={passTurn}
-      setHandleConfirm={setHandleConfirm}
-      setPassCondition={setPassCondition}
-      targetPlayer={targetPlayer}
-      setTargetPlayer={setTargetPlayer}
+        passTurn={passTurn}
+        setHandleConfirm={setHandleConfirm}
+        setPassCondition={setPassCondition}
+        targetPlayer={targetPlayer}
+        setTargetPlayer={setTargetPlayer}
+      />
+    ),
+    Cruzado: (
+      <Crusader
+        passTurn={passTurn}
+        setHandleConfirm={setHandleConfirm}
+        setPassCondition={setPassCondition}
+        targetPlayer={targetPlayer}
+        setTargetPlayer={setTargetPlayer}
       />
     )
   };
@@ -72,7 +82,7 @@ export default function PlayerAction({ navigation }) {
   }
 
   return (
-    <SpaceAroundContainer style={{backgroundColor: invertTheme(dark).bg}}>
+    <SpaceAroundContainer style={{ backgroundColor: invertTheme(dark).bg }}>
       {roleScreens[currentPlayer.getRoleName()]}
       <ActionButtons
         showPass={passCondition}

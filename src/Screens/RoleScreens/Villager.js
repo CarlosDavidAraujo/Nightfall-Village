@@ -68,16 +68,16 @@ export default function Villager({
             skillIcon={villager.getFirstSkillIcon()}
             skillName={villager.getFirstSkillName()}
             skillDescription={villager.getFirstSkillDescription()}
-            disabled={currentPlayer.isFirstSkillBlocked()}
-            skillUsed={currentPlayer.isFirstSkillBlocked()}
+            disabled={currentPlayer.isSkillBlocked(1)}
+            skillUsed={currentPlayer.isSkillBlocked(1)}
           />
           <SkillButton
             onPress={() => handleShowPlayers()}
             skillIcon={villager.getSecondSkillIcon()}
             skillName={villager.getSecondSkillName()}
             skillDescription={villager.getSecondSkillDescription()}
-            disabled={currentPlayer.isSecondSkillBlocked()}
-            skillUsed={currentPlayer.isSecondSkillBlocked()}
+            disabled={currentPlayer.isSkillBlocked(2)}
+            skillUsed={currentPlayer.isSkillBlocked(2)}
           />
         </SkillsContainer>
       }

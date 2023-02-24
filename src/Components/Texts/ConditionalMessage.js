@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native"
+import { View } from "react-native"
 import { SubTitle } from "../../Styles";
 
 export default function ConditionalMessage({ showChooseSkill, showSelectPlayer, selectPlayerMessage, showAlert, alertMessage }) {

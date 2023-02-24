@@ -23,13 +23,13 @@ export default function Hunter({
 
 
   function handleAtirar() {
-    hunter.atirar(targetPlayer, currentPlayer);
+    hunter.atirar(targetPlayer);
     setTargetPlayer(null);
     passTurn();
   }
 
   function handleCapturar() {
-    hunter.capturar(targetPlayer, currentPlayer);
+    hunter.capturar(targetPlayer);
     setTargetPlayer(null);
     passTurn();
   }
@@ -70,8 +70,8 @@ export default function Hunter({
             skillName={hunter.getFirstSkillName()}
             skillDescription={hunter.getFirstSkillDescription()}
             skillIcon={hunter.getFirstSkillIcon()}
-            disabled={currentPlayer.isFirstSkillBlocked()}
-            skillUsed={currentPlayer.isFirstSkillBlocked()}
+            disabled={currentPlayer.isSkillBlocked(1)}
+            skillUsed={currentPlayer.isSkillBlocked(1)}
           />
           <SkillButton
             onPress={() => {
@@ -81,8 +81,8 @@ export default function Hunter({
             skillName={hunter.getSecondSkillName()}
             skillDescription={hunter.getSecondSkillDescription()}
             skillIcon={hunter.getSecondSkillIcon()}
-            disabled={currentPlayer.isSecondSkillBlocked()}
-            skillUsed={currentPlayer.isSecondSkillBlocked()}
+            disabled={currentPlayer.isSkillBlocked(2)}
+            skillUsed={currentPlayer.isSkillBlocked(2)}
           />
         </SkillsContainer>
       }

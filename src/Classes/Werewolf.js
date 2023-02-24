@@ -23,9 +23,8 @@ export default class WereWolf extends Role {
     otherPlayer.addVote();
   };
 
-  transmutar(currentPlayer) {
-    this.fakeName = 'Aldeão';
-    this.turnsWithFakeName = 1;
-    currentPlayer.setBlockedSkill(1, 1); //bloqueia devorar por 1 turno
+  transmutar() {
+    this.setFakeName('Aldeão', 1); //muda de nome por 1 turno
+    this.player.blockSkill(1, 1); //bloqueia devorar por 1 turno
   }
 }

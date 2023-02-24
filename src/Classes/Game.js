@@ -1,4 +1,5 @@
 import _ from "lodash";
+import Crusader from "./Crusader";
 import Hunter from "./Hunter";
 import News from "./News";
 import Player from "./Player";
@@ -18,7 +19,8 @@ export default class Game {
       new Villager(),
       new Seer(),
       new Werewolf(),
-      new Hunter()
+      new Hunter(),
+      new Crusader()
     ];
   }
 
@@ -40,18 +42,18 @@ export default class Game {
     });
   }
 
+  //limpa o array de <players>
   clearPlayers() {
-    //limpa o array de <players>
     this.players = [];
   }
 
+  //retorna o jogador atual da vez
   getCurrentPlayer() {
-    //retorna o jogador atual da vez
     return this.players[this.currentPlayerIndex];
   }
 
+  //avança para o próximo jogador da lista
   setNextPlayer() {
-    //avança para o próximo jogador da lista
     this.currentPlayerIndex++;
   }
 
@@ -86,25 +88,33 @@ export default class Game {
     });
   }
 
-  decreaseTurnsToBlockPlayers() { //diminui a contagem de turnos que faltam para o cada jogador ter suas habilidades bloqueadas
+  //gerencia o bloqueio de habilidades dos jogadores
+  manageBlockedSkills() {
     this.players.forEach(player => {
-      const turnsToBlock = player.getTurnsToBlock();
-      if (turnsToBlock === 0) { //se ja estiver zerado libera o jogador para usar habilidades
-        player.setBlockedSkill(0, 1000);
-      } else {                                // se nao diminui a contagem
-        player.setTurnsToBlock(turnsToBlock - 1);
+      if (player.wasBlockedThisTurn()) {
+        player.decreaseSkillBlockDuration();
+      }
+      else if (player.thereAreSkillsToBlock()) {
+        player.setBlockedNextTurn(true);
       }
     });
   }
 
-  decreaseTurnsWithFakeName() { //diminui a contagem de turnos que faltam para o cada jogador perder um nome falso do seu papel
+  //gerencia o bloqueio de votos
+  manageBlockedVotes() {
     this.players.forEach(player => {
-      const turnsWithFakeName = player.getRole().getTurnsWithFakeName();
-      if (turnsWithFakeName === 0) { //se estiver zerado volta seta o nome falso com o nome verdareiro
-        const trueName = player.getRoleName();
-        player.getRole().setFakeName(trueName);
-      } else {                                // se nao diminui a contagem
-        player.getRole().setTurnsWithFakeName(turnsWithFakeName - 1);
+      if (player.isVoteBlocked()) {
+        player.decreaseBlockedVoteDuration();
+      }
+    });
+  }
+
+  //gerencia os nomes falsos das roles dos jogadores
+  manageFakeNames() {
+    this.players.forEach(player => {
+      const role = player.getRole();
+      if (role.hasFakeName()) {
+        role.decreaseFakeNameDuration();
       }
     });
   }
@@ -115,23 +125,28 @@ export default class Game {
 
   //remove jogadores da partida
   removePlayers() {
-    const alivePlayers = this.players.filter(player => !player.isMarkedForDeath() || player.isProtected());
-    if (alivePlayers.length === this.players.length) { //se o tamanho se manteve o mesmo quer dizer que nao houveram mortes
-      return this.news.setNews("Noite de paz na vila.");
-    }
-
+    //verificacoes para remover o jogadores
     this.players.forEach(player => {
-      if (player.isMarkedForDeath() && player.isProtected()) { //se estava marcado para morrer, foi protegido adiciona noticia de que alguem foi salvo
-        this.news.addNews('Preces protegeram morador(es).');
+      if (player.isMarkedForDeath() && player.isProtected()) { //se estava marcado para morrer mas foi protegido adiciona noticia de que alguem foi salvo
+        this.news.addNews('Moradores foram protegidos esta noite.');
+        const protector = player.getProtector(); //se foi protegido por um cruzado
+        if (protector) {
+          this.deadPlayers.push(protector); //sacrifica o cruzado
+          this.news.addNews(`${protector.getName()} morreu esta noite. Deve ficar calado até o fim do jogo.`);
+        }
       }
       else if (player.isMarkedForDeath()) { //se estava marcado sem protecao, adiciona a noticia da eliminacao
         this.news.addNews(`${player.getName()} morreu esta noite. Deve ficar calado até o fim do jogo.`);
-        this.deadPlayers.push(player); //adiciona a lista de jogadores mortos
+        this.deadPlayers.push(player); //adiciona o jogador morto a lista de jogadores mortos
       }
     });
 
     //atualiza a lista de <players> com os que ficaram vivos
-    this.players = alivePlayers;
+    const alivePlayers = this.players.filter(player => !this.deadPlayers.includes(player));
+    if (this.players.length === alivePlayers.length) { //verifica se a lista players atual tem o mesmo tamnho de alive players, isso significa que ninguem morreu
+      this.news.addNews('Noite de paz na vila.'); //entao atribui a noiticia de paz
+    }
+    this.players = alivePlayers; //finalmente atualiza a lista de players
   }
 
   setMostVotedPlayers() {
@@ -187,6 +202,10 @@ export default class Game {
   }
 
   getNews() {
+    return this.news;
+  }
+
+  getTurnNews() {
     //retorna todas as notícias disponíveis
     return this.news.getNews();
   }
@@ -218,6 +237,13 @@ export default class Game {
     return winner;
   }
 
+  endTurn() {
+    this.clearTurnNews();
+    this.manageBlockedSkills();
+    this.manageBlockedVotes();
+    this.manageFakeNames();
+  }
+
   //adiciona os papéis selecionados à lista de <roles> com suas respectivas quantidades
   //esta é uma função auxiliar da função logo abaixo
   setRoles(selectedRoles) {
@@ -241,7 +267,8 @@ export default class Game {
     this.players.forEach((player, i) => {
       //associa cada jogador a um papel
       const roleCopy = _.cloneDeep(this.roles[i]);//cria uma copia da instacia de role do array <roles> para garantir que cada jogador nao esteja manipulando a mesma instancia de role
-      player.setRole(roleCopy);
+      player.setRole(roleCopy);//associa o jogador a role
+      roleCopy.setPlayer(player); //associa a role ao jogador
     });
   }
 }

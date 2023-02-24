@@ -2,27 +2,32 @@ export default class Player {
   constructor(name) {
     this.name = name; // guarda o nome do jogador
     this.votesCount = 0; // guarda o número de votos que o jogador recebeu
-    this.protected = false; // guarda se o jogador está protegido
-    this.markedForDeath = false;
+    this.blockedVoteDuration = 0; //guarda por quantos turnos o jogador nao pode votar
+    this.protected = false; // condiçao de proteçao do jogador
+    this.protector = null; // recebe um outro player que protegeu este jogador// so é usado em classes que se scrificam, como o cruzado
+    this.markedForDeath = false; //condigçao de morte do jogador
     this.role = null; // guarda a role do jogador
-    this.blockedSkill = 0 // guarda qual habilidade está bloqueada: 0 para nenhuma/ 1 para a primeira/ 2 para a segunda/ 3 para ambas
-    this.permaBlockedSkill = 0 // guarda qual habilidade está permanentemente bloqueada: 0 para nenhuma/ 1 para a primeira/ 2 para a segunda/ 3 para ambas
-    this.turnsToBlock = 1000; // as habilidades são bloqueadas se chegar a zero
+    this.blockedNextTurn = false;
+    this.blockedSkills = { //armazena qual habilidade esta bloqueada e por quantos turnos
+      skill1: 0,
+      skill2: 0,
+    }
   }
 
-  getName() { // retorna o nome do jogador
+  getName() { 
     return this.name;
   }
 
-  setRole(role) { // atribui a role do jogador
+  setRole(role) { 
     this.role = role;
   }
 
-  getRole() { // retorna a role do jogador
+  getRole() {
     return this.role;
   }
 
-  getRoleName() { // retorna o nome da role do jogador
+  // retorna o nome da role do jogador
+  getRoleName() { 
     return this.role.getName();
   }
 
@@ -38,12 +43,41 @@ export default class Player {
     this.votesCount = 0;
   }
 
+  blockVote(duration) { //bloqueia os votos pela quantidade de turnos determinada
+    this.blockedVoteDuration = duration;
+  }
+
+  decreaseBlockedVoteDuration() {
+    this.blockedVoteDuration--;
+  }
+
+  isVoteBlocked() {
+    return this.blockedVoteDuration > 0;
+  }
+
   setProtected(protectedState) { // define se o jogador está protegido ou não
     this.protected = protectedState;
   }
 
   isProtected() { // retorna se o jogador está protegido ou não
     return this.protected;
+  }
+
+  //retorna o protetor do jogador, por enquanto somente o cruzado pode ser um protetor
+  getProtector() {
+    return this.protector;
+  }
+
+  //atribui o protetor
+  setProtector(player) {
+    this.protector = player;
+  }
+
+  //Metodo para sacrificar o cruzado
+  //sacrifica o jogador removendo protecao e marcando para morte
+  sacrifice() {
+    this.protected = false;
+    this.markedForDeath = true;
   }
 
   isMarkedForDeath() { //retorna se esta marcado para morrer
@@ -54,40 +88,43 @@ export default class Player {
     this.markedForDeath = value
   }
 
-  getBlockedSkill() { // retorna qual habilidade está bloqueada
-    return this.blockedSkill;
+  //Metodo para bloquear habilidades
+  blockSkill(skill, duration) {
+    const { skill1, skill2 } = this.blockedSkills;
+    if (skill === 1 && duration > skill1) {   //verifica qual habilidade esta sendo bloqueada e se ja nao existe uma duraçao maior,                                                      
+      this.blockedSkills.skill1 = duration;  //evitando sobrescreve-la com uma duração menor do que a que ja esta em andamento
+    } else if (skill === 2 && duration > skill2) {
+      this.blockedSkills.skill2 = duration;
+    }
   }
 
-  setBlockedSkill(skill, turns) { // define qual habilidade será bloqueada e por quantos turnos
-    this.blockedSkill = skill;
-    this.turnsToBlock = turns
+  //decrementa a duraçao do bloqueio
+  decreaseSkillBlockDuration() {
+    this.blockedSkills.skill1--
+    this.blockedSkills.skill2--
   }
 
-  getTurnsToBlock() { // retorna quantos turnos faltam para bloquear as habilidades
-    return this.turnsToBlock;
+  //verifica se existem habilidades a serem bloqueadas
+  thereAreSkillsToBlock() {
+    return this.blockedSkills.skill1 > 0 || this.blockedSkills.skill2 > 0;
   }
 
-  setTurnsToBlock(value) { // define quantos turnos faltam para bloquear as habilidades
-    this.turnsToBlock = value;
+  //verifica se a habilidade especificada esta bloqueada
+  isSkillBlocked(skill) {
+    if (skill === 1) {
+      return this.blockedSkills.skill1 > 0 && this.blockedNextTurn;
+    } else if (skill === 2) {
+      return this.blockedSkills.skill2 > 0 && this.blockedNextTurn;
+    }
   }
 
-  isFirstSkillBlocked() { // retorna se a primeira habilidade está bloqueada ou não
-    const isSkill1Blocked = this.blockedSkill === 1 || this.blockedSkill === 3 && this.turnsToBlock === 0; // verifica se a primeira habilidade está temporariamente bloqueada
-    const isSkill1PermaBlocked = this.permaBlockedSkill === 1 || this.permaBlockedSkill === 3; // verifica se a primeira habilidade está permanentemente bloqueada
-    return isSkill1Blocked || isSkill1PermaBlocked;
+  //verifica se o jogador estava bloqueado este turno
+  wasBlockedThisTurn() {
+    return this.blockedNextTurn;
   }
 
-  isSecondSkillBlocked() {
-    const isSkill2Blocked = this.blockedSkill === 2 || this.blockedSkill === 3 && this.turnsToBlock === 0;
-    const isSkill2PermaBlocked = this.permaBlockedSkill === 2 || this.permaBlockedSkill === 3;
-    return isSkill2Blocked || isSkill2PermaBlocked;
-  }
-
-  getPermaBlockedSkill() {
-    return this.permaBlockedSkill;
-  }
-
-  setPermaBlockedSkill(skill) {
-    this.permaBlockedSkill = skill;
+  //bloqueia o jogador no proximo turno
+  setBlockedNextTurn(value) {
+    this.blockedNextTurn = value;
   }
 }

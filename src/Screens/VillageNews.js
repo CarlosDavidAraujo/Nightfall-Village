@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import Game from "../Classes/Game";
 import { GameContext } from "../Context/GameContext";
 import DefaultButton from "../Components/Buttons/DefaultButton";
-import { SpaceAroundContainer, SubTitle } from "../Styles";
+import { FlexStartContainer, SpaceAroundContainer, SubTitle } from "../Styles";
 import { dark, invertTheme } from "../Themes/Dark";
 
 export default function VillageNews({ route, navigation }) {
@@ -34,9 +34,11 @@ export default function VillageNews({ route, navigation }) {
 
   return (
     <SpaceAroundContainer style={{ backgroundColor: invertTheme(dark).bg }}>
-      {currentGame.getTurnNews().map((message, i) => (
-        <SubTitle key={i}>{message}</SubTitle>
-      ))}
+      <FlexStartContainer>
+        {currentGame.getTurnNews().map((message, i) => (
+          <SubTitle key={i}>{message}</SubTitle>
+        ))}
+      </FlexStartContainer>
       {winner ? (
         <DefaultButton onPress={() => handleEndGame()} title="Novo jogo" />
       ) : previousScreen === "PlayerAction" ? (

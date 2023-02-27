@@ -10,14 +10,14 @@ export default function RoleInfoModal({ isVisible, onClose, role }) {
         <View>
             <Modal
                 isVisible={isVisible}
-                style={{ backgroundColor: invertTheme(dark).bg, padding: 10 }} >
+                style={{ backgroundColor: invertTheme(dark).bg, padding: 10, justifyContent: 'flex-start' }} >
                 <FlexStartContainer>
                     <CloseButton onPress={onClose} />
                     <Title>{role.getName()}</Title>
                     <RoleImageContainer>
                         <RoleImage source={role.getRoleImg()} />
                     </RoleImageContainer>
-                    <DefaultText>{`Você faz parte do time dos "${role.getTeam()}". Seu objetivo é ${role.getObjective()}.`}</DefaultText>
+                    <DefaultText>{`Você faz parte do time dos "${role.getTeam()}". Seu objetivo é ${role.getObjective()}`}</DefaultText>
                     <SubTitle style={{ marginTop: '5%' }}>Habilidades</SubTitle>
                     <SkillsContainer>
                         <SkillButton

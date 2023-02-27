@@ -1,5 +1,5 @@
 export default class Role {
-  constructor(name, team, roleImg, objective, firstSkillName, firstSkillDescription, firstSkillIcon, secondSkillName, secondSkillDescription, secondSkillIcon) {
+  constructor(name, team, species, interactWithDeadPlayers, roleImg, objective, firstSkill, secondSkill) { //firstSkill e secondSkill devem ser dicionarios
     this.player = null;
     this.name = name;
     this.fakeName = {
@@ -7,14 +7,22 @@ export default class Role {
       duration: 1000
     };
     this.team = team;
+    this.species = species;
+    this.interactWithDeadPlayers = interactWithDeadPlayers;
     this.roleImg = roleImg;
     this.objective = objective;
-    this.firstSkillName = firstSkillName;
-    this.firstSkillIcon = firstSkillIcon;
-    this.firstSkillDescription = firstSkillDescription;
-    this.secondSkillName = secondSkillName;
-    this.secondSkillDescription = secondSkillDescription;
-    this.secondSkillIcon = secondSkillIcon;
+    this.firstSkill = firstSkill;
+    this.secondSkill = secondSkill;
+    this.blockedSkills = {
+      1: {
+        duration: 0,
+        lastBlockedTurn: -1
+      },
+      2: {
+        duration: 0,
+        lastBlockedTurn: -1
+      }
+    }
   }
 
   getPlayer() {
@@ -27,6 +35,14 @@ export default class Role {
 
   getName() {
     return this.name;
+  }
+
+  getSpecies() {
+    return this.species;
+  }
+
+  cantInteractWithDeadPlayers(currentGame) {
+    return this.interactWithDeadPlayers === true && currentGame.getDeadPlayers().length === 0;
   }
 
   //retorna uma nome falso para a role
@@ -68,27 +84,43 @@ export default class Role {
   }
 
   getFirstSkillName() {
-    return this.firstSkillName;
+    return this.firstSkill.name;
   }
 
   getFirstSkillDescription() {
-    return this.firstSkillDescription;
+    return this.firstSkill.description;
   }
 
   getFirstSkillIcon() {
-    return this.firstSkillIcon;
+    return this.firstSkill.icon;
   }
 
   getSecondSkillName() {
-    return this.secondSkillName;
+    return this.secondSkill.name;
   }
 
   getSecondSkillDescription() {
-    return this.secondSkillDescription;
+    return this.secondSkill.description;
   }
 
   getSecondSkillIcon() {
-    return this.secondSkillIcon;
+    return this.secondSkill.icon;
   }
 
+  getSkillTarget() {
+    return {
+      skill1IsTarget: this.firstSkill.target,
+      skill2IsTarget: this.secondSkill.target,
+    }
+  }
+
+  blockSkill(skill, duration, lastBlockedTurn) {
+    this.blockedSkills[skill].duration = duration;
+    this.blockedSkills[skill].lastBlockedTurn = lastBlockedTurn;
+  }
+
+  isSkillBlocked(skill, currentTurn) {
+    const { duration, lastBlockedTurn } = this.blockedSkills[skill];
+    return lastBlockedTurn < currentTurn && currentTurn <= lastBlockedTurn + duration;
+  }
 }

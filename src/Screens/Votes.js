@@ -14,7 +14,17 @@ export default function Votes({ navigation }) {
     const playerList = currentGame.getPlayers();
 
     function handleVote() {
-        targetPlayer.addVote();
+        if (currentPlayer.isConfused()) {
+            const randomPlayer = currentGame.getRandomPlayer();
+            randomPlayer.addVote();
+            currentPlayer.setConfused(false);
+        }
+        else if (currentPlayer.hasBuffedVote()) {
+            targetPlayer.addDoubleVote();
+        }
+        else {
+            targetPlayer.addVote();
+        }
         passVotation();
     }
 
@@ -45,6 +55,7 @@ export default function Votes({ navigation }) {
                         <>
                             <SubTitle style={{ marginTop: 160 }}>{currentPlayer.getName()}, escolha seu voto</SubTitle>
                             <PlayersButtonList
+                                currentGame={currentGame}
                                 playerList={playerList}
                                 currentPlayer={currentPlayer}
                                 targetPlayer={targetPlayer}

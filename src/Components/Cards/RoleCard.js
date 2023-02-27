@@ -48,7 +48,7 @@ export default function RoleCard({
         </InfoButton>
       </ThemeProvider>
       <RoleImg source={role.getRoleImg()} /> 
-      <DefaultText>{role.getName()}</DefaultText>
+      <DefaultText numberOfLines={1} ellipsizeMode='tail' style={{ maxWidth: 50 * 2 }}>{role.getName()}</DefaultText>
 
       {selected && (
         <AmountController>

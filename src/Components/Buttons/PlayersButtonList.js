@@ -3,17 +3,28 @@ import { SimpleGrid } from "react-native-super-grid";
 import DefaultButton from "./DefaultButton";
 import { useRoute } from "@react-navigation/native";
 
-export default function PlayersButtonList({ playerList, currentPlayer, targetPlayer, setTargetPlayer, inverted }) {
+export default function PlayersButtonList({currentGame, playerList, currentPlayer, targetPlayer, setTargetPlayer, chosenSkill, inverted }) {
     const route = useRoute();
+    const role = currentPlayer.getRole();
+    const currentTurn = currentGame.getCurrentTurn();
+
     const isAlliedWerewolf = (otherPlayer) => {
-        return currentPlayer.getRoleName() === 'Lobisomem' && otherPlayer.getRoleName() === 'Lobisomem'
+        return currentPlayer.belongsToWerewolfsTeam() && currentPlayer.isWolf() && otherPlayer.belongsToWerewolfsTeam() && otherPlayer.isWolf();
     }
 
-    const currentPlayerIsWerewolf = () => {
-        return currentPlayer.getRoleName() === 'Lobisomem';
+    const canSeeVotes = () => {
+        currentPlayer.isWolf() && route.name === 'PlayerAction';
     }
 
-    const playerListWithoutCurrentPlayer = playerList.filter(player => player.getName() !== currentPlayer.getName())
+    const lastDoctorHealTarget = (otherPlayer) => {
+        return currentPlayer.getRoleName() === 'Médica' && role.hasInvalidTargetOn(otherPlayer, currentTurn) && chosenSkill === 1 && route.name !== 'Votes';
+    }
+
+    const lastWitchCursetarget = (otherPlayer) => {
+        return currentPlayer.getRoleName() === 'Bruxa' && role.hasInvalidTargetOn(otherPlayer, currentTurn) && chosenSkill === 1 && route.name !== 'Votes';
+    }
+
+    const playerListWithoutCurrentPlayer = playerList.filter(player => player !== currentPlayer)
 
     return (
         <View style={{ height: '40%' }}>
@@ -24,13 +35,18 @@ export default function PlayersButtonList({ playerList, currentPlayer, targetPla
                     renderItem={({ item }) =>
                         <DefaultButton
                             onPress={() => setTargetPlayer(item)}
-                            disabled={isAlliedWerewolf(item)}
+                            disabled=
+                            {
+                                isAlliedWerewolf(item) ||
+                                lastDoctorHealTarget(item) ||
+                                lastWitchCursetarget(item)
+                            }
                             inverted={inverted === (targetPlayer !== item)}
                             title={item.getName()}
                             showWolfIcon={isAlliedWerewolf(item)}
-                            showVotesIcon={!isAlliedWerewolf(item) && currentPlayerIsWerewolf() && route.name === 'PlayerAction'}
+                            showVotesIcon={!isAlliedWerewolf(item) && canSeeVotes()}
                             voteCount={item.getVotesCount()}
-                            style={{height: 50}}
+                            style={{ height: 50 }}
                         />
                     }
                 />

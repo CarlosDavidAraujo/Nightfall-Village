@@ -8,23 +8,31 @@ export default class Seer extends Role {
     super(
       "Vidente",
       "Aldeões",
+      'Human',
+      true,
       seerImg,
-      'descobrir quem são os lobisomens e ajudar os aldeões a vencerem o jogo',
-      'Revelar',
-      'Você pode ver a função de outro jogador.',
-      firstSkillIcon,
-      'Contactar',
-      'Você pode ver a função de um jogador que ja morreu.',
-      secondSkillIcon
+      'descobrir quem são os lobisomens e ajudar os aldeões a vencerem o jogo.',
+      {
+        name: 'Revelar',
+        description: 'Você pode ver a função de outro jogador.',
+        target: true,
+        icon: firstSkillIcon
+      },
+      {
+        name:  'Contactar',
+        description: 'Você pode ver a função de um jogador que ja morreu.',
+        target: true,
+        icon: secondSkillIcon
+      }
     );
   }
 
   revelar(otherPlayer) {
-    return `A verdade foi revelada! O papel de ${otherPlayer.getName()} é ${otherPlayer.getRole().getFakeName()}. Fique atento à sua jogada!`;
+    return `A verdade foi revelada! ${otherPlayer.getName()} é ${otherPlayer.getRole().getFakeName()}. Fique atento à sua jogada!`;
   }
 
   contactar(otherPlayer) {
-    return `A verdade foi revelada! O papel de ${otherPlayer.getName()} era ${otherPlayer.getRoleName()}.`;
+    return `A verdade foi revelada! ${otherPlayer.getName()} era ${otherPlayer.getRoleName()}.`;
   }
 
 }

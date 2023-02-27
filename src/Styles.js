@@ -31,6 +31,14 @@ export const DefaultText = styled.Text`
     text-align: center;
 `;
 
+export const SmallText = styled.Text`
+    color: ${props => props.theme.color};
+    font-size: 16px;
+    font-family: 'NewRocker_400Regular';
+    text-align: justify;
+    flex-shrink: 1;
+`;
+
 export const RotatedText = styled.Text`
   transform: rotateX(30deg) rotateY(-20deg) rotateZ(-13deg); 
   color: ${props => props.theme.color};
@@ -89,7 +97,6 @@ export const SpaceBetweenContainer = styled.View`
 `;
 
 export const FlexStartContainer = styled.View`
-    flex: 1;
     align-items: center;
     justify-content: flex-start;
 `;

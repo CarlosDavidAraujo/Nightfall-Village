@@ -1,24 +1,29 @@
+import News from "./News";
+
 export default class Player {
-  constructor(name) {
-    this.name = name; // guarda o nome do jogador
-    this.votesCount = 0; // guarda o número de votos que o jogador recebeu
+  constructor(name, ID) {
+    this.name = name; //guarda o nome do jogador
+    this.ID = ID;
+    this.votesCount = 0; //guarda o número de votos que o jogador recebeu
     this.blockedVoteDuration = 0; //guarda por quantos turnos o jogador nao pode votar
-    this.protected = false; // condiçao de proteçao do jogador
-    this.protector = null; // recebe um outro player que protegeu este jogador// so é usado em classes que se scrificam, como o cruzado
+    this.buffedVote = false; //estado de voto amplificado
+    this.confused = false; //estado de voto aleatório
+    this.protected = false; //condiçao de proteçao do jogador
+    this.protector = null; //recebe um outro player que protegeu este jogador// so é usado em classes que se scrificam, como o cruzado
     this.markedForDeath = false; //condigçao de morte do jogador
-    this.role = null; // guarda a role do jogador
-    this.blockedNextTurn = false;
-    this.blockedSkills = { //armazena qual habilidade esta bloqueada e por quantos turnos
-      skill1: 0,
-      skill2: 0,
-    }
+    this.markedForRess = false; //marca um jogador para ser revivido ao final do turno
+    this.role = null; //guarda a role do jogador
   }
 
-  getName() { 
+  getName() {
     return this.name;
   }
 
-  setRole(role) { 
+  getID() {
+    return this.ID;
+  }
+
+  setRole(role) {
     this.role = role;
   }
 
@@ -27,7 +32,7 @@ export default class Player {
   }
 
   // retorna o nome da role do jogador
-  getRoleName() { 
+  getRoleName() {
     return this.role.getName();
   }
 
@@ -37,6 +42,26 @@ export default class Player {
 
   addVote() { // adiciona um voto ao jogador
     this.votesCount += 1;
+  }
+
+  addDoubleVote() {
+    this.votesCount += 2;
+  }
+
+  setBuffedVote(value) {
+    this.buffedVote = value;
+  }
+
+  hasBuffedVote() {
+    return this.buffedVote === true;
+  }
+
+  setConfused(value) {
+    this.confused = value;
+  }
+
+  isConfused() {
+    return this.confused === true;
   }
 
   clearVotes() { // zera o número de votos que o jogador recebeu
@@ -88,43 +113,45 @@ export default class Player {
     this.markedForDeath = value
   }
 
-  //Metodo para bloquear habilidades
-  blockSkill(skill, duration) {
-    const { skill1, skill2 } = this.blockedSkills;
-    if (skill === 1 && duration > skill1) {   //verifica qual habilidade esta sendo bloqueada e se ja nao existe uma duraçao maior,                                                      
-      this.blockedSkills.skill1 = duration;  //evitando sobrescreve-la com uma duração menor do que a que ja esta em andamento
-    } else if (skill === 2 && duration > skill2) {
-      this.blockedSkills.skill2 = duration;
+  isMarkedForRess() { //retorna se esta marcado para morrer
+    return this.markedForRess === true;
+  }
+
+  setMarkedForRess(value) { //atribui a marca
+    this.markedForRess = value
+  }
+
+  //usado nso casos em que o jogador é ressuscitar
+  reset() {
+    this.votesCount = 0;
+    this.blockedVoteDuration = 0;
+    this.buffedVote = false;
+    this.confused = false;
+    this.protected = false;
+    this.protector = null;
+    this.markedForDeath = false;
+    this.markedForRess = false;
+    this.blockedNextTurn = false;
+    this.blockedSkills = {
+      skill1: 0,
+      skill2: 0,
     }
   }
 
-  //decrementa a duraçao do bloqueio
-  decreaseSkillBlockDuration() {
-    this.blockedSkills.skill1--
-    this.blockedSkills.skill2--
+  belongsToWerewolfsTeam() {
+    return this.role.getTeam() === 'Lobisomens';
   }
 
-  //verifica se existem habilidades a serem bloqueadas
-  thereAreSkillsToBlock() {
-    return this.blockedSkills.skill1 > 0 || this.blockedSkills.skill2 > 0;
+  belongsToVillagersTeam() {
+    return this.role.getTeam() === 'Aldeões';
   }
 
-  //verifica se a habilidade especificada esta bloqueada
-  isSkillBlocked(skill) {
-    if (skill === 1) {
-      return this.blockedSkills.skill1 > 0 && this.blockedNextTurn;
-    } else if (skill === 2) {
-      return this.blockedSkills.skill2 > 0 && this.blockedNextTurn;
-    }
+  isHuman() {
+    return this.role.getSpecies() === 'Human';
   }
 
-  //verifica se o jogador estava bloqueado este turno
-  wasBlockedThisTurn() {
-    return this.blockedNextTurn;
+  isWolf() {
+    return this.role.getSpecies() === 'Wolf';
   }
 
-  //bloqueia o jogador no proximo turno
-  setBlockedNextTurn(value) {
-    this.blockedNextTurn = value;
-  }
 }

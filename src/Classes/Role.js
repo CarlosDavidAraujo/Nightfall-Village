@@ -1,10 +1,21 @@
 export default class Role {
-  constructor(name, team, species, interactWithDeadPlayers, roleImg, objective, firstSkill, secondSkill) { //firstSkill e secondSkill devem ser dicionarios
+  constructor(
+    name,
+    team,
+    species,
+    interactWithDeadPlayers,
+    roleImg,
+    objective,
+    firstSkill,
+    secondSkill
+  ) {
+    //firstSkill e secondSkill devem ser dicionarios
     this.player = null;
     this.name = name;
     this.fakeName = {
-      name: this.name,
-      duration: 1000
+      name: this.name, //inicia com o nome verdadeiro
+      duration: 0,
+      lastFakeNameTurn: -1,
     };
     this.team = team;
     this.species = species;
@@ -16,13 +27,13 @@ export default class Role {
     this.blockedSkills = {
       1: {
         duration: 0,
-        lastBlockedTurn: -1
+        lastBlockedTurn: -1,
       },
       2: {
         duration: 0,
-        lastBlockedTurn: -1
-      }
-    }
+        lastBlockedTurn: -1,
+      },
+    };
   }
 
   getPlayer() {
@@ -42,33 +53,31 @@ export default class Role {
   }
 
   cantInteractWithDeadPlayers(currentGame) {
-    return this.interactWithDeadPlayers === true && currentGame.getDeadPlayers().length === 0;
+    return (
+      this.interactWithDeadPlayers === true &&
+      currentGame.getDeadPlayers().length === 0
+    );
   }
 
   //retorna uma nome falso para a role
-  getFakeName() {
-    return this.fakeName.name;
+  getFakeName(currentTurn) {
+    if (this.hasFakeName(currentTurn)) {
+      return this.fakeName.name;
+    }
+    return this.name;
   }
 
   //atribui um nome falso à role e por quanto tempo durará
-  setFakeName(value, duration) {
-    this.fakeName.name = value;
+  setFakeName(name, duration, currentTurn) {
+    this.fakeName.name = name;
     this.fakeName.duration = duration;
+    this.fakeName.lastFakeNameTurn = currentTurn;
   }
 
   //verifica se está com um nome falso
-  hasFakeName() {
-    return this.fakeName.name !== this.name;
-  }
-
-  //auto explicativo hehe
-  decreaseFakeNameDuration() {
-    if (this.fakeName.duration <= 0) { //quando a duraçao acabar devolve o nome original
-      this.fakeName.name = this.name;
-      this.fakeName.duration = 1000;
-    }
-
-    this.fakeName.duration--;
+  hasFakeName(currentTurn) {
+    const { duration, lastFakeNameTurn } = this.fakeName;
+    return (duration + lastFakeNameTurn) >= currentTurn;
   }
 
   getTeam() {
@@ -111,7 +120,7 @@ export default class Role {
     return {
       skill1IsTarget: this.firstSkill.target,
       skill2IsTarget: this.secondSkill.target,
-    }
+    };
   }
 
   blockSkill(skill, duration, lastBlockedTurn) {
@@ -121,6 +130,12 @@ export default class Role {
 
   isSkillBlocked(skill, currentTurn) {
     const { duration, lastBlockedTurn } = this.blockedSkills[skill];
-    return lastBlockedTurn < currentTurn && currentTurn <= lastBlockedTurn + duration;
+    return (
+      lastBlockedTurn < currentTurn && currentTurn <= lastBlockedTurn + duration
+    );
+  }
+  
+  hasInvalidTargetOn(targetPlayer, currentTurn, chosenSkill) {
+    return false;
   }
 }

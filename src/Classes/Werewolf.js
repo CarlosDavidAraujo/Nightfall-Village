@@ -33,8 +33,12 @@ export class WereWolf extends Role {
   };
 
   transmutar(currentTurn) {
-    this.setFakeName('Aldeão', 1); //muda de nome por 1 turno
+    this.setFakeName('Aldeão', 1, currentTurn); //muda de nome por 1 turno além do turno atual
     this.blockSkill(1, 1, currentTurn); //bloqueia devorar por 1 turno
+  }
+  
+  hasInvalidTargetOn(targetPlayer) {
+    return targetPlayer.isWolf();
   }
 }
 

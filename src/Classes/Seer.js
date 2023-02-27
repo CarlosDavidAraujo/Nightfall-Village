@@ -27,8 +27,8 @@ export default class Seer extends Role {
     );
   }
 
-  revelar(otherPlayer) {
-    return `A verdade foi revelada! ${otherPlayer.getName()} é ${otherPlayer.getRole().getFakeName()}. Fique atento à sua jogada!`;
+  revelar(otherPlayer, currentTurn) {
+    return `A verdade foi revelada! ${otherPlayer.getName()} é ${otherPlayer.getRole().getFakeName(currentTurn)}. Fique atento à sua jogada!`;
   }
 
   contactar(otherPlayer) {

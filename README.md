@@ -24,19 +24,19 @@
 # ScreenShots
 
 * Tela Inicial: advinha o que ela faz?
-<img src="./assets/Tela_inicial.jpeg" alt="Tela 1" width="300" height="600">
+<img src="./assets/screenshots/Tela_inicial.jpeg" alt="Tela 1" width="300" height="600">
 
 * Tela de seleção de jogadores: nesta tela é possível adicionar a quantidade de jogadores que irão participar e editar seus respectivos nomes
-<img src="./assets/Seleção-de-jogadores.gif" alt="Tela 1" width="300">
+<img src="./assets/screenshots/Seleção-de-jogadores.gif" alt="Tela 1" width="300">
 
 * Tela de seleção de jogadores: nesta tela é possível adicionar os papéis qu os jogadores irão assumir e suas respectivas quantidades, também é possível visualizar as informações sobre cada papél
-<img src="./assets/Seleçao-de-papeis.gif" alt="Tela 1" width="300">
+<img src="./assets/screenshots/Seleçao-de-papeis.gif" alt="Tela 1" width="300">
 
 * Fase da noite: onde o jogo inicia de fato, aqui os jogadores escolhem suas habilidades, após todos jogarem, a noite termina e é exibida uma mensagem com os acontecimentos
-<img src="./assets/Night.gif" alt="Tela 1" width="300">
+<img src="./assets/screenshots/Night.gif" alt="Tela 1" width="300">
 
 * Fase do dia: a partir daqui os jogadores terão um tempo para discutir quem eles desconfiam ser o lobisomem, em sequida irão votar em quem eliminar, após todos votarem é exibida uma mensagem sobre quem foi eliminado ou se algúem venceu o jogo, se ningúem venceu o jogo avança para o segundo turno
-<img src="./assets/Day_1.gif" alt="Tela 1" width="300" >
+<img src="./assets/screenshots/Day_1.gif" alt="Tela 1" width="300" >
 
 
 

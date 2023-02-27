@@ -155,7 +155,7 @@ export default function useRoleConfig(
         alert: "",
       },
     },
-    "Lobisomem solitário": {
+    "Lobisomem Solitário": {
       methods: {
         useFirstSkill: () => {
           role.devorar(targetPlayer);

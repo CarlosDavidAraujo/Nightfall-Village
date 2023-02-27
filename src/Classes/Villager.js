@@ -31,7 +31,7 @@ export default class Villager extends Role {
 
   espiar(playerList, currentTurn) {
     const deathChance = 0.15;
-    const discoverChance = 1;
+    const discoverChance = 0.05;
     const randomNumber = Math.random();
     let message = "";
     let discoveredWereWolf = playerList.find(

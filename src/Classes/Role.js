@@ -9,13 +9,12 @@ export default class Role {
     firstSkill,
     secondSkill
   ) {
-    //firstSkill e secondSkill devem ser dicionarios
     this.player = null;
     this.name = name;
     this.fakeName = {
       name: this.name, //inicia com o nome verdadeiro
       duration: 0,
-      lastFakeNameTurn: -1,
+      lastFakeNameTurn: 0,
     };
     this.team = team;
     this.species = species;
@@ -27,11 +26,11 @@ export default class Role {
     this.blockedSkills = {
       1: {
         duration: 0,
-        lastBlockedTurn: -1,
+        lastBlockedTurn: 0, 
       },
       2: {
         duration: 0,
-        lastBlockedTurn: -1,
+        lastBlockedTurn: 0,
       },
     };
   }
@@ -52,6 +51,7 @@ export default class Role {
     return this.species;
   }
 
+  //verifica a role tem habildiades que interagem com jogadores mortos
   cantInteractWithDeadPlayers(currentGame) {
     return (
       this.interactWithDeadPlayers === true &&

@@ -28,9 +28,9 @@ export default class Scientist extends Role {
             }
         );
         this.potions = {
-            'pavor': otherPlayer => otherPlayer.blockVote(1), //nao pode votar por 1 turno
+            'pavor': (otherPlayer, currentTurn) => otherPlayer.blockVote(1, currentTurn), //nao pode votar por 1 turno
             'confusão': otherPlayer => otherPlayer.setConfused(true), //voto aleatorio por 1 turno
-            'manipulação': otherPlayer => otherPlayer.setBuffedVote(true) //voto duplo por um turno
+            'manipulação': otherPlayer => otherPlayer.setDoubleVote(true) //voto duplo por um turno
         };
     }
 
@@ -52,7 +52,7 @@ export default class Scientist extends Role {
     usarPocao(potion, otherPlayer, currentTurn) {
         const action = this.potions[potion];
         if (action) {
-            action(otherPlayer);
+            action(otherPlayer, currentTurn);
             delete this.potions[potion];
         }
         if (Object.keys(this.potions).length === 0) { //bloqueia alquimia até o final do jogo quando não houver mais poções para serem usadas

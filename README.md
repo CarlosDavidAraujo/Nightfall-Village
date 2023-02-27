@@ -13,7 +13,7 @@
 * Entre no diretório do projeto: ```cd Nightfall-Village```
 * Instale as dependências: ```npm install```
 * Inicie o projeto: ```npx expo start ```
-
+* Link para download do último APK funcional(eu acho): ```https://expo.dev/accounts/carlosdavid/projects/AwesomeProject/builds/38bc5fc8-6e4d-4f8c-b403-12e6ea6187af```
 
 # Funcionalidades
 * O jogo é jogado por uma comunidade de aldeões, com um ou mais jogadores agindo como lobisomens secretamente disfarçados.

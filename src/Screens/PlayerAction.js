@@ -147,7 +147,7 @@ export default function PlayerAction({ navigation }) {
                 showPass={passCondition}
                 passText='Passar a vez'
                 onPass={() => passTurn()}
-                showConfirm={targetPlayer} //confirm é usado apenas em habilidades que precisam de um alvo
+                showConfirm={targetPlayer} //confirmar é usado apenas em habilidades que precisam de um alvo
                 confirmText='Confirmar'
                 onConfirm={chosenSkill === 1 ? handleUseFirstSkill : chosenSkill === 2 && handleUseSecondSkill} //executa o metodo da habilidade escolhida 
             />

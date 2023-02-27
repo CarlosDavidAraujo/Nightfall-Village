@@ -45,9 +45,17 @@ export default class Game {
     return this.roleMap;
   }
 
+  //retorna todos os jogadores vivos
   getPlayers() {
-    //retorna todos os jogadores vivos
     return this.players;
+  }
+
+  //adiciona todos os jogadores ao array <players>, esses players são definidos na tela <DefinePlayers>
+  setPlayers(players) {
+    this.players = [];
+    players.forEach((player, index) => {
+      this.players.push(new Player(player, index));
+    });
   }
 
   getDeadPlayers() {
@@ -56,21 +64,6 @@ export default class Game {
 
   getRevivedPlayers() {
     return this.revivedPlayers;
-  }
-
-  //retorna um jogador aleatório da lista de players vivos
-  getRandomPlayer() {
-    const randomIndex = Math.floor(Math.random() * this.players.length);
-    console.log(this.players[randomIndex]);
-    return this.players[randomIndex];
-  }
-
-  setPlayers(players) {
-    this.players = [];
-    //adiciona todos os jogadores ao array <players>, esses players são definidos na tela <DefinePlayers>
-    players.forEach((player, index) => {
-      this.players.push(new Player(player, index));
-    });
   }
 
   //limpa o array de <players>
@@ -119,69 +112,43 @@ export default class Game {
     });
   }
 
-  //gerencia a duracaod e bloqueio dos votos
-  manageBlockedVotes(player) {
-    if (player.isVoteBlocked()) {
-      player.decreaseBlockedVoteDuration();
-    }
-  }
-
-  //gerencia votos duplos
-  manageBuffedVotes(player) {
-    player.setBuffedVote(false);
-  }
-
   //gerencia o fim do turno
   endTurn() {
     this.clearTurnNews();
     this.advanceTurn();
     this.players.forEach((player) => {
-      this.manageBlockedVotes(player);
-      this.manageBuffedVotes(player);
+      player.setDoubleVote(false);
+      player.setConfused(false);
     });
   }
 
   endNight() {
-    this.setMostVotedPlayerByWerewolfs(); //decide a vitima dos lobisomens
-    this.removePlayers(); //remove a vitima
-    this.revivePlayers(); //revive jogadores
-    this.clearPlayersVotes(); //limpa os votos
-    this.clearPlayersProtection(); //limpa as proteçoes
-    this.clearPlayersDeathMarks(); //limpa as marcas de morte
+    this.setMostVotedPlayerByWerewolfs();
+    this.removePlayers(); 
+    this.revivePlayers(); 
+    this.clearPlayersVotes();
+    this.clearPlayersProtection(); 
+    this.clearPlayersDeathMarks(); 
   }
 
   //remove jogadores da partida
   removePlayers() {
-    //verificacoes para remover o jogadores
     this.players.forEach((player) => {
-      if (player.isMarkedForDeath() && player.isProtected()) {
-        //se estava marcado para morrer mas foi protegido adiciona noticia de que alguem foi salvo
-        const protector = player.getProtector(); //se foi protegido por um cruzado
-        if (protector) {
-          this.deadPlayers.push(protector); //sacrifica o cruzado
-          this.news.addNews(
-            `${protector.getName()} morreu esta noite. Deve ficar calado até o fim do jogo.`
-          );
-        }
-      } else if (player.isMarkedForDeath()) {
-        //se estava marcado sem protecao, adiciona a noticia da eliminacao
+      if (player.isMarkedForDeath() && !player.isProtected()) {
         this.news.addNews(
           `${player.getName()} morreu esta noite. Deve ficar calado até o fim do jogo.`
         );
-        player.reset(); //reseta os estados do jogador antes de adiciona-lo a lista de mortos
-        this.deadPlayers.push(player); //adiciona o jogador morto a lista de jogadores mortos
+        player.reset();
+        this.deadPlayers.push(player); 
       }
     });
 
     //atualiza a lista de <players> com os que ficaram vivos
-    const alivePlayers = this.players.filter(
-      (player) => !this.deadPlayers.includes(player)
-    );
+    const alivePlayers = this.players.filter(player => !this.deadPlayers.includes(player));
     if (this.players.length === alivePlayers.length) {
-      //verifica se a lista players atual tem o mesmo tamnho de alive players, isso significa que ninguem morreu
-      this.news.addNews("Noite de paz na vila."); //entao atribui a noiticia de paz
+      this.news.addNews("Noite de paz na vila."); 
     }
-    this.players = alivePlayers; //finalmente atualiza a lista de players
+    this.players = alivePlayers; 
   }
 
   //revive os jogadores marcados para reviver
@@ -209,21 +176,18 @@ export default class Game {
     let maxVotes = 0;
     this.players.forEach((player) => {
       if (player.getVotesCount() > maxVotes) {
-        //se os votos forem maiores armazena apenas um jogador
         maxVotes = player.getVotesCount();
         this.mostVotedPlayers = [player];
-      } else if (player.getVotesCount() === maxVotes && maxVotes > 0) {
-        //quando empatar adiciona mais um jogador a lista de mais votados,
-        this.mostVotedPlayers.push(player); //execeto quando maxvotes for igual a zero, pois isso adicionaria todos os jogadores,
-      } //mesmo que ninguem tivesse sido votado
+      } else if (player.getVotesCount() === maxVotes && maxVotes > 0) {    
+        this.mostVotedPlayers.push(player); 
+      } 
     });
   }
 
   //remove o jogador mais votado pela vila
   removeMostVotedPlayer() {
     this.setMostVotedPlayers(); //define o jogador mais votado
-    if (this.mostVotedPlayers.length != 1) {
-      //se houve empate ninguem morre
+    if (this.mostVotedPlayers.length != 1) {   //se houve empate ninguem morre
       return this.news.setNews("A aldeia ficou indecisa!");
     }
 
@@ -253,10 +217,8 @@ export default class Game {
     this.mostVotedPlayers = []; //ao final reseta a lista de mais votados
   }
 
+  //desempata a votaçao dos lobisomens durante a noite
   resolveTieBreak() {
-    // verifica se a lista <mostVotedPlayers> tem mais de um jogador, ou seja,
-    // se houve empate, e escolhe um jogador aleatoriamente a partir dos jogadores
-    // com o mesmo número de votos. Importante! essa funçao so deve ser usada para desempatar o voto dos lobisomens durante a etapa em que usam a habilidade devorar
     if (this.mostVotedPlayers.length > 1) {
       const randomIndex = Math.floor(
         Math.random() * this.mostVotedPlayers.length
@@ -271,17 +233,14 @@ export default class Game {
   }
 
   getTurnNews() {
-    //retorna todas as notícias disponíveis
     return this.news.getNews();
   }
 
   clearTurnNews() {
-    //limpa todas as notícias
     this.news.clearNews();
   }
 
   getWinnerTeam() {
-    //verifica se há um vencedor e seta a notícia de quem venceu o jogo
     let winner = null;
 
     const remainingVillagers = this.players.filter((player) =>
@@ -293,7 +252,7 @@ export default class Game {
 
     const isLastWerewolf =
       remainingWerewolves.length === 1 &&
-      remainingWerewolves[0].getRole().getName() === "Lobisomem solitário";
+      remainingWerewolves[0].getRole().getName() === "Lobisomem Solitário";
 
     if (remainingVillagers.length === 0 && isLastWerewolf) {
       this.news.setNews("O lobisomem solitário venceu!");
@@ -311,18 +270,13 @@ export default class Game {
   //adiciona os papéis selecionados à lista de <roles> com suas respectivas quantidades
   //esta é uma função auxiliar da função logo abaixo
   setRoles(selectedRoles) {
-    // reinicia a lista de roles
     this.roles = [];
-
-    // itera sobre cada objeto de papel único selecionado
     selectedRoles.forEach((selectedRole) => {
       const { role, count } = selectedRole;
-      // itera sobre a quantidade de cada papel único selecionado
       for (let i = 0; i < count; i++) {
         this.roles.push(role);
       }
     });
-
     this.roles = _.shuffle(this.roles); // por fim, embaralha a lista <roles>
   }
 

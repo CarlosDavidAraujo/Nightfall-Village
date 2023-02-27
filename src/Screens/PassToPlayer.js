@@ -26,7 +26,7 @@ export default function PassToPlayer({ navigation, route }) {
       <SpaceAroundContainer>
         {ready ? (
           <>
-            <ThemeProvider theme={dark}>
+           <ThemeProvider theme={dark}>
               <Title>
                 {currentPlayerName}
               </Title>

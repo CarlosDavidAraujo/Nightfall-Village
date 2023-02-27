@@ -9,22 +9,13 @@ import { dark } from "../Themes/Dark";
 
 export default function Votes({ navigation }) {
     const { currentGame } = useContext(GameContext);
+    const currentTurn = currentGame.getCurrentTurn();
     const currentPlayer = currentGame.getCurrentPlayer();
     const [targetPlayer, setTargetPlayer] = useState();
     const playerList = currentGame.getPlayers();
 
     function handleVote() {
-        if (currentPlayer.isConfused()) {
-            const randomPlayer = currentGame.getRandomPlayer();
-            randomPlayer.addVote();
-            currentPlayer.setConfused(false);
-        }
-        else if (currentPlayer.hasBuffedVote()) {
-            targetPlayer.addDoubleVote();
-        }
-        else {
-            targetPlayer.addVote();
-        }
+        currentPlayer.voteOn(targetPlayer, playerList);
         passVotation();
     }
 
@@ -46,7 +37,7 @@ export default function Votes({ navigation }) {
         <BackgroundImage source={votationImg}>
             <SpaceAroundContainer>
                 <ThemeProvider theme={dark}>
-                    {currentPlayer.isVoteBlocked() ? (
+                    {currentPlayer.hasBlockedVote(currentTurn) ? (
                         <>
                             <SubTitle style={{ marginTop: 160 }}>Seus votos estão bloqueados neste turno</SubTitle>
                             <DefaultButton title="Passar a vez" onPress={() => passVotation()} inverted={true} />

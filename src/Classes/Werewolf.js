@@ -45,7 +45,7 @@ export class WereWolf extends Role {
 export class LonelyWerewolf extends WereWolf {
   constructor() {
     super();
-    this.name = 'Lobisomem solitário';
+    this.name = 'Lobisomem Solitário';
     this.objective = 'eliminar todos os aldeões, mas você só vencerá se for o último lobisomem vivo.';
     this.roleImg = loneWolfImg;
   }

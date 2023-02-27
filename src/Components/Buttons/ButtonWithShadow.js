@@ -2,9 +2,9 @@ import { useState } from "react";
 import styled, { ThemeProvider } from "styled-components/native";
 import { dark, invertTheme } from "../../Themes/Dark";
 
-export default function ButtonWithShadow({ onPress, children, style, inverted, disabled, skillUsed}) {
+export default function ButtonWithShadow({ onPress, children, style, inverted, disabled, skillUsed }) {
     const [isPressed, setIsPressed] = useState(false);
-    const theme = inverted? invertTheme(dark) : dark;
+    const theme = inverted ? invertTheme(dark) : dark;
 
     return (
         <ThemeProvider theme={theme}>
@@ -27,11 +27,11 @@ export default function ButtonWithShadow({ onPress, children, style, inverted, d
 };
 
 const Container = styled.Pressable`
-  position: relative;
-  flex-direction: row;
-  margin-top: 4%;
-  opacity: ${props => props.skillUsed? 0.6 : 1};
-  transform: ${({ isPressed, inverted }) => isPressed || !inverted ? 'translate(5px, 5px)' : 'translate(0, 0)'};
+    position: relative;
+    flex-direction: row;
+    margin-top: 4%;
+    opacity: ${props => props.skillUsed ? 0.6 : 1};
+    transform: ${({ isPressed, inverted }) => isPressed || !inverted ? 'translate(5px, 5px)' : 'translate(0, 0)'};
 `;
 
 const Content = styled.View` 

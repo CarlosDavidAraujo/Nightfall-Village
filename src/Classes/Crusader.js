@@ -29,7 +29,7 @@ export default class Crusader extends Role {
 
     sacrificar(otherPlayer) {
         otherPlayer.setProtected(true);
-        otherPlayer.setProtector(this.player); //seta o cruzado como protetor do jogador alvo
+        this.player.setMarkedForDeath(true);
     }
 
     julgar(otherPlayer, currentGame, currentTurn) {
@@ -40,7 +40,7 @@ export default class Crusader extends Role {
         }
         else {
             this.blockSkill(2, 2, currentTurn);  //bloqueia a habilidade 2 por 2 turnos
-            this.player.blockVote(2); //bloqueia os votos por 2 turnos
+            this.player.blockVote(2, currentTurn); //bloqueia os votos por 2 turnos
         }
     }
 }

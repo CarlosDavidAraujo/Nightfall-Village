@@ -12,9 +12,9 @@ export default class Role {
     this.player = null;
     this.name = name;
     this.fakeName = {
-      name: this.name, //inicia com o nome verdadeiro
+      name: this.name, //inicia com nome original
       duration: 0,
-      lastFakeNameTurn: 0,
+      turnItWasFaked: 0,
     };
     this.team = team;
     this.species = species;
@@ -23,16 +23,17 @@ export default class Role {
     this.objective = objective;
     this.firstSkill = firstSkill;
     this.secondSkill = secondSkill;
-    this.blockedSkills = {
+    this.disabledSkills = {
       1: {
         duration: 0,
-        lastBlockedTurn: 0, 
+        turnItWasDisabled: -1,
       },
       2: {
         duration: 0,
-        lastBlockedTurn: 0,
+        turnItWasDisabled: -1,
       },
     };
+    this.currentGame = null;
   }
 
   getPlayer() {
@@ -43,6 +44,10 @@ export default class Role {
     this.player = player;
   }
 
+  setCurrentGame(currentGame) {
+    this.currentGame = currentGame;
+  }
+
   getName() {
     return this.name;
   }
@@ -51,33 +56,29 @@ export default class Role {
     return this.species;
   }
 
-  //verifica a role tem habildiades que interagem com jogadores mortos
-  cantInteractWithDeadPlayers(currentGame) {
+  cantInteractWithDeadPlayers() {
     return (
       this.interactWithDeadPlayers === true &&
-      currentGame.getDeadPlayers().length === 0
+      this.currentGame.getDeadPlayers().length === 0
     );
   }
 
-  //retorna uma nome falso para a role
-  getFakeName(currentTurn) {
-    if (this.hasFakeName(currentTurn)) {
+  setFakeName(name, duration) {
+    this.fakeName.name = name;
+    this.fakeName.duration = duration;
+    this.fakeName.turnItWasFaked = this.currentGame.getCurrentTurn();
+  }
+
+  hasFakeName() {
+    const { duration, turnItWasFaked } = this.fakeName;
+    return (duration + turnItWasFaked) >= this.currentGame.getCurrentTurn();
+  }
+
+  getFakeName() {
+    if (this.hasFakeName()) {
       return this.fakeName.name;
     }
     return this.name;
-  }
-
-  //atribui um nome falso à role e por quanto tempo durará
-  setFakeName(name, duration, currentTurn) {
-    this.fakeName.name = name;
-    this.fakeName.duration = duration;
-    this.fakeName.lastFakeNameTurn = currentTurn;
-  }
-
-  //verifica se está com um nome falso
-  hasFakeName(currentTurn) {
-    const { duration, lastFakeNameTurn } = this.fakeName;
-    return (duration + lastFakeNameTurn) >= currentTurn;
   }
 
   getTeam() {
@@ -116,26 +117,27 @@ export default class Role {
     return this.secondSkill.icon;
   }
 
-  getSkillTarget() {
+  getSkillType() {
     return {
-      skill1IsTarget: this.firstSkill.target,
-      skill2IsTarget: this.secondSkill.target,
+      isFirstSkillTargetType: this.firstSkill.isTargetType,
+      isSecondSkillTargetType: this.secondSkill.isTargetType,
     };
   }
 
-  blockSkill(skill, duration, lastBlockedTurn) {
-    this.blockedSkills[skill].duration = duration;
-    this.blockedSkills[skill].lastBlockedTurn = lastBlockedTurn;
+  disableSkill(skill, duration) {
+    this.disabledSkills[skill].duration = duration;
+    this.disabledSkills[skill].turnItWasDisabled = this.currentGame.getCurrentTurn();
   }
 
-  isSkillBlocked(skill, currentTurn) {
-    const { duration, lastBlockedTurn } = this.blockedSkills[skill];
-    return (
-      lastBlockedTurn < currentTurn && currentTurn <= lastBlockedTurn + duration
-    );
+  isSkillDisabled(skill) {
+    const { duration, turnItWasDisabled } = this.disabledSkills[skill];
+    const currentTurn = this.currentGame.getCurrentTurn();
+    const hasNotBeenBlockedThisTurn = turnItWasDisabled < currentTurn;
+    const isInTheBlockRange = currentTurn <= turnItWasDisabled + duration;
+    return (hasNotBeenBlockedThisTurn && isInTheBlockRange);
   }
-  
-  hasInvalidTargetOn(targetPlayer, currentTurn, chosenSkill) {
+
+  skillHasInvalidTargetOn(targetPlayer, chosenSkill, ) {
     return false;
   }
 }

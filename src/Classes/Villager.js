@@ -16,42 +16,42 @@ export default class Villager extends Role {
         name: "Espiar",
         description:
           "Você tem 5% de chance de descobrir um lobisomem. Se conseguir, há 15% de chance dele te matar.",
-        target: false,
+        isTargetType: false,
         icon: firstSkillIcon,
       },
       {
         name: "Rezar",
         description:
           "Escolha outro jogador. Ele tem 5% de chance de ser protegido.",
-        target: true,
+        isTargetType: true,
         icon: secondSkillIcon,
       }
     );
   }
 
-  espiar(playerList, currentTurn) {
+  espiar() {
+    const alivePlayers = this.currentGame.getPlayers();
     const deathChance = 0.15;
-    const discoverChance = 0.05;
+    const discoverWerewolfChance = 0.05;
     const randomNumber = Math.random();
-    let message = "";
-    let discoveredWereWolf = playerList.find(
-      (player) => player.getRole().getFakeName(currentTurn) === "Lobisomem"
-    );
-    if (randomNumber <= discoverChance) {
+    let alert = "";
+    let discoveredWereWolf = alivePlayers.find(player => player.getRole().getFakeName() === "Lobisomem");
+    if (randomNumber <= discoverWerewolfChance) {
       const deathNumber = Math.random();
       if (deathNumber <= deathChance) {
         this.player.setMarkedForDeath(true);
       } else if (discoveredWereWolf) {
-        message = `${discoveredWereWolf.getName()} é um lobisomem entre nós!`;
+        alert = `${discoveredWereWolf.getName()} é um lobisomem entre nós!`;
       }
     }
-    return message;
+    return alert;
   }
 
-  orar(otherPlayer) {
-    const chance = Math.random();
-    if (chance <= 0.05) {
-      otherPlayer.setProtected(true);
+  orar(targetPlayer) {
+    const protectingChance = 0.05;
+    const randomNumber = Math.random();
+    if (randomNumber <= protectingChance) {
+      targetPlayer.setProtected(true);
     }
   }
 }

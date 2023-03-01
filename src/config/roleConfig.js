@@ -14,9 +14,6 @@ const potionInstructions = {
 };
 
 export default function useRoleConfig(
-  currentGame,
-  currentTurn,
-  playerList,
   role,
   targetPlayer,
   setTargetPlayer,
@@ -37,7 +34,7 @@ export default function useRoleConfig(
       methods: {
         useFirstSkill: () => {
           setChosenSkill(1);
-          const newDiscoveredPlayer = role.espiar(playerList, currentTurn);
+          const newDiscoveredPlayer = role.espiar();
           if (!newDiscoveredPlayer) {
             return passTurn();
           }
@@ -62,12 +59,12 @@ export default function useRoleConfig(
     Caçador: {
       methods: {
         useFirstSkill: () => {
-          role.atirar(targetPlayer, currentTurn);
+          role.atirar(targetPlayer);
           setTargetPlayer(null);
           passTurn();
         },
         useSecondSkill: () => {
-          role.capturar(targetPlayer, currentTurn);
+          role.capturar(targetPlayer);
           setTargetPlayer(null);
           passTurn();
         },
@@ -90,11 +87,11 @@ export default function useRoleConfig(
           passTurn();
         },
         useSecondSkill: () => {
-          role.usarPocao(potion, targetPlayer, currentTurn);
+          role.usarPocao(targetPlayer, potion);
           setTargetPlayer(null);
           passTurn();
         },
-        useSkillTarget: (skill, role) => {
+        useSkillTarget: (skill) => {
           setChosenSkill(skill);
           handleShowPlayers();
           setPotion(role.gerarPocao());
@@ -114,7 +111,7 @@ export default function useRoleConfig(
           passTurn();
         },
         useSecondSkill: () => {
-          role.julgar(targetPlayer, currentGame, currentTurn);
+          role.julgar(targetPlayer);
           setTargetPlayer(null);
           passTurn();
         },
@@ -137,7 +134,7 @@ export default function useRoleConfig(
           passTurn();
         },
         useSecondSkill: () => {
-          role.transmutar(currentTurn);
+          role.transmutar();
           passTurn();
         },
         useSkillTarget: (skill) => {
@@ -163,7 +160,7 @@ export default function useRoleConfig(
           passTurn();
         },
         useSecondSkill: () => {
-          role.transmutar(currentTurn);
+          role.transmutar();
           passTurn();
         },
         useSkillTarget: (skill) => {
@@ -184,12 +181,12 @@ export default function useRoleConfig(
     Médica: {
       methods: {
         useFirstSkill: () => {
-          role.curar(targetPlayer, currentGame);
+          role.curar(targetPlayer);
           setTargetPlayer(null);
           passTurn();
         },
         useSecondSkill: () => {
-          role.reanimar(targetPlayer, currentGame, currentTurn);
+          role.reanimar(targetPlayer);
           setTargetPlayer(null);
           passTurn();
         },
@@ -211,7 +208,7 @@ export default function useRoleConfig(
     Vidente: {
       methods: {
         useFirstSkill: () => {
-          setDiscoveredPlayer(role.revelar(targetPlayer, currentTurn));
+          setDiscoveredPlayer(role.revelar(targetPlayer));
           setTargetPlayer(null);
           setShowPlayers(false);
           setPassCondition(true);
@@ -240,7 +237,7 @@ export default function useRoleConfig(
     Bruxa: {
       methods: {
         useFirstSkill: () => {
-          role.amaldicoar(targetPlayer, currentTurn);
+          role.amaldicoar(targetPlayer);
           setTargetPlayer(null);
           setShowPlayers(false);
           passTurn();

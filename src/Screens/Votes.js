@@ -15,7 +15,7 @@ export default function Votes({ navigation }) {
     const playerList = currentGame.getPlayers();
 
     function handleVote() {
-        currentPlayer.voteOn(targetPlayer, playerList);
+        currentPlayer.voteOn(targetPlayer);
         passVotation();
     }
 
@@ -37,7 +37,7 @@ export default function Votes({ navigation }) {
         <BackgroundImage source={votationImg}>
             <SpaceAroundContainer>
                 <ThemeProvider theme={dark}>
-                    {currentPlayer.hasBlockedVote(currentTurn) ? (
+                    {currentPlayer.hasDisabledVote(currentTurn) ? (
                         <>
                             <SubTitle style={{ marginTop: 160 }}>Seus votos estão bloqueados neste turno</SubTitle>
                             <DefaultButton title="Passar a vez" onPress={() => passVotation()} inverted={true} />
@@ -46,7 +46,6 @@ export default function Votes({ navigation }) {
                         <>
                             <SubTitle style={{ marginTop: 160 }}>{currentPlayer.getName()}, escolha seu voto</SubTitle>
                             <PlayersButtonList
-                                currentGame={currentGame}
                                 playerList={playerList}
                                 currentPlayer={currentPlayer}
                                 targetPlayer={targetPlayer}

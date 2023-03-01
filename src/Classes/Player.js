@@ -1,18 +1,20 @@
 export default class Player {
-  constructor(name, ID) {
-    this.name = name; //guarda o nome do jogador
+  constructor(name, ID, currentGame) {
+    this.name = name; 
     this.ID = ID;
-    this.votesCount = 0; //guarda o número de votos que o jogador recebeu
-    this.doubleVote = false; //estado de voto com peso 2
-    this.blockedVote = {
-      duration: 0,
-      lastBlockedVoteTurn: 0
+    this.role = null;
+    this.currentGame = currentGame; 
+    this.votesCount = 0; 
+    this.duplicatedVote = false; 
+    this.disabledVote = {
+      duration: -1,
+      turnItWasDisabled: -1
     }
-    this.confused = false; //estado de voto aleatório
-    this.protected = false; //condiçao de proteçao do jogador
-    this.markedForDeath = false; //condigçao de morte do jogador
-    this.markedForRess = false; //marca um jogador para ser revivido ao final do turno
-    this.role = null; //guarda a role do jogador
+    this.confused = false; 
+    this.protected = false; 
+    this.protector = null;
+    this.markedForDeath = false; 
+    this.markedForRess = false; 
   }
 
   getName() {
@@ -23,12 +25,12 @@ export default class Player {
     return this.ID;
   }
 
-  setRole(role) {
-    this.role = role;
-  }
-
   getRole() {
     return this.role;
+  }
+
+  setRole(role) {
+    this.role = role;
   }
 
   getRoleName() {
@@ -39,12 +41,16 @@ export default class Player {
     return this.votesCount;
   }
 
-  setDoubleVote(value) {
-    this.doubleVote = value;
+  clearVotes() { 
+    this.votesCount = 0;
   }
 
-  hasDoubleVote() {
-    return this.doubleVote === true;
+  setDuplicatedVote(value) {
+    this.duplicatedVote = value;
+  }
+
+  hasDuplicatedVote() {
+    return this.duplicatedVote === true;
   }
 
   setConfused(value) {
@@ -54,39 +60,46 @@ export default class Player {
   isConfused() {
     return this.confused === true;
   }
-
-  voteOn(targetPlayer, playerList) {
-    let otherPlayer = targetPlayer;
+  
+  voteOn(targetPlayer) {
+    let player = targetPlayer;
     if (this.isConfused()) {
-      const randomIndex = Math.floor(Math.random() * playerList.length);
-      otherPlayer = playerList[randomIndex];
+      player = this.currentGame.getRandomPlayer();
     }
-    if (this.hasDoubleVote()) {
-      return otherPlayer.votesCount += 2;
+    if (this.hasDuplicatedVote()) {
+      return player.votesCount += 2;
     }
-    otherPlayer.votesCount += 1;
+    player.votesCount += 1;
   }
 
-  clearVotes() { 
-    this.votesCount = 0;
+  disableVote(duration) { 
+    this.disabledVote.duration = duration;
+    this.disabledVote.turnItWasDisabled = this.currentGame.getCurrentTurn();
   }
 
-  blockVote(duration, currentTurn) { //bloqueia os votos pela quantidade de turnos determinada
-    this.blockedVote.duration = duration;
-    this.blockedVote.lastBlockedVoteTurn = currentTurn;
+  hasDisabledVote() {
+    const { duration, turnItWasDisabled } = this.disabledVote; 
+    return (duration + turnItWasDisabled) >= this.currentGame.getCurrentTurn(); 
   }
 
-  hasBlockedVote(currentTurn) {
-    const { duration, lastBlockedVoteTurn } = this.blockedVote;
-    return (duration + lastBlockedVoteTurn) >= currentTurn + 1; //adiciona 1 para permitir o bloqueio de voto no mesmo turno em que a habildiade de bloqueio for usada
-  }
-
-  setProtected(protectedState) { 
-    this.protected = protectedState;
+  setProtected(value) { 
+    this.protected = value;
   }
 
   isProtected() { 
-    return this.protected;
+    return this.protected === true;
+  }
+
+  getProtector() {
+    return this.protector;
+  }
+
+  setProtector(player) {
+    this.protector = player;
+  } 
+
+  hasProtector() {
+    return this.player !== null;
   }
 
   isMarkedForDeath() { 
@@ -94,7 +107,11 @@ export default class Player {
   }
 
   setMarkedForDeath(value) { 
-    this.markedForDeath = value
+    this.markedForDeath = value;
+  }
+
+  canBeRemoved() {
+    return this.isMarkedForDeath() && !this.isProtected();
   }
 
   isMarkedForRess() { 
@@ -102,7 +119,7 @@ export default class Player {
   }
 
   setMarkedForRess(value) {
-    this.markedForRess = value
+    this.markedForRess = value;
   }
 
   belongsToWerewolfsTeam() {
@@ -121,20 +138,22 @@ export default class Player {
     return this.role.getSpecies() === 'Wolf';
   }
 
-  reset() {
+  resetAllStates() {
     this.votesCount = 0;
-    this.blockedVoteDuration = 0;
-    this.doubleVote = false;
+    this.duplicatedVote = false;
     this.confused = false;
     this.protected = false;
     this.protector = null;
     this.markedForDeath = false;
     this.markedForRess = false;
-    this.blockedNextTurn = false;
-    this.blockedSkills = {
-      skill1: 0,
-      skill2: 0,
-    }
+  }
+
+  resetStatesInNightPhase() {
+    this.votesCount = 0;
+    this.protected = false;
+    this.protector = null;
+    this.markedForDeath = false;
+    this.markedForRess = false;
   }
 
 }

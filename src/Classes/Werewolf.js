@@ -16,28 +16,28 @@ export class WereWolf extends Role {
       {
         name: 'Devorar',
         description: 'Você e outros lobisomens votam em um jogador para elimina-lo do jogo. Em caso de empate, a vítima é aleatória.',
-        target: true,
+        isTargetType: true,
         icon: firstSkillIcon
       },
       {
         name: 'Transmutar',
         description: 'Os outros aldeões te verão como aldeão neste e no próximo turno. Bloqueia devorar enquanto transmutado.',
-        target: false,
+        isTargetType: false,
         icon: secondtSkillIcon
       }
     );
   }
 
-  devorar(otherPlayer) { //os lobisomens votam durante a noite em quem vao eliminar
-    otherPlayer.addVote();
+  devorar(targetPlayer) { 
+    this.player.voteOn(targetPlayer);
   };
 
-  transmutar(currentTurn) {
-    this.setFakeName('Aldeão', 1, currentTurn); //muda de nome por 1 turno além do turno atual
-    this.blockSkill(1, 1, currentTurn); //bloqueia devorar por 1 turno
+  transmutar() {
+    this.setFakeName('Aldeão', 1); 
+    this.disableSkill(1, 1); 
   }
   
-  hasInvalidTargetOn(targetPlayer) {
+  skillHasInvalidTargetOn(targetPlayer) {
     return targetPlayer.isWolf();
   }
 }

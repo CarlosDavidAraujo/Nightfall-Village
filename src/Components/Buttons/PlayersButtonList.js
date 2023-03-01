@@ -4,7 +4,6 @@ import DefaultButton from "./DefaultButton";
 import { useRoute } from "@react-navigation/native";
 
 export default function PlayersButtonList({
-  currentGame,
   playerList,
   currentPlayer,
   targetPlayer,
@@ -14,7 +13,6 @@ export default function PlayersButtonList({
 }) {
   const route = useRoute();
   const role = currentPlayer.getRole();
-  const currentTurn = currentGame.getCurrentTurn();
   const canSeeVotes = () => {
     return currentPlayer.isWolf() && route.name === "PlayerAction";
   };
@@ -32,7 +30,7 @@ export default function PlayersButtonList({
             <DefaultButton
               onPress={() => setTargetPlayer(item)}
               disabled={
-                role.hasInvalidTargetOn(item, currentTurn, chosenSkill) &&
+                role.skillHasInvalidTargetOn(item, chosenSkill) &&
                 route.name === "PlayerAction"
               }
               inverted={inverted === (targetPlayer !== item)}

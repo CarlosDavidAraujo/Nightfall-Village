@@ -16,7 +16,7 @@ export default function PlayerAction({ navigation }) {
     const currentPlayer = currentGame.getCurrentPlayer();
     const role = currentPlayer.getRole();
     const roleName = role.getName();
-    const { skill1IsTarget, skill2IsTarget } = role.getSkillTarget();
+    const {  isFirstSkillTargetType,  isSecondSkillTargetType } = role.getSkillType();
     const [passCondition, setPassCondition] = useState(true);
     const [targetPlayer, setTargetPlayer] = useState();
     const [discoveredPlayer, setDiscoveredPlayer] = useState();
@@ -25,9 +25,6 @@ export default function PlayerAction({ navigation }) {
     const [chosenSkill, setChosenSkill] = useState();
     const [potion, setPotion] = useState();
     const roleConfig = useRoleConfig(
-        currentGame,
-        currentTurn,
-        playerList,
         role,
         targetPlayer,
         setTargetPlayer,
@@ -100,27 +97,26 @@ export default function PlayerAction({ navigation }) {
                 {!chosenSkill &&
                     <SkillsContainer>
                         <SkillButton
-                            onPress={skill1IsTarget ? () => methods.useSkillTarget(1, role) : handleUseFirstSkill} //se a skill é de alvo chama o metodo que mostra os alvos
+                            onPress={isFirstSkillTargetType ? () => methods.useSkillTarget(1) : handleUseFirstSkill} //se a skill é de alvo chama o metodo que mostra os alvos
                             skillIcon={role.getFirstSkillIcon()}                                  //se nao, executa diretamente o metodo da habilidade
                             skillName={role.getFirstSkillName()}
                             skillDescription={role.getFirstSkillDescription()}
-                            disabled={role.isSkillBlocked(1, currentTurn)}
-                            skillUsed={role.isSkillBlocked(1, currentTurn)}
+                            disabled={role.isSkillDisabled(1, currentTurn)}
+                            skillUsed={role.isSkillDisabled(1, currentTurn)}
                         />
                         <SkillButton
-                            onPress={skill2IsTarget ? () => methods.useSkillTarget(2, role) : handleUseSecondSkill}
+                            onPress={isSecondSkillTargetType ? () => methods.useSkillTarget(2) : handleUseSecondSkill}
                             skillIcon={role.getSecondSkillIcon()}
                             skillName={role.getSecondSkillName()}
                             skillDescription={role.getSecondSkillDescription()}
-                            disabled={role.isSkillBlocked(2, currentTurn) || role.cantInteractWithDeadPlayers(currentGame)}
-                            skillUsed={role.isSkillBlocked(2, currentTurn) || role.cantInteractWithDeadPlayers(currentGame)}
+                            disabled={role.isSkillDisabled(2, currentTurn) || role.cantInteractWithDeadPlayers(currentGame)}
+                            skillUsed={role.isSkillDisabled(2, currentTurn) || role.cantInteractWithDeadPlayers(currentGame)}
                         />
                     </SkillsContainer>
                 }
 
                 {showPlayers &&
                     <PlayersButtonList //renderiza a lista de alvos
-                        currentGame={currentGame}
                         playerList={playerList}
                         currentPlayer={currentPlayer}
                         targetPlayer={targetPlayer}
@@ -132,8 +128,7 @@ export default function PlayerAction({ navigation }) {
 
                 {showDeadPlayers &&
                     <PlayersButtonList
-                        currentGame={currentGame}
-                        playerList={deadPlayers} s
+                        playerList={deadPlayers} 
                         currentPlayer={currentPlayer}
                         targetPlayer={targetPlayer}
                         setTargetPlayer={setTargetPlayer}

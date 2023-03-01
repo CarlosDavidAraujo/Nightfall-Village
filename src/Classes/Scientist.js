@@ -2,7 +2,7 @@ import Role from "./Role";
 import scientistImg from '../../assets/images/scientist.png';
 import firstSkillIcon from '../../assets/images/tube.png';
 import secondSkillIcon from '../../assets/images/potion.png';
-import WereWolf from "./Werewolf";
+import {WereWolf} from "./Werewolf";
 import Villager from "./Villager";
 
 export default class Scientist extends Role {
@@ -17,53 +17,54 @@ export default class Scientist extends Role {
             {
                 name: 'Experimento',
                 description: 'Uma vez por jogo escolha um jogador. Se for um lobisomem, transforme-o em aldeão. Se for aldeão transforme-o em lobisomem.',
-                target: true,
+                isTargetType: true,
                 icon: firstSkillIcon
             },
             {
                 name: 'Alquimia',
                 description: 'Crie 1 de 3 poções aleatórias (pavor, confusão ou manipulação), sem repetir a mesma poção a cada turno. Bloqueia "Alquimia" após 3 usos.',
-                target: true,
+                isTargetType: true,
                 icon: secondSkillIcon
             }
         );
-        this.potions = {
-            'pavor': (otherPlayer, currentTurn) => otherPlayer.blockVote(1, currentTurn), //nao pode votar por 1 turno
-            'confusão': otherPlayer => otherPlayer.setConfused(true), //voto aleatorio por 1 turno
-            'manipulação': otherPlayer => otherPlayer.setDoubleVote(true) //voto duplo por um turno
+        this.potionsEffects = {
+            'pavor': targetPlayer => targetPlayer.disableVote(1),
+            'confusão': targetPlayer => targetPlayer.setConfused(true),
+            'manipulação': targetPlayer => targetPlayer.setDuplicatedVote(true)
         };
     }
 
-    experimentar(otherPlayer) {
-        const playerTeam = otherPlayer.getRole().getTeam();
-        if (playerTeam === 'Aldeões') {
+    experimentar(targetPlayer) {
+        if (targetPlayer.belongsToVillagersTeam()) {
             const werewolf = new WereWolf();
-            otherPlayer.setRole(werewolf);
-            werewolf.setPlayer(otherPlayer);
+            targetPlayer.setRole(werewolf);
+            werewolf.setPlayer(targetPlayer);
         }
-        else if (playerTeam === 'Lobisomens') {
+        else if (targetPlayer.isWolf()) {
             const villager = new Villager();
-            otherPlayer.setRole(villager);
-            villager.setPlayer(otherPlayer);
+            targetPlayer.setRole(villager);
+            villager.setPlayer(targetPlayer);
         }
-        this.player.blockSkill(1, 1000, currentTurn); //bloqueia experimentar ate o final do jogo
+        this.disableSkill(1, 1000);
     }
 
-    usarPocao(potion, otherPlayer, currentTurn) {
-        const action = this.potions[potion];
-        if (action) {
-            action(otherPlayer, currentTurn);
-            delete this.potions[potion];
-        }
-        if (Object.keys(this.potions).length === 0) { //bloqueia alquimia até o final do jogo quando não houver mais poções para serem usadas
-            this.blockSkill(2, 1000, currentTurn); 
+    usarPocao(targetPlayer, potion) {
+        const usePotionEffectOn = this.potionsEffects[potion];
+        usePotionEffectOn(targetPlayer);
+        delete this.potionsEffects[potion];
+        if (!this.hasPotions()) {
+            return this.disableSkill(2, 1000);
         }
     }
 
     gerarPocao() {
-        const potionKeys = Object.keys(this.potions);
-        const randomIndex = Math.floor(Math.random() * potionKeys.length);
-        const potion = potionKeys[randomIndex];
+        const potions = Object.keys(this.potionsEffects);
+        const randomIndex = Math.floor(Math.random() * potions.length);
+        const potion = potions[randomIndex];
         return potion;
+    }
+
+    hasPotions() {
+        Object.keys(this.potionsEffects).length > 0;
     }
 }

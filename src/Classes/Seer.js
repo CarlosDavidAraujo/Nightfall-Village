@@ -15,24 +15,24 @@ export default class Seer extends Role {
       {
         name: 'Revelar',
         description: 'Você pode ver a função de outro jogador.',
-        target: true,
+        isTargetType: true,
         icon: firstSkillIcon
       },
       {
         name:  'Contactar',
         description: 'Você pode ver a função de um jogador que ja morreu.',
-        target: true,
+        isTargetType: true,
         icon: secondSkillIcon
       }
     );
   }
 
-  revelar(otherPlayer, currentTurn) {
-    return `A verdade foi revelada! ${otherPlayer.getName()} é ${otherPlayer.getRole().getFakeName(currentTurn)}. Fique atento à sua jogada!`;
+  revelar(targetPlayer) {
+    return `A verdade foi revelada! ${targetPlayer.getName()} é ${targetPlayer.getRole().getFakeName()}. Fique atento à sua jogada!`;
   }
 
-  contactar(otherPlayer) {
-    return `A verdade foi revelada! ${otherPlayer.getName()} era ${otherPlayer.getRoleName()}.`;
+  contactar(targetPlayer) {
+    return `A verdade foi revelada! ${targetPlayer.getName()} era ${targetPlayer.getRoleName()}.`;
   }
 
 }

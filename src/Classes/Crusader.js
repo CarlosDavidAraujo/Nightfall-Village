@@ -15,32 +15,32 @@ export default class Crusader extends Role {
             {
                 name: 'Sacrifício',
                 description: 'Escolha um jogador. Se ele iria morrer esta noite você morre no lugar dele.',
-                target: true,
+                isTargetType: true,
                 icon: firstSkillIcon
             },
             {
                 name: 'Julgamento',
                 description: 'Escolha um jogador. Se for um lobisomem, ele será exposto, se for um aldeão, por 2 rodadas você não pode votar e julgamento é bloqueado.',
-                target: true,
+                isTargetType: true,
                 icon: secondSkillIcon
             }
         );
     }
 
-    sacrificar(otherPlayer) {
-        otherPlayer.setProtected(true);
-        this.player.setMarkedForDeath(true);
+    sacrificar(targetPlayer) {
+        targetPlayer.setProtected(true);
+        targetPlayer.setProtector(this.player);
     }
 
-    julgar(otherPlayer, currentGame, currentTurn) {
-        const otherPlayerTeam = otherPlayer.getRole().getTeam();
-        if (otherPlayerTeam === 'Lobisomens') {
-            const news = currentGame.getNews();
-            news.addNews(`${otherPlayer.getName()} é um lobisomem entre nós!`);
+    julgar(targetPlayer) {
+        const targetPlayerTeam = targetPlayer.getRole().getTeam();
+        if (targetPlayerTeam === 'Lobisomens') {
+            const news = this.currentGame.getNews();
+            news.addNews(`${targetPlayer.getName()} é um lobisomem entre nós!`);
         }
         else {
-            this.blockSkill(2, 2, currentTurn);  //bloqueia a habilidade 2 por 2 turnos
-            this.player.blockVote(2, currentTurn); //bloqueia os votos por 2 turnos
+            this.disableSkill(2, 2);
+            this.player.disableVote(2); 
         }
     }
 }

@@ -20,15 +20,15 @@ export default class Game {
     this.news = new News();
     this.currentRoles = [];
     this.roleMap = [
-      new Villager(),
-      new Seer(),
-      new WereWolf(),
-      new Crusader(),
-      new Doctor(),
-      new Hunter(),
-      new LonelyWerewolf(),
-      new Scientist(),
-      new Witch(),
+      new Villager(this),
+      new Seer(this),
+      new WereWolf(this),
+      new Crusader(this),
+      new Doctor(this),
+      new Hunter(this),
+      new LonelyWerewolf(this),
+      new Scientist(this),
+      new Witch(this),
     ];
   }
 
@@ -37,7 +37,7 @@ export default class Game {
   }
 
   advanceTurn() {
-    this.currentTurn++;
+    this.currentTurn = this.currentTurn + 1;
   }
 
   getRoleMap() {
@@ -86,16 +86,48 @@ export default class Game {
   }
 
   resetAllPlayersStates() {
-    this.alivePlayers.forEach(player => {
+    this.alivePlayers.forEach((player) => {
       player.resetAllStates();
     });
   }
 
-  endTurn() {
-    this.clearTurnNews();
+  removeKilledPlayers(player) {
+    if (player.canBeRemoved()) {
+      this.news.addNews(player.getDeathMessage());
+      player.remove();
+    }
+  }
+
+  removePlayersProtectors(player) {
+    if (player.hasAProtectorToRemove()) {
+      const protector = player.getProtector();
+      this.news.addNews(protector.getDeathMessage());
+      protector.remove();
+    }
+  }
+
+  removeDeadPlayersFromAlivePlayers() {
+    const remainingAlivePlayers = this.alivePlayers.filter(
+      (player) => !this.deadPlayers.includes(player)
+    );
+    const noOneDied = this.alivePlayers.length === remainingAlivePlayers.length;
+    if (noOneDied) {
+      this.news.addNews("Noite de paz na vila.");
+    }
+    this.alivePlayers = remainingAlivePlayers;
+  }
+
+  removePlayers() {
     this.alivePlayers.forEach((player) => {
-      player.resetAllStates();
+      this.removeKilledPlayers(player);
+      this.removePlayersProtectors(player);
     });
+    this.removeDeadPlayersFromAlivePlayers();
+  }
+
+  endTurn() {
+    this.removeMostVotedPlayer();
+    this.resetAllPlayersStates();
     this.advanceTurn();
   }
 
@@ -103,60 +135,46 @@ export default class Game {
     this.setMostVotedPlayerByWerewolfs();
     this.removePlayers();
     this.revivePlayers();
-    this.resetAllPlayersStates();
+    this.alivePlayers.forEach((player) => player.clearVotes());
   }
 
-
-
-  removePlayers() {
-    this.alivePlayers.forEach((player) => {
-      if (player.isMarkedForDeath() && !player.isProtected()) {
-        this.news.addNews(
-          `${player.getName()} morreu esta noite. Deve ficar calado até o fim do jogo.`
-        );
-        player.resetStates();
-        this.deadPlayers.push(player);
-      }
-      if(player.hasProtector() && player.isMarkedForDeath()) {
-        const protector = player.getProtector();
-        this.news.addNews(
-          `${protector.getName()} morreu esta noite. Deve ficar calado até o fim do jogo.`
-        );
-        protector.resetStates();
-        this.deadPlayers.push(protector);
-      }
-    });
-
-    //atualiza a lista de <players> com os que ficaram vivos
-    const alivePlayers = this.alivePlayers.filter(player => !this.deadPlayers.includes(player));
-    if (this.alivePlayers.length === alivePlayers.length) {
-      this.news.addNews("Noite de paz na vila.");
-    }
-    this.alivePlayers = alivePlayers;
+  removeResurrectedPlayerFromDeadPlayers() {
+    const updatedDeadPlayers = this.deadPlayers.filter(
+      (player) => !player.isMarkedForRess()
+    );
+    this.deadPlayers = updatedDeadPlayers;
   }
 
-  //revive os jogadores marcados para reviver
+  getInsertionPositionOfResurrected(player) {
+    const originalPlayerPositionInQueue = player.getID();
+    const nearestPlayerPosition = this.alivePlayers.findIndex(
+      (p) => p.getID() > originalPlayerPositionInQueue
+    );
+    const insertionIndex =
+      nearestPlayerPosition !== -1
+        ? nearestPlayerPosition
+        : this.alivePlayers.length;
+    return insertionIndex;
+  }
+
+  insertPlayerInAlivePlayers(insertionPosition, player) {
+    this.alivePlayers.splice(insertionPosition, 0, player);
+    this.news.addNews(`${player.getName()} foi ressuscitado!`);
+  }
+
   revivePlayers() {
     this.deadPlayers.forEach((player) => {
       if (player.isMarkedForRess()) {
-        const updatedDeadPlayers = this.deadPlayers.filter(
-          (p) => p.getID() !== player.getID()
-        );
-        this.deadPlayers = updatedDeadPlayers;
-        const originalIndex = player.getID(); //obtem seu index original na lista de players
-        const nextPlayerIndex = this.alivePlayers.findIndex(
-          (p) => p.getID() > originalIndex
-        ); //procura o index do jogador com Id maior que o do jogador reivivido
-        const insertionIndex =
-          nextPlayerIndex !== -1 ? nextPlayerIndex : this.alivePlayers.length; //insere antes do jogador mais proximo ou no final da lista se nao houver ninguem a frente
-        this.alivePlayers.splice(insertionIndex, 0, player);
-        this.news.addNews(`${player.getName()} foi ressuscitado!`);
+        const insertionPosition =
+          this.getInsertionPositionOfResurrected(player);
+        this.insertPlayerInAlivePlayers(insertionPosition, player);
+        player.setMarkedForRess(false);
       }
     });
+    this.removeResurrectedPlayerFromDeadPlayers();
   }
 
   setMostVotedPlayers() {
-    //define os jogadores mais votados pela vila
     let maxVotes = 0;
     this.alivePlayers.forEach((player) => {
       if (player.getVotesCount() > maxVotes) {
@@ -168,40 +186,42 @@ export default class Game {
     });
   }
 
-  //remove o jogador mais votado pela vila
-  removeMostVotedPlayer() {
-    this.setMostVotedPlayers(); //define o jogador mais votado
-    if (this.mostVotedPlayers.length != 1) {   //se houve empate ninguem morre
-      return this.news.setNews("A aldeia ficou indecisa!");
-    }
+  didVoteTie() {
+    return this.mostVotedPlayers.length != 1;
+  }
 
-    //se não há empate atualiza a lista de jogadores vivos removendo o jogador mais votado
-    const mostVotedPlayer = this.mostVotedPlayers[0];
-    const alivePlayers = this.alivePlayers.filter(
+  updateAlivePlayersWithoutMostVotedPlayer(mostVotedPlayer) {
+    const updatedAlivePlayers = this.alivePlayers.filter(
       (player) => player.getName() !== mostVotedPlayer.getName()
     );
-    this.alivePlayers = alivePlayers;
+    this.alivePlayers = updatedAlivePlayers;
+  }
+
+  removeMostVotedPlayer() {
+    this.setMostVotedPlayers();
+    if (this.didVoteTie()) {
+      return this.news.setNews("A aldeia ficou indecisa!");
+    }
+    const mostVotedPlayer = this.mostVotedPlayers[0];
+    this.updateAlivePlayersWithoutMostVotedPlayer(mostVotedPlayer);
     this.deadPlayers.push(mostVotedPlayer);
     this.news.addNews(
       `${mostVotedPlayer.getName()} foi morto pela aldeia. Deve ficar calado até o fim do jogo.`
     );
-    this.mostVotedPlayers = []; //ao final reseta a lista de mais votados
+    this.mostVotedPlayers = [];
   }
 
-  //remove o jogador mais votado pelos lobisomens
   setMostVotedPlayerByWerewolfs() {
-    this.setMostVotedPlayers(); //define os mais votados
+    this.setMostVotedPlayers();
     if (this.mostVotedPlayers.length === 0) {
-      //faz nada se ninguem foi morto por lobisomens
       return;
     }
-    this.resolveTieBreak(); //desempata a votacao, assim não morrerá mais de um jogador por turno devorado por lobisomens
+    this.resolveTieBreak();
     const mostVotedPlayer = this.mostVotedPlayers[0];
     mostVotedPlayer.setMarkedForDeath(true);
-    this.mostVotedPlayers = []; //ao final reseta a lista de mais votados
+    this.mostVotedPlayers = [];
   }
 
-  //desempata a votaçao dos lobisomens durante a noite
   resolveTieBreak() {
     if (this.mostVotedPlayers.length > 1) {
       const randomIndex = Math.floor(
@@ -251,8 +271,6 @@ export default class Game {
     return winner;
   }
 
-  //adiciona os papéis selecionados à lista de <roles> com suas respectivas quantidades
-  //esta é uma função auxiliar da função logo abaixo
   setRoles(selectedRoles) {
     this.currentRoles = [];
     selectedRoles.forEach((selectedRole) => {
@@ -261,17 +279,16 @@ export default class Game {
         this.currentRoles.push(role);
       }
     });
-    this.currentRoles = _.shuffle(this.currentRoles); // por fim, embaralha a lista <roles>
+    this.currentRoles = _.shuffle(this.currentRoles);
   }
 
   assignRoleToPlayer(selectedRoles) {
-    this.setRoles(selectedRoles); //seta a lista <roles>
+    this.setRoles(selectedRoles);
     this.alivePlayers.forEach((player, i) => {
-      //associa cada jogador a um papel
-      const roleCopy = _.cloneDeep(this.currentRoles[i]); //cria uma copia da instacia de role do array <roles> para garantir que cada jogador nao esteja manipulando a mesma instancia de role
+      const roleCopy = _.cloneDeep(this.currentRoles[i]);
       roleCopy.setCurrentGame(this);
-      player.setRole(roleCopy); //associa o jogador a role
-      roleCopy.setPlayer(player); //associa a role ao jogador
+      player.setRole(roleCopy);
+      roleCopy.setPlayer(player);
     });
   }
 }

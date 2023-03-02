@@ -5,8 +5,9 @@ import secondtSkillIcon from '../../assets/images/transmute.png';
 import loneWolfImg from '../../assets/images/loneWolf.png';
 
 export class WereWolf extends Role {
-  constructor() {
+  constructor(currentGame) {
     super(
+      currentGame,
       "Lobisomem", //nome
       "Lobisomens", //time
       'Wolf',

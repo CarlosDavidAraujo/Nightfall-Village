@@ -50,10 +50,8 @@ export default function DefinePlayers({ navigation }) {
     } else if (emptyName()) {
       return setErrorMessage("Dê um nome para cada jogador!");
     }
-    currentGame.setPlayers(players);
-    navigation.navigate("DefineRoles", {
-      playerList: currentGame.getPlayers(),
-    });
+    currentGame.setAlivePlayers(players);
+    navigation.navigate("DefineRoles");
   }
 
   const emptyName = () => {

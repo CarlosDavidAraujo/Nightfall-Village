@@ -4,8 +4,9 @@ import firstSkillIcon from '../../assets/images/target.png';
 import secondSkillIcon from '../../assets/images/trap.png';
 
 export default class Hunter extends Role {
-  constructor() {
+  constructor(currentGame) {
     super(
+      currentGame,
       "Caçador",
       "Aldeões",
       'Human',

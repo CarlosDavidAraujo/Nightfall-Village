@@ -4,8 +4,9 @@ import firstSkillIcon from "../../assets/images/medicine.png";
 import secondSkillIcon from "../../assets/images/syringe.png";
 
 export default class Doctor extends Role {
-    constructor() {
+    constructor(currentGame) {
         super(
+            currentGame,
             "Médica",
             "Aldeões",
             "Human",

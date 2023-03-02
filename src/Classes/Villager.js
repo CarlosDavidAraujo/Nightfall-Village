@@ -4,8 +4,9 @@ import firstSkillIcon from "../../assets/images/keyhole.png";
 import secondSkillIcon from "../../assets/images/pray.png";
 
 export default class Villager extends Role {
-  constructor() {
+  constructor(currentGame) {
     super(
+      currentGame,
       "Aldeão",
       "Aldeões",
       "Human",
@@ -30,12 +31,14 @@ export default class Villager extends Role {
   }
 
   espiar() {
-    const alivePlayers = this.currentGame.getPlayers();
+    const alivePlayers = this.currentGame.getAlivePlayers();
     const deathChance = 0.15;
     const discoverWerewolfChance = 0.05;
     const randomNumber = Math.random();
     let alert = "";
-    let discoveredWereWolf = alivePlayers.find(player => player.getRole().getFakeName() === "Lobisomem");
+    let discoveredWereWolf = alivePlayers.find(
+      (player) => player.getRole().getFakeName() === "Lobisomem"
+    );
     if (randomNumber <= discoverWerewolfChance) {
       const deathNumber = Math.random();
       if (deathNumber <= deathChance) {

@@ -2,19 +2,24 @@ import { useContext, useState, useEffect } from "react";
 import { ThemeProvider } from "styled-components/native";
 import DefaultButton from "../Components/Buttons/DefaultButton";
 import { GameContext } from "../Context/GameContext";
-import bgImg from '../../assets/images/passTo.png'
-import door from '../../assets/images/door.png';
-import { BackgroundImage, RotatedText, SpaceAroundContainer, Title } from "../Styles";
+import bgImg from "../../assets/images/passTo.png";
+import door from "../../assets/images/door.png";
+import {
+  BackgroundImage,
+  RotatedText,
+  SpaceAroundContainer,
+  Title,
+} from "../Styles";
 import { dark } from "../Themes/Dark";
 
 export default function PassToPlayer({ navigation, route }) {
-  const { currentGame  } = useContext(GameContext);
+  const { currentGame } = useContext(GameContext);
   const [ready, setReady] = useState(false);
   const currentPlayerName = currentGame.getCurrentPlayer().getName();
   const { previousScreen } = route.params;
 
   function passVoteToNextPlayer() {
-    navigation.navigate('Votes');
+    navigation.navigate("Votes");
   }
 
   useEffect(() => {
@@ -26,30 +31,32 @@ export default function PassToPlayer({ navigation, route }) {
       <SpaceAroundContainer>
         {ready ? (
           <>
-           <ThemeProvider theme={dark}>
-              <Title>
-                {currentPlayerName}
-              </Title>
+            <ThemeProvider theme={dark}>
+              <Title>{currentPlayerName}</Title>
             </ThemeProvider>
             <DefaultButton
               inverted={true}
               title="Mostrar função"
               onPress={() => navigation.navigate("PlayerAction")}
-              style={{ position: 'absolute', bottom: '20%' }}
+              style={{ position: "absolute", bottom: "20%" }}
             />
           </>
         ) : (
           <>
             <ThemeProvider theme={dark}>
-              <RotatedText style={{ position: 'absolute', top: '35.5%' }}>
+              <RotatedText style={{ position: "absolute", top: "35.5%" }}>
                 Passe para {currentPlayerName}
               </RotatedText>
             </ThemeProvider>
             <DefaultButton
               inverted={true}
               title="Clique quando estiver pronto"
-              onPress={previousScreen === 'Votes' || previousScreen === 'Clock'? () => passVoteToNextPlayer() : () => setReady(true)}
-              style={{ position: 'absolute', bottom: '20%' }}
+              onPress={
+                previousScreen === "Votes" || previousScreen === "Clock"
+                  ? () => passVoteToNextPlayer()
+                  : () => setReady(true)
+              }
+              style={{ position: "absolute", bottom: "20%" }}
             />
           </>
         )}
@@ -57,4 +64,3 @@ export default function PassToPlayer({ navigation, route }) {
     </BackgroundImage>
   );
 }
-

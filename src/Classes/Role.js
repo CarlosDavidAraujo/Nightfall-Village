@@ -1,5 +1,6 @@
 export default class Role {
   constructor(
+    currentGame,
     name,
     team,
     species,
@@ -9,6 +10,7 @@ export default class Role {
     firstSkill,
     secondSkill
   ) {
+    this.currentGame = currentGame;
     this.player = null;
     this.name = name;
     this.fakeName = {
@@ -33,7 +35,10 @@ export default class Role {
         turnItWasDisabled: -1,
       },
     };
-    this.currentGame = null;
+  }
+
+  setCurrentGame(currentGame) {
+    this.currentGame = currentGame;
   }
 
   getPlayer() {
@@ -42,10 +47,6 @@ export default class Role {
 
   setPlayer(player) {
     this.player = player;
-  }
-
-  setCurrentGame(currentGame) {
-    this.currentGame = currentGame;
   }
 
   getName() {
@@ -71,7 +72,7 @@ export default class Role {
 
   hasFakeName() {
     const { duration, turnItWasFaked } = this.fakeName;
-    return (duration + turnItWasFaked) >= this.currentGame.getCurrentTurn();
+    return duration + turnItWasFaked >= this.currentGame.getCurrentTurn();
   }
 
   getFakeName() {
@@ -126,7 +127,8 @@ export default class Role {
 
   disableSkill(skill, duration) {
     this.disabledSkills[skill].duration = duration;
-    this.disabledSkills[skill].turnItWasDisabled = this.currentGame.getCurrentTurn();
+    this.disabledSkills[skill].turnItWasDisabled =
+      this.currentGame.getCurrentTurn();
   }
 
   isSkillDisabled(skill) {
@@ -134,10 +136,10 @@ export default class Role {
     const currentTurn = this.currentGame.getCurrentTurn();
     const hasNotBeenBlockedThisTurn = turnItWasDisabled < currentTurn;
     const isInTheBlockRange = currentTurn <= turnItWasDisabled + duration;
-    return (hasNotBeenBlockedThisTurn && isInTheBlockRange);
+    return hasNotBeenBlockedThisTurn && isInTheBlockRange;
   }
 
-  skillHasInvalidTargetOn(targetPlayer, chosenSkill, ) {
+  skillHasInvalidTargetOn(targetPlayer, chosenSkill) {
     return false;
   }
 }

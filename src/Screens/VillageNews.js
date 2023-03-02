@@ -6,10 +6,8 @@ import { FlexStartContainer, SpaceAroundContainer, SubTitle } from "../Styles";
 import { dark, invertTheme } from "../Themes/Dark";
 
 export default function VillageNews({ route, navigation }) {
-  const { currentGame, setCurrentGame } = useContext(
-    GameContext
-  );
-  const { previousScreen } = route.params
+  const { currentGame, setCurrentGame } = useContext(GameContext);
+  const { previousScreen } = route.params;
 
   const winner = currentGame.getWinnerTeam();
 
@@ -21,14 +19,14 @@ export default function VillageNews({ route, navigation }) {
   function gatherVillagers() {
     currentGame.clearTurnNews();
     navigation.navigate("Clock", {
-      previousScreen: 'VillageNews'
+      previousScreen: "VillageNews",
     });
   }
 
   function nightFall() {
-    currentGame.endTurn();
+    currentGame.clearTurnNews();
     navigation.navigate("PassToPlayer", {
-      previousScreen: 'VillageNews'
+      previousScreen: "VillageNews",
     });
   }
 
@@ -42,7 +40,10 @@ export default function VillageNews({ route, navigation }) {
       {winner ? (
         <DefaultButton onPress={() => handleEndGame()} title="Novo jogo" />
       ) : previousScreen === "PlayerAction" ? (
-        <DefaultButton onPress={() => gatherVillagers()} title="Reunir a vila" />
+        <DefaultButton
+          onPress={() => gatherVillagers()}
+          title="Reunir a vila"
+        />
       ) : previousScreen === "Votes" ? (
         <DefaultButton onPress={() => nightFall()} title="Adormecer" />
       ) : null}

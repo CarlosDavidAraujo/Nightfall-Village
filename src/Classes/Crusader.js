@@ -4,8 +4,9 @@ import firstSkillIcon from '../../assets/images/shield.png';
 import secondSkillIcon from '../../assets/images/balance.png';
 
 export default class Crusader extends Role {
-    constructor() {
+    constructor(currentGame) {
         super(
+            currentGame,
             "Cruzado",
             "Aldeões",
             'Human',

@@ -1,7 +1,7 @@
 import Role from "./Role";
-import villagerImg from "../../assets/images/villager.png";
-import firstSkillIcon from "../../assets/images/keyhole.png";
-import secondSkillIcon from "../../assets/images/pray.png";
+import villagerImg from "../../../assets/images/villager.png";
+import firstSkillIcon from "../../../assets/images/keyhole.png";
+import secondSkillIcon from "../../../assets/images/pray.png";
 
 export default class Villager extends Role {
   constructor(currentGame) {

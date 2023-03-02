@@ -1,7 +1,7 @@
 import Role from "./Role";
-import hunterImg from '../../assets/images/hunter.png';
-import firstSkillIcon from '../../assets/images/target.png';
-import secondSkillIcon from '../../assets/images/trap.png';
+import hunterImg from '../../../assets/images/hunter.png';
+import firstSkillIcon from '../../../assets/images/target.png';
+import secondSkillIcon from '../../../assets/images/trap.png';
 
 export default class Hunter extends Role {
   constructor(currentGame) {

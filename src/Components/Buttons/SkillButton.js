@@ -2,9 +2,9 @@ import styled from "styled-components/native";
 import { SmallText } from "../../Styles";
 import ButtonWithShadow from "./ButtonWithShadow";
 
-export default function SkillButton({ onPress, skillName, skillDescription, skillIcon, disabled, skillUsed }) {
+export default function SkillButton({ onPress, skillName, skillDescription, skillIcon, disabled, showOpacity }) {
     return (
-        <ButtonWithShadow onPress={onPress} inverted={true} disabled={disabled} skillUsed={skillUsed}> 
+        <ButtonWithShadow onPress={onPress} inverted={true} disabled={disabled} showOpacity={showOpacity}> 
                 <IconContainer>
                     <Image source={skillIcon} />
                     <SmallText>{skillName}</SmallText>

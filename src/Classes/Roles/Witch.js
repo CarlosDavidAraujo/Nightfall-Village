@@ -1,7 +1,7 @@
 import Role from "./Role";
-import witchImg from "../../assets/images/witch.png";
-import firstSkillIcon from "../../assets/images/darkPotion.png";
-import secondSkillIcon from "../../assets/images/crystalBall.png";
+import witchImg from "../../../assets/images/witch.png";
+import firstSkillIcon from "../../../assets/images/darkPotion.png";
+import secondSkillIcon from "../../../assets/images/crystalBall.png";
 
 export default class Witch extends Role {
     constructor(currentGame) {

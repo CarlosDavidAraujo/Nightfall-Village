@@ -25,43 +25,42 @@ export default function DefinePlayers({ navigation }) {
   ]);
   const [errorMessage, setErrorMessage] = useState("");
 
-  const handlePlayerChange = (text, index) => {
+  const addPlayer = () => {
+    setPlayers([...players, `Jogador ${players.length + 1}`]);
+  };
+
+  const removePlayer = (index) => {
+    const updatedPlayers = [...players];
+    setPlayers(updatedPlayers.filter((_, i) => i !== index));
+  };
+
+  const emptyName = () => {
+    return players.some((player) => player === "");
+  };
+
+  const validatePlayers = () => {
+    if (emptyName()) {
+      return "Dê um nome para cada jogador!";
+    }
+    if (players.length < 4) {
+      return "É necessário ter pelo menos 4 jogadores!";
+    }
+    return "";
+  };
+
+  const handlePlayerNameChange = (text, index) => {
     const updatedPlayers = [...players];
     updatedPlayers[index] = text;
     setPlayers(updatedPlayers);
   };
 
-  const handleAddPlayer = () => {
-    setPlayers([...players, `Jogador ${players.length + 1}`]);
-  };
-
-  const handleRemovePlayer = (index) => {
-    const updatedPlayers = [...players];
-    setPlayers(updatedPlayers.filter((_, i) => i !== index));
-  };
-
-  function handleDefinePlayers() {
-    if (emptyName() && players.length < 4) {
-      return setErrorMessage(
-        "Dê um nome para cada jogador! É necessário ter pelo menos 4 jogadores!"
-      );
-    } else if (players.length < 4) {
-      return setErrorMessage("É necessário ter pelo menos 4 jogadores!");
-    } else if (emptyName()) {
-      return setErrorMessage("Dê um nome para cada jogador!");
+  const handleDefinePlayers = () => {
+    const error = validatePlayers();
+    if (error) {
+      return setErrorMessage(error);
     }
     currentGame.setAlivePlayers(players);
     navigation.navigate("DefineRoles");
-  }
-
-  const emptyName = () => {
-    let result = false;
-    players.forEach((player) => {
-      if (player === "") {
-        result = true;
-      }
-    });
-    return result;
   };
 
   return (
@@ -78,12 +77,12 @@ export default function DefinePlayers({ navigation }) {
               spacing={5}
               renderItem={({ item, index }) =>
                 item === "add" ? (
-                  <AddPlayerButton onPress={() => handleAddPlayer()} />
+                  <AddPlayerButton onPress={() => addPlayer()} />
                 ) : (
                   <PlayerCard
                     value={item}
-                    onPress={() => handleRemovePlayer(index)}
-                    onChangeText={(text) => handlePlayerChange(text, index)}
+                    onPress={() => removePlayer(index)}
+                    onChangeText={(text) => handlePlayerNameChange(text, index)}
                   />
                 )
               }

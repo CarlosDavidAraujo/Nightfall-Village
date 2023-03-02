@@ -8,7 +8,7 @@ export default function ButtonWithShadow({
   style,
   inverted,
   disabled,
-  skillUsed,
+  showOpacity,
 }) {
   const [isPressed, setIsPressed] = useState(false);
   const theme = inverted ? invertTheme(dark) : dark;
@@ -19,7 +19,7 @@ export default function ButtonWithShadow({
         style={style}
         isPressed={isPressed}
         disabled={disabled}
-        skillUsed={skillUsed}
+        showOpacity={showOpacity}
         inverted={inverted}
         onPress={onPress}
         onPressIn={() => setIsPressed(true)}
@@ -36,7 +36,7 @@ const Container = styled.Pressable`
   position: relative;
   flex-direction: row;
   margin-top: 4%;
-  opacity: ${(props) => (props.skillUsed ? 0.6 : 1)};
+  opacity: ${(props) => (props.showOpacity ? 0.6 : 1)};
   transform: ${({ isPressed, inverted }) =>
     isPressed || !inverted ? "translate(5px, 5px)" : "translate(0, 0)"};
 `;

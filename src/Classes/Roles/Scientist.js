@@ -1,7 +1,7 @@
 import Role from "./Role";
-import scientistImg from "../../assets/images/scientist.png";
-import firstSkillIcon from "../../assets/images/tube.png";
-import secondSkillIcon from "../../assets/images/potion.png";
+import scientistImg from "../../../assets/images/scientist.png";
+import firstSkillIcon from "../../../assets/images/tube.png";
+import secondSkillIcon from "../../../assets/images/potion.png";
 import { WereWolf } from "./Werewolf";
 import Villager from "./Villager";
 

@@ -1,14 +1,15 @@
 import _ from "lodash";
-import Crusader from "./Crusader";
-import Doctor from "./Doctor";
-import Hunter from "./Hunter";
+import Crusader from "./Roles/Crusader";
+import Doctor from "./Roles/Doctor";
+import Hunter from "./Roles/Hunter";
 import News from "./News";
 import Player from "./Player";
-import Scientist from "./Scientist";
-import Seer from "./Seer";
-import Villager from "./Villager";
-import { LonelyWerewolf, WereWolf } from "./Werewolf";
-import Witch from "./Witch";
+import Scientist from "./Roles/Scientist";
+import Seer from "./Roles/Seer";
+import Villager from "./Roles/Villager";
+import { LonelyWerewolf, WereWolf } from "./Roles/Werewolf";
+import Witch from "./Roles/Witch";
+import Necromancer from "./Roles/Necromancer";
 
 export default class Game {
   constructor() {
@@ -27,6 +28,7 @@ export default class Game {
       new Doctor(this),
       new Hunter(this),
       new LonelyWerewolf(this),
+      new Necromancer(),
       new Scientist(this),
       new Witch(this),
     ];

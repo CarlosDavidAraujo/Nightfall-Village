@@ -1,7 +1,7 @@
 import Role from "./Role";
-import doctorImg from "../../assets/images/doctor.png";
-import firstSkillIcon from "../../assets/images/medicine.png";
-import secondSkillIcon from "../../assets/images/syringe.png";
+import doctorImg from "../../../assets/images/doctor.png";
+import firstSkillIcon from "../../../assets/images/medicine.png";
+import secondSkillIcon from "../../../assets/images/syringe.png";
 
 export default class Doctor extends Role {
     constructor(currentGame) {

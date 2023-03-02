@@ -1,7 +1,7 @@
 import Role from "./Role";
-import crusaderImg from '../../assets/images/crusader.png';
-import firstSkillIcon from '../../assets/images/shield.png';
-import secondSkillIcon from '../../assets/images/balance.png';
+import crusaderImg from '../../../assets/images/crusader.png';
+import firstSkillIcon from '../../../assets/images/shield.png';
+import secondSkillIcon from '../../../assets/images/balance.png';
 
 export default class Crusader extends Role {
     constructor(currentGame) {

@@ -205,6 +205,33 @@ export default function useRoleConfig(
         alert: "",
       },
     },
+    Necromante: {
+      methods: {
+        useFirstSkill: () => {
+          role.recompor(targetPlayer);
+          setTargetPlayer(null);
+          passTurn();
+        },
+        useSecondSkill: () => {
+          role.reanimar(targetPlayer);
+          setTargetPlayer(null);
+          passTurn();
+        },
+        useSkillTarget: (skill) => {
+          setChosenSkill(skill);
+          if (skill === 1) {
+            handleShowDeadPlayers();
+          } else if (skill === 2) {
+            handleShowPlayers();
+          }
+        },
+      },
+      messages: {
+        firstSkill: "Selecione quem deseja proteger",
+        secondSkill: "Selecione quem será julgado",
+        alert: "",
+      },
+    },
     Vidente: {
       methods: {
         useFirstSkill: () => {

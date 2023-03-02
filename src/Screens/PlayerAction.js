@@ -72,7 +72,6 @@ export default function PlayerAction({ navigation }) {
     currentGame.incrementCurrentPlayerIndex();
 
     if (currentGame.noNextPlayer()) {
-      //nao ha mais nenhum jogador para agir entao:
       currentGame.endNight();
       navigation.navigate("VillageNews", {
         previousScreen: "PlayerAction",
@@ -92,9 +91,9 @@ export default function PlayerAction({ navigation }) {
           <RoleImage source={role.getRoleImg()} />
         </RoleImageContainer>
 
-        <ConditionalMessage //renderiza condicionalmente mensagens
-          showChooseSkill={!chosenSkill} //se deve mostrar a mensagem de selecinar habilidade
-          showSelectPlayer={showPlayers} //se deve mostrar a mensagem de selecionar um jogador alvo
+        <ConditionalMessage 
+          showChooseSkill={!chosenSkill} 
+          showSelectPlayer={showPlayers}
           selectPlayerMessage={
             chosenSkill === 1
               ? messages.firstSkill
@@ -102,7 +101,7 @@ export default function PlayerAction({ navigation }) {
               ? messages.secondSkill
               : messages.alert && messages.alert
           }
-          showAlert={discoveredPlayer} //alertas como revelar a funcao de outro jogador
+          showAlert={discoveredPlayer} 
           alertMessage={discoveredPlayer}
         />
 
@@ -118,7 +117,7 @@ export default function PlayerAction({ navigation }) {
               skillName={role.getFirstSkillName()}
               skillDescription={role.getFirstSkillDescription()}
               disabled={role.isSkillDisabled(1)}
-              skillUsed={role.isSkillDisabled(1)}
+              showOpacity={role.isSkillDisabled(1)}
             />
             <SkillButton
               onPress={
@@ -133,7 +132,7 @@ export default function PlayerAction({ navigation }) {
                 role.isSkillDisabled(2) ||
                 role.cantInteractWithDeadPlayers(currentGame)
               }
-              skillUsed={
+              showOpacity={
                 role.isSkillDisabled(2) ||
                 role.cantInteractWithDeadPlayers(currentGame)
               }
@@ -142,7 +141,7 @@ export default function PlayerAction({ navigation }) {
         )}
 
         {showPlayers && (
-          <PlayersButtonList //renderiza a lista de alvos
+          <PlayersButtonList 
             playerList={playerList}
             currentPlayer={currentPlayer}
             targetPlayer={targetPlayer}
@@ -163,17 +162,17 @@ export default function PlayerAction({ navigation }) {
           />
         )}
       </FlexStartContainer>
-      <ActionButtons //rederiza 2 botoes, passar a vez ou confirmar, dependendo das condiçoes inseridas em showPass e showConfirm
+      <ActionButtons 
         showPass={passCondition}
         passText="Passar a vez"
         onPass={() => passTurn()}
-        showConfirm={targetPlayer} //confirmar é usado apenas em habilidades que precisam de um alvo
+        showConfirm={targetPlayer} 
         confirmText="Confirmar"
         onConfirm={
           chosenSkill === 1
             ? handleUseFirstSkill
             : chosenSkill === 2 && handleUseSecondSkill
-        } //executa o metodo da habilidade escolhida
+        }
       />
     </SpaceBetweenContainer>
   );

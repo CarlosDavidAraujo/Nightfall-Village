@@ -1,8 +1,8 @@
 import Role from "./Role";
-import werewolfImg from '../../assets/images/werewolf.png';
-import firstSkillIcon from '../../assets/images/bite.png';
-import secondtSkillIcon from '../../assets/images/transmute.png';
-import loneWolfImg from '../../assets/images/loneWolf.png';
+import werewolfImg from '../../../assets/images/werewolf.png';
+import firstSkillIcon from '../../../assets/images/bite.png';
+import secondtSkillIcon from '../../../assets/images/transmute.png';
+import loneWolfImg from '../../../assets/images/loneWolf.png';
 
 export class WereWolf extends Role {
   constructor(currentGame) {

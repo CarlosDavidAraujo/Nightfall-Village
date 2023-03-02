@@ -1,7 +1,7 @@
 import Role from "./Role";
-import seerImg from '../../assets/images/seer.png';
-import firstSkillIcon from '../../assets/images/seerEye.png';
-import secondSkillIcon from '../../assets/images/tarot.png';
+import seerImg from '../../../assets/images/seer.png';
+import firstSkillIcon from '../../../assets/images/seerEye.png';
+import secondSkillIcon from '../../../assets/images/tarot.png';
 
 export default class Seer extends Role {
   constructor(currentGame) {

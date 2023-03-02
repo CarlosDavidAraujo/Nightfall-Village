@@ -55,10 +55,8 @@ export default function DefineRoles({ navigation }) {
           count: newCount,
         };
       }
-      if (newCount === 0) {
-        newSelectedRoles.splice(roleIndex, 1);
-      }
-      return newSelectedRoles;
+       newCount === 0 && newSelectedRoles.splice(roleIndex, 1)
+       return newSelectedRoles;
     });
   };
 

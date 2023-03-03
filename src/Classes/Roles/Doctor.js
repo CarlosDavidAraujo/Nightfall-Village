@@ -4,9 +4,8 @@ import firstSkillIcon from "../../../assets/images/medicine.png";
 import secondSkillIcon from "../../../assets/images/syringe.png";
 
 export default class Doctor extends Role {
-    constructor(currentGame) {
+    constructor() {
         super(
-            currentGame,
             "Médica",
             "Aldeões",
             "Human",
@@ -47,7 +46,7 @@ export default class Doctor extends Role {
     }
 
     reanimar(targetPlayer) {
-        targetPlayer.setMarkedForRess(true);
+        targetPlayer.resurrectAfterManyTurns(1);
         this.disableSkill(2, 1000);
     }
 

@@ -208,27 +208,27 @@ export default function useRoleConfig(
     Necromante: {
       methods: {
         useFirstSkill: () => {
-          role.recompor(targetPlayer);
+          role.reanimar(targetPlayer);
           setTargetPlayer(null);
           passTurn();
         },
         useSecondSkill: () => {
-          role.reanimar(targetPlayer);
+          role.recompor(targetPlayer);
           setTargetPlayer(null);
           passTurn();
         },
         useSkillTarget: (skill) => {
           setChosenSkill(skill);
           if (skill === 1) {
-            handleShowDeadPlayers();
-          } else if (skill === 2) {
             handleShowPlayers();
+          } else if (skill === 2) {
+            handleShowDeadPlayers();
           }
         },
       },
       messages: {
         firstSkill: "Selecione quem deseja proteger",
-        secondSkill: "Selecione quem será julgado",
+        secondSkill: "Selecione quem será transformado em zumbi",
         alert: "",
       },
     },
@@ -284,6 +284,26 @@ export default function useRoleConfig(
         firstSkill: "Selecione um jogador para amaldiçoar",
         secondSkill:
           "Selecione um jogador para ver se ele é lobisomem ou vidente",
+        alert: discoveredPlayer,
+      },
+    },
+    Zumbi: {
+      methods: {
+        useFirstSkill: () => {
+          role.infectar(targetPlayer);
+          setTargetPlayer(null);
+          setShowPlayers(false);
+          passTurn();
+        },
+        useSecondSkill: null,
+        useSkillTarget: (skill) => {
+          setChosenSkill(skill);
+          handleShowPlayers();
+        },
+      },
+      messages: {
+        firstSkill: "Selecione quem será infectado",
+        secondSkill: "",
         alert: discoveredPlayer,
       },
     },

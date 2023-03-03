@@ -6,9 +6,8 @@ import { WereWolf } from "./Werewolf";
 import Villager from "./Villager";
 
 export default class Scientist extends Role {
-  constructor(currentGame) {
+  constructor() {
     super(
-      currentGame,
       "Cientista Maluco",
       "Aldeões",
       "Human",

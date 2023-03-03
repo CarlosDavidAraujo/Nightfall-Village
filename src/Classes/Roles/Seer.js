@@ -4,9 +4,8 @@ import firstSkillIcon from '../../../assets/images/seerEye.png';
 import secondSkillIcon from '../../../assets/images/tarot.png';
 
 export default class Seer extends Role {
-  constructor(currentGame) {
+  constructor() {
     super(
-      currentGame,
       "Vidente",
       "Aldeões",
       'Human',

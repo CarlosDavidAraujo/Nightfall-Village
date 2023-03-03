@@ -10,6 +10,7 @@ import Villager from "./Roles/Villager";
 import { LonelyWerewolf, WereWolf } from "./Roles/Werewolf";
 import Witch from "./Roles/Witch";
 import Necromancer from "./Roles/Necromancer";
+import Zombie from "./Roles/Zombie";
 
 export default class Game {
   constructor() {
@@ -21,16 +22,17 @@ export default class Game {
     this.news = new News();
     this.currentRoles = [];
     this.roleMap = [
-      new Villager(this),
-      new Seer(this),
-      new WereWolf(this),
-      new Crusader(this),
-      new Doctor(this),
-      new Hunter(this),
-      new LonelyWerewolf(this),
+      new Villager(),
+      new Seer(),
+      new WereWolf(),
+      new Crusader(),
+      new Doctor(),
+      new Hunter(),
+      new LonelyWerewolf(),
       new Necromancer(),
-      new Scientist(this),
-      new Witch(this),
+      new Scientist(),
+      new Witch(),
+      new Zombie(),
     ];
   }
 
@@ -93,13 +95,6 @@ export default class Game {
     });
   }
 
-  removeKilledPlayers(player) {
-    if (player.canBeRemoved()) {
-      this.news.addNews(player.getDeathMessage());
-      player.remove();
-    }
-  }
-
   removePlayersProtectors(player) {
     if (player.hasAProtectorToRemove()) {
       const protector = player.getProtector();
@@ -121,10 +116,17 @@ export default class Game {
 
   removePlayers() {
     this.alivePlayers.forEach((player) => {
-      this.removeKilledPlayers(player);
-      this.removePlayersProtectors(player);
+      player.remove();
     });
     this.removeDeadPlayersFromAlivePlayers();
+  }
+
+  transforInZombies() {
+    this.alivePlayers.forEach((player) => {
+      if (player.shouldTransform()) {
+        player.transformInZombie();
+      }
+    });
   }
 
   endTurn() {
@@ -135,6 +137,8 @@ export default class Game {
 
   endNight() {
     this.setMostVotedPlayerByWerewolfs();
+    this.transforInZombies();
+    this.advanceTurn();
     this.removePlayers();
     this.revivePlayers();
     this.alivePlayers.forEach((player) => player.clearVotes());
@@ -161,16 +165,16 @@ export default class Game {
 
   insertPlayerInAlivePlayers(insertionPosition, player) {
     this.alivePlayers.splice(insertionPosition, 0, player);
-    this.news.addNews(`${player.getName()} foi ressuscitado!`);
   }
 
   revivePlayers() {
     this.deadPlayers.forEach((player) => {
-      if (player.isMarkedForRess()) {
+      if (player.shouldResurrect()) {
         const insertionPosition =
           this.getInsertionPositionOfResurrected(player);
         this.insertPlayerInAlivePlayers(insertionPosition, player);
-        player.setMarkedForRess(false);
+        player.resetAllStates();
+        player.sendResurrectMessage();
       }
     });
     this.removeResurrectedPlayerFromDeadPlayers();
@@ -193,10 +197,9 @@ export default class Game {
   }
 
   updateAlivePlayersWithoutMostVotedPlayer(mostVotedPlayer) {
-    const updatedAlivePlayers = this.alivePlayers.filter(
+    this.alivePlayers = this.alivePlayers.filter(
       (player) => player.getName() !== mostVotedPlayer.getName()
     );
-    this.alivePlayers = updatedAlivePlayers;
   }
 
   removeMostVotedPlayer() {
@@ -220,7 +223,7 @@ export default class Game {
     }
     this.resolveTieBreak();
     const mostVotedPlayer = this.mostVotedPlayers[0];
-    mostVotedPlayer.setMarkedForDeath(true);
+    mostVotedPlayer.dieAfterManyTurns(1);
     this.mostVotedPlayers = [];
   }
 

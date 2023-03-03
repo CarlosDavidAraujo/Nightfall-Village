@@ -4,9 +4,8 @@ import firstSkillIcon from "../../../assets/images/darkPotion.png";
 import secondSkillIcon from "../../../assets/images/crystalBall.png";
 
 export default class Witch extends Role {
-    constructor(currentGame) {
+    constructor() {
         super(
-            currentGame,
             "Bruxa",
             "Lobisomens",
             "Human",

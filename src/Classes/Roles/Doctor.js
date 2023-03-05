@@ -11,7 +11,7 @@ export default class Doctor extends Role {
             "Human",
             true,
             doctorImg,
-            "manter os aldeões vivos",
+            "Seu objetivo é proteger e manter os aldeões vivos.",
             {
                 name: "Curar",
                 description: "Impede um jogador de morrer esta noite. Não pode selecionar o mesmo alvo em turnos seguidos.",

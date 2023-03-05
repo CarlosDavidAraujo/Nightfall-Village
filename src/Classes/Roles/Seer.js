@@ -1,5 +1,5 @@
 import Role from "./Role";
-import seerImg from '../../../assets/images/seer.png';
+import seerImg from '../../../assets/images/seer3.png';
 import firstSkillIcon from '../../../assets/images/seerEye.png';
 import secondSkillIcon from '../../../assets/images/tarot.png';
 
@@ -11,7 +11,7 @@ export default class Seer extends Role {
       'Human',
       true,
       seerImg,
-      'descobrir quem são os lobisomens e ajudar os aldeões a vencerem o jogo.',
+      'Seu objetivo é descobrir quem são os lobisomens e ajudar os aldeões a vencerem o jogo.',
       {
         name: 'Revelar',
         description: 'Você pode ver a função de outro jogador.',

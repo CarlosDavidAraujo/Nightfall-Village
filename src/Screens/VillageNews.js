@@ -9,7 +9,7 @@ export default function VillageNews({ route, navigation }) {
   const { currentGame, setCurrentGame } = useContext(GameContext);
   const { previousScreen } = route.params;
 
-  const winner = currentGame.getWinnerTeam();
+  const winner = currentGame.winConditionManager.getWinnerTeam();
 
   function handleEndGame() {
     setCurrentGame(new Game());

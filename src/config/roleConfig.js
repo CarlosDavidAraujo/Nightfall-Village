@@ -208,7 +208,7 @@ export default function useRoleConfig(
     Necromante: {
       methods: {
         useFirstSkill: () => {
-          role.reanimar(targetPlayer);
+          role.perpetuar(targetPlayer);
           setTargetPlayer(null);
           passTurn();
         },
@@ -230,6 +230,32 @@ export default function useRoleConfig(
         firstSkill: "Selecione quem deseja proteger",
         secondSkill: "Selecione quem será transformado em zumbi",
         alert: "",
+      },
+    },
+    'Velho Caduco': {
+      methods: {
+        useFirstSkill: () => {
+          setChosenSkill(1);
+          const newDiscoveredPlayer = role.espiar();
+          if (!newDiscoveredPlayer) {
+            return passTurn();
+          }
+          setDiscoveredPlayer(newDiscoveredPlayer);
+        },
+        useSecondSkill: () => {
+          role.orar(targetPlayer);
+          setTargetPlayer(null);
+          passTurn();
+        },
+        useSkillTarget: (skill) => {
+          setChosenSkill(skill);
+          handleShowPlayers();
+        },
+      },
+      messages: {
+        firstSkill: "",
+        secondSkill: "Selecione um jogador para tentar protege-lo",
+        alert: discoveredPlayer,
       },
     },
     Vidente: {
@@ -290,7 +316,7 @@ export default function useRoleConfig(
     Zumbi: {
       methods: {
         useFirstSkill: () => {
-          role.infectar(targetPlayer);
+          role.morder(targetPlayer);
           setTargetPlayer(null);
           setShowPlayers(false);
           passTurn();

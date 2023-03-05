@@ -1,11 +1,11 @@
 import styled from "styled-components/native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faPaw } from "@fortawesome/free-solid-svg-icons";
+import { faSkull} from "@fortawesome/free-solid-svg-icons";
 
-export default function PawIcon({theme}) {
+export default function SkullIcon({theme}) {
     return (
         <IconContainer theme={theme}>
-            <FontAwesomeIcon icon={faPaw} color={theme.color}/>
+            <FontAwesomeIcon icon={faSkull} color={theme.color}/>
         </IconContainer>
     );
 }
@@ -15,7 +15,7 @@ const IconContainer = styled.View`
     height: 20px;
     align-self: flex-end;
     align-items: center;
-    margin-top: 0px;
-    margin-right: -10px;
+    margin-top: -20px;
+    margin-right: -20px;
     border-radius: 50;
 `;

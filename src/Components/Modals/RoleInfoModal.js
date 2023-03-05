@@ -17,7 +17,7 @@ export default function RoleInfoModal({ isVisible, onClose, role }) {
                     <RoleImageContainer>
                         <RoleImage source={role.getRoleImg()} />
                     </RoleImageContainer>
-                    <DefaultText>{`Você faz parte do time dos "${role.getTeam()}". Seu objetivo é ${role.getObjective()}`}</DefaultText>
+                    <DefaultText>{role.getObjective()}</DefaultText>
                     <SubTitle style={{ marginTop: '5%' }}>Habilidades</SubTitle>
                     <SkillsContainer>
                         <SkillButton

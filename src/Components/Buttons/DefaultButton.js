@@ -3,6 +3,7 @@ import { dark, invertTheme } from "../../Themes/Dark";
 import { DefaultText, ButtonContainer } from "../../Styles";
 import VoteIcon from "../CustomIcons/VoteIcon";
 import PawIcon from "../CustomIcons/PawIcon";
+import SkullIcon from "../CustomIcons/SkullIcon";
 
 export default function DefaultButton({
   onPress,
@@ -12,6 +13,7 @@ export default function DefaultButton({
   inverted,
   showWolfIcon,
   showVotesIcon,
+  showUndeadIcon,
   voteCount
 }) {
 
@@ -26,6 +28,7 @@ export default function DefaultButton({
       >
         {showWolfIcon && <PawIcon theme={theme}/>}
         {showVotesIcon && <VoteIcon>{voteCount}</VoteIcon>}
+        {showUndeadIcon && <SkullIcon theme={theme}/>}
         <DefaultText >{title}</DefaultText>
       </ButtonContainer>
     </ThemeProvider>

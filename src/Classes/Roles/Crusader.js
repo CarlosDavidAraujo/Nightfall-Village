@@ -11,7 +11,7 @@ export default class Crusader extends Role {
       "Human",
       false,
       crusaderImg,
-      "proteger os aldeões e descobrir os lobisomens.",
+      "Seu objeitvo é proteger os aldeões e descobrir os lobisomens.",
       {
         name: "Sacrifício",
         description:

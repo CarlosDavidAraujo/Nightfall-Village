@@ -28,7 +28,7 @@ export default function Votes({ navigation }) {
     currentGame.incrementCurrentPlayerIndex();
 
     if (currentGame.noNextPlayer()) {
-      currentGame.endTurn();
+      currentGame.endDay();
       return navigation.navigate("VillageNews", { previousScreen: "Votes" });
     }
 

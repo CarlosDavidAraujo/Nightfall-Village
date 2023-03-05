@@ -1,4 +1,4 @@
-import Zombie from "./Roles/Zombie";
+import Undead from "./Roles/Undead";
 
 export default class Player {
   constructor(name, ID, currentGame) {
@@ -17,54 +17,7 @@ export default class Player {
     this.resurrectTurn = null;
   }
 
-  dieAfterManyTurns(turns) {
-    const currentTurn = this.currentGame.getCurrentTurn();
-    this.deathTurn = turns * 2 + currentTurn - 1;
-  }
-
-  sendDeathMessage() {
-    const news = this.currentGame.getNews();
-    news.addNews(
-      `${this.name} morreu esta noite. Deve ficar calado até o fim do jogo.`
-    );
-  }
-
-  shouldDie() {
-    const currentTurn = this.currentGame.getCurrentTurn();
-    return currentTurn === this.deathTurn &&!this.isProtected();
-  }
-
-  transformInZombie() {
-    this.dieAfterManyTurns(2);
-    const zombie = new Zombie();
-    zombie.setCurrentGame(this.currentGame);
-    zombie.setPlayer(this);
-    this.setRole(zombie);
-  }
-
-  remove() {
-    if (this.shouldDie()) {
-      this.resetAllStates();
-      this.sendDeathMessage();
-      const deadPlayers = this.currentGame.getDeadPlayers();
-      deadPlayers.push(this);
-    }
-  }
-
-  resurrectAfterManyTurns(turns) {
-    const currentTurn = this.currentGame.getCurrentTurn();
-    this.resurrectTurn = turns * 2 + currentTurn - 1;
-  }
-
-  sendResurrectMessage() {
-    const news = this.currentGame.getNews();
-    news.addNews(`${this.name} foi ressuscitado.`);
-  }
-
-  shouldResurrect() {
-    const currentTurn = this.currentGame.getCurrentTurn();
-    return currentTurn === this.resurrectTurn;
-  }
+  //------------GETTERS E SETTERS BÁSICOS----------//
 
   getName() {
     return this.name;
@@ -110,6 +63,72 @@ export default class Player {
     return this.confused === true;
   }
 
+  setProtected(value) {
+    this.protected = this.isUndead() ? false : value;
+  }
+
+  isProtected() {
+    return this.protected === true;
+  }
+
+  getProtector() {
+    return this.protector;
+  }
+
+  setProtector(player) {
+    this.protector = player;
+  }
+
+  hasProtector() {
+    return this.protector !== null;
+  }
+
+  setInfected(value) {
+    this.infected = value;
+  }
+
+  isInfected() {
+    return this.infected === true;
+  }
+
+  belongsToWerewolvesTeam() {
+    return this.role.getTeam() === "Lobisomens";
+  }
+
+  belongsToVillagersTeam() {
+    return this.role.getTeam() === "Aldeões";
+  }
+
+  belongsToUndeadsTeam() {
+    return this.role.getTeam() === "Undeads";
+  }
+
+  isHuman() {
+    return this.role.getSpecies() === "Human";
+  }
+
+  isWolf() {
+    return this.role.getSpecies() === "Wolf";
+  }
+
+  isLonelyWolf() {
+    return this.getRoleName() === "Lobisomem Solitário";
+  }
+
+  isUndead() {
+    return this.role.getSpecies() === "Undead";
+  }
+
+  resetAllStates() {
+    this.votesCount = 0;
+    this.duplicatedVote = false;
+    this.confused = false;
+    this.protected = false;
+    this.protector = null;
+  }
+
+  //----------MÉTODOS DE VOTOS------------//
+
   voteOn(targetPlayer) {
     let player = targetPlayer;
     if (this.isConfused()) {
@@ -130,59 +149,64 @@ export default class Player {
     return this.disabledVoteDuration >= this.currentGame.getCurrentTurn();
   }
 
-  setProtected(value) {
-    this.protected = value;
+  //-----------MÉTODOS DE REMOÇÃO-------------//
+
+  shouldDie() {
+    const currentTurn = this.currentGame.getCurrentTurn();
+    return currentTurn === this.deathTurn && !this.isProtected() && !this.isInfected();
   }
 
-  isProtected() {
-    return this.protected === true;
+  dieAfterManyTurns(turns) {
+    const currentTurn = this.currentGame.getCurrentTurn();
+    const currentDeathTurn = this.deathTurn;
+    const newDeathTurn = turns * 2 + currentTurn - 1;
+    this.deathTurn = newDeathTurn > currentDeathTurn ? newDeathTurn : currentDeathTurn;
   }
 
-  getProtector() {
-    return this.protector;
+  sendDeathMessage() {
+    const news = this.currentGame.getNews();
+    news.addNews(
+      `${this.name} morreu esta noite. Deve ficar calado até o fim do jogo.`
+    );
   }
 
-  setProtector(player) {
-    this.protector = player;
+  sendLynchingMessage() {
+    const news = this.currentGame.getNews();
+    news.addNews(`A vila linchou ${this.name}. Deve ficar calado até o fim do jogo.`);
   }
 
-  hasProtector() {
-    return this.protector !== null;
+  //----------MÉTODOS DE RESSURREIÇÃO------------//
+
+  resurrectAfterManyTurns(turns) {
+    const currentTurn = this.currentGame.getCurrentTurn();
+    this.resurrectTurn = turns * 2 + currentTurn - 1;
   }
 
-  setInfected(value) {
-    this.setInfected = value;
+  sendResurrectMessage() {
+    const news = this.currentGame.getNews();
+    news.addNews(`${this.name} foi ressuscitado.`);
   }
 
-  isMarkedForRess() {
-    return this.markedForRess === true;
+  shouldResurrect() {
+    const currentTurn = this.currentGame.getCurrentTurn();
+    return currentTurn === this.resurrectTurn;
   }
 
-  setMarkedForRess(value) {
-    this.markedForRess = value;
+  //------------TRANSFORMAÇÃO DE ZUMBIS------------//
+
+  transformInUndead() {
+    this.dieAfterManyTurns(2);
+    this.disabledVoteDuration = 1000;
+    this.infected = true;
+    const undead = new Undead();
+    undead.setCurrentGame(this.currentGame);
+    undead.setPlayer(this);
+    this.setRole(undead); 
   }
 
-  belongsToWerewolfsTeam() {
-    return this.role.getTeam() === "Lobisomens";
-  }
-
-  belongsToVillagersTeam() {
-    return this.role.getTeam() === "Aldeões";
-  }
-
-  isHuman() {
-    return this.role.getSpecies() === "Human";
-  }
-
-  isWolf() {
-    return this.role.getSpecies() === "Wolf";
-  }
-
-  resetAllStates() {
-    this.votesCount = 0;
-    this.duplicatedVote = false;
-    this.confused = false;
-    this.protected = false;
-    this.protector = null;
+  shouldBecomeUndead() {
+    const currentTurn = this.currentGame.getCurrentTurn();
+    const isAboutToDie = currentTurn + 1 === this.deathTurn && !this.isProtected();
+    return isAboutToDie && this.isInfected();
   }
 }

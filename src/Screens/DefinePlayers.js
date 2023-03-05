@@ -95,7 +95,6 @@ export default function DefinePlayers({ navigation }) {
           </ThemeProvider>
           <DefaultButton
             title="Confirmar"
-            inverted={true}
             onPress={() => handleDefinePlayers()}
             style={{ width: "100%" }}
           />

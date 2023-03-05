@@ -1,9 +1,10 @@
 import Role from "./Role";
 import villagerImg from "../../../assets/images/villager.png";
+import oldManImg from "../../../assets/images/oldMan.png";
 import firstSkillIcon from "../../../assets/images/keyhole.png";
 import secondSkillIcon from "../../../assets/images/pray.png";
 
-export default class Villager extends Role {
+export class Villager extends Role {
   constructor() {
     super(
       "Aldeão",
@@ -11,7 +12,7 @@ export default class Villager extends Role {
       "Human",
       false,
       villagerImg,
-      "descobrir quem são os lobisomens e tentar proteger seus aliados.",
+      "Seu objetivo é descobrir quem são os lobisomens e tentar proteger seus aliados.",
       {
         name: "Espiar",
         description:
@@ -55,5 +56,24 @@ export default class Villager extends Role {
     if (randomNumber <= protectingChance) {
       targetPlayer.setProtected(true);
     }
+  }
+}
+
+export class OldMan extends Villager {
+  constructor() {
+    super();
+    this.name = 'Velho Caduco';
+    this.objective = "Você é um aldeão comum, mas sempre que usar uma habilidade ela será bloqueada pro 2 turnos.";
+    this.roleImg = oldManImg;
+  }
+
+  espiar() {
+    super.espiar();
+    this.disableSkill(1, 2);
+  }
+
+  orar(targetPlayer) {
+    super.orar(targetPlayer);
+    this.disableSkill(2, 2);
   }
 }

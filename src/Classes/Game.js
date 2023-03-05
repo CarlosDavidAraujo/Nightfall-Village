@@ -6,20 +6,25 @@ import News from "./News";
 import Player from "./Player";
 import Scientist from "./Roles/Scientist";
 import Seer from "./Roles/Seer";
-import Villager from "./Roles/Villager";
+import {Villager, OldMan} from "./Roles/Villager";
 import { LonelyWerewolf, WereWolf } from "./Roles/Werewolf";
 import Witch from "./Roles/Witch";
 import Necromancer from "./Roles/Necromancer";
-import Zombie from "./Roles/Zombie";
+import Undead from "./Roles/Undead";
+import DeathManager from "./DeathManager";
+import VotingManager from "./VotingManager";
+import WinConditionManager from "./WinConditionManager";
 
 export default class Game {
   constructor() {
     this.alivePlayers = [];
     this.deadPlayers = [];
-    this.mostVotedPlayers = [];
-    this.currentPlayerIndex = 0;
-    this.currentTurn = 0;
     this.news = new News();
+    this.deathManager = new DeathManager(this);
+    this.votingManager = new VotingManager(this);
+    this.winConditionManager = new WinConditionManager(this);
+    this.currentPlayerIndex = 0;
+    this.currentTurn = 0; //noites acontecem em turnos pares e dias em turnos ímpares
     this.currentRoles = [];
     this.roleMap = [
       new Villager(),
@@ -30,10 +35,25 @@ export default class Game {
       new Hunter(),
       new LonelyWerewolf(),
       new Necromancer(),
+      new OldMan(),
       new Scientist(),
       new Witch(),
-      new Zombie(),
+      new Undead(),
     ];
+  }
+
+  //--------GETTERS E SETTERS BÁSICOS---------//
+
+  getNews() {
+    return this.news;
+  }
+
+  getTurnNews() {
+    return this.news.getNews();
+  }
+
+  clearTurnNews() {
+    this.news.clearNews();
   }
 
   getCurrentTurn() {
@@ -68,10 +88,6 @@ export default class Game {
     return this.deadPlayers;
   }
 
-  clearPlayers() {
-    this.alivePlayers = [];
-  }
-
   getCurrentPlayer() {
     return this.alivePlayers[this.currentPlayerIndex];
   }
@@ -89,192 +105,7 @@ export default class Game {
     return result;
   }
 
-  resetAllPlayersStates() {
-    this.alivePlayers.forEach((player) => {
-      player.resetAllStates();
-    });
-  }
-
-  removePlayersProtectors(player) {
-    if (player.hasAProtectorToRemove()) {
-      const protector = player.getProtector();
-      this.news.addNews(protector.getDeathMessage());
-      protector.remove();
-    }
-  }
-
-  removeDeadPlayersFromAlivePlayers() {
-    const remainingAlivePlayers = this.alivePlayers.filter(
-      (player) => !this.deadPlayers.includes(player)
-    );
-    const noOneDied = this.alivePlayers.length === remainingAlivePlayers.length;
-    if (noOneDied) {
-      this.news.addNews("Noite de paz na vila.");
-    }
-    this.alivePlayers = remainingAlivePlayers;
-  }
-
-  removePlayers() {
-    this.alivePlayers.forEach((player) => {
-      player.remove();
-    });
-    this.removeDeadPlayersFromAlivePlayers();
-  }
-
-  transforInZombies() {
-    this.alivePlayers.forEach((player) => {
-      if (player.shouldTransform()) {
-        player.transformInZombie();
-      }
-    });
-  }
-
-  endTurn() {
-    this.removeMostVotedPlayer();
-    this.resetAllPlayersStates();
-    this.advanceTurn();
-  }
-
-  endNight() {
-    this.setMostVotedPlayerByWerewolfs();
-    this.transforInZombies();
-    this.advanceTurn();
-    this.removePlayers();
-    this.revivePlayers();
-    this.alivePlayers.forEach((player) => player.clearVotes());
-  }
-
-  removeResurrectedPlayerFromDeadPlayers() {
-    const updatedDeadPlayers = this.deadPlayers.filter(
-      (player) => !player.isMarkedForRess()
-    );
-    this.deadPlayers = updatedDeadPlayers;
-  }
-
-  getInsertionPositionOfResurrected(player) {
-    const originalPlayerPositionInQueue = player.getID();
-    const nearestPlayerPosition = this.alivePlayers.findIndex(
-      (p) => p.getID() > originalPlayerPositionInQueue
-    );
-    const insertionIndex =
-      nearestPlayerPosition !== -1
-        ? nearestPlayerPosition
-        : this.alivePlayers.length;
-    return insertionIndex;
-  }
-
-  insertPlayerInAlivePlayers(insertionPosition, player) {
-    this.alivePlayers.splice(insertionPosition, 0, player);
-  }
-
-  revivePlayers() {
-    this.deadPlayers.forEach((player) => {
-      if (player.shouldResurrect()) {
-        const insertionPosition =
-          this.getInsertionPositionOfResurrected(player);
-        this.insertPlayerInAlivePlayers(insertionPosition, player);
-        player.resetAllStates();
-        player.sendResurrectMessage();
-      }
-    });
-    this.removeResurrectedPlayerFromDeadPlayers();
-  }
-
-  setMostVotedPlayers() {
-    let maxVotes = 0;
-    this.alivePlayers.forEach((player) => {
-      if (player.getVotesCount() > maxVotes) {
-        maxVotes = player.getVotesCount();
-        this.mostVotedPlayers = [player];
-      } else if (player.getVotesCount() === maxVotes && maxVotes > 0) {
-        this.mostVotedPlayers.push(player);
-      }
-    });
-  }
-
-  didVoteTie() {
-    return this.mostVotedPlayers.length != 1;
-  }
-
-  updateAlivePlayersWithoutMostVotedPlayer(mostVotedPlayer) {
-    this.alivePlayers = this.alivePlayers.filter(
-      (player) => player.getName() !== mostVotedPlayer.getName()
-    );
-  }
-
-  removeMostVotedPlayer() {
-    this.setMostVotedPlayers();
-    if (this.didVoteTie()) {
-      return this.news.setNews("A aldeia ficou indecisa!");
-    }
-    const mostVotedPlayer = this.mostVotedPlayers[0];
-    this.updateAlivePlayersWithoutMostVotedPlayer(mostVotedPlayer);
-    this.deadPlayers.push(mostVotedPlayer);
-    this.news.addNews(
-      `${mostVotedPlayer.getName()} foi morto pela aldeia. Deve ficar calado até o fim do jogo.`
-    );
-    this.mostVotedPlayers = [];
-  }
-
-  setMostVotedPlayerByWerewolfs() {
-    this.setMostVotedPlayers();
-    if (this.mostVotedPlayers.length === 0) {
-      return;
-    }
-    this.resolveTieBreak();
-    const mostVotedPlayer = this.mostVotedPlayers[0];
-    mostVotedPlayer.dieAfterManyTurns(1);
-    this.mostVotedPlayers = [];
-  }
-
-  resolveTieBreak() {
-    if (this.mostVotedPlayers.length > 1) {
-      const randomIndex = Math.floor(
-        Math.random() * this.mostVotedPlayers.length
-      );
-      const mostVotedPlayer = this.mostVotedPlayers[randomIndex];
-      this.mostVotedPlayers = [mostVotedPlayer];
-    }
-  }
-
-  getNews() {
-    return this.news;
-  }
-
-  getTurnNews() {
-    return this.news.getNews();
-  }
-
-  clearTurnNews() {
-    this.news.clearNews();
-  }
-
-  getWinnerTeam() {
-    let winner = null;
-
-    const remainingVillagers = this.alivePlayers.filter((player) =>
-      player.belongsToVillagersTeam()
-    );
-    const remainingWerewolves = this.alivePlayers.filter(
-      (player) => player.belongsToWerewolfsTeam() && player.isWolf()
-    );
-
-    const isLastWerewolf =
-      remainingWerewolves.length === 1 &&
-      remainingWerewolves[0].getRole().getName() === "Lobisomem Solitário";
-
-    if (remainingVillagers.length === 0 && isLastWerewolf) {
-      this.news.setNews("O lobisomem solitário venceu!");
-      winner = true;
-    } else if (remainingVillagers.length === 0) {
-      this.news.setNews("Os lobisomens venceram!");
-      winner = true;
-    } else if (remainingWerewolves.length === 0) {
-      this.news.setNews("Os aldeões venceram!");
-      winner = true;
-    }
-    return winner;
-  }
+  //----------FUÇÕES AVANÇADAS DE CONFIGURAÇAO DA CLASSE------------//
 
   setRoles(selectedRoles) {
     this.currentRoles = [];
@@ -296,4 +127,27 @@ export default class Game {
       roleCopy.setPlayer(player);
     });
   }
+
+  //--------------GERENCIAMENTO DE FIM DE TURNO------------------//
+
+  resetAllPlayersStates() {
+    this.alivePlayers.forEach(player => {
+      player.resetAllStates();
+    });
+  }
+
+  endDay() {
+    this.votingManager.removeMostVotedPlayer();
+    this.votingManager.clearPlayersVotes();
+    this.resetAllPlayersStates();
+    this.advanceTurn();
+  }
+
+  endNight() {
+    this.votingManager.removeWerewolfsVictim();
+    this.votingManager.clearPlayersVotes();
+    this.advanceTurn();
+    this.deathManager.removePlayers();
+    this.deathManager.revivePlayers();
+  }  
 }

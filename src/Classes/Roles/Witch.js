@@ -11,18 +11,16 @@ export default class Witch extends Role {
             "Human",
             false,
             witchImg,
-            "descobrir quem são os videntes e evitar que os lobisomens morram.",
+            "Seu objetivo é descobrir quem são os videntes e atrapalhar os aldeões para que os lobisomens vençam.",
             {
                 name: "Maldição",
-                description:
-                    "Você bloqueia uma habilidade aleatória de um jogador por 1 turno. Não pode selecionar o mesmo alvo em turnos seguidos.",
+                description: "Você bloqueia uma habilidade aleatória de um jogador por 1 turno. Não pode selecionar o mesmo alvo em turnos seguidos.",
                 isTargetType: true,
                 icon: firstSkillIcon,
             },
             {
                 name: "Premonição",
-                description:
-                    "Selecione um jogador para ver se ele é lobisomem ou vidente",
+                description: "Selecione um jogador para ver se ele é lobisomem ou vidente",
                 isTargetType: true,
                 icon: secondSkillIcon,
             }

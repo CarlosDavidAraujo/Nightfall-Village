@@ -36,6 +36,8 @@ export default class Role {
     };
   }
 
+  //------------GETTERS E SETTERS BÁSICOS--------------//
+
   setCurrentGame(currentGame) {
     this.currentGame = currentGame;
   }
@@ -54,31 +56,6 @@ export default class Role {
 
   getSpecies() {
     return this.species;
-  }
-
-  cantInteractWithDeadPlayers() {
-    return (
-      this.interactWithDeadPlayers === true &&
-      this.currentGame.getDeadPlayers().length === 0
-    );
-  }
-
-  setFakeName(name, duration) {
-    this.fakeName.name = name;
-    this.fakeName.duration = duration * 2;
-    this.fakeName.turnItWasFaked = this.currentGame.getCurrentTurn();
-  }
-
-  hasFakeName() {
-    const { duration, turnItWasFaked } = this.fakeName;
-    return duration + turnItWasFaked >= this.currentGame.getCurrentTurn();
-  }
-
-  getFakeName() {
-    if (this.hasFakeName()) {
-      return this.fakeName.name;
-    }
-    return this.name;
   }
 
   getTeam() {
@@ -117,6 +94,35 @@ export default class Role {
     return this.secondSkill.icon;
   }
 
+  cantInteractWithDeadPlayers() {
+    return (
+      this.interactWithDeadPlayers === true &&
+      this.currentGame.getDeadPlayers().length === 0
+    );
+  }
+
+  //----------GERENCIAMENTO DE NOMES FALSOS------------//
+
+  setFakeName(name, duration) {
+    this.fakeName.name = name;
+    this.fakeName.duration = duration * 2;
+    this.fakeName.turnItWasFaked = this.currentGame.getCurrentTurn();
+  }
+
+  hasFakeName() {
+    const { duration, turnItWasFaked } = this.fakeName;
+    return duration + turnItWasFaked >= this.currentGame.getCurrentTurn();
+  }
+
+  getFakeName() {
+    if (this.hasFakeName()) {
+      return this.fakeName.name;
+    }
+    return this.name;
+  }
+
+  //---------------GERENCIAMENTO DE HABILIDADES--------------------//
+
   getSkillType() {
     return {
       isFirstSkillTargetType: this.firstSkill.isTargetType,
@@ -125,9 +131,10 @@ export default class Role {
   }
 
   disableSkill(skill, duration) {
-    this.disabledSkills[skill].duration = duration * 2; //multiplica por 2 para cobrir as 2 fazes do turno (dia e noite)
-    this.disabledSkills[skill].turnItWasDisabled =
-      this.currentGame.getCurrentTurn();
+    const currentDuration = this.disabledSkills[skill].duration;
+    const newDuration = duration * 2;//multiplica por 2 para cobrir as 2 fazes do turno (dia e noite)
+    this.disabledSkills[skill].duration = newDuration > currentDuration ? newDuration : currentDuration;
+    this.disabledSkills[skill].turnItWasDisabled = this.currentGame.getCurrentTurn();
   }
 
   isSkillDisabled(skill) {

@@ -11,7 +11,7 @@ export default class Hunter extends Role {
       "Human",
       false,
       hunterImg,
-      "eliminar os lobisomens e ajudar os aldeões a vencerem o jogo.",
+      "Seu objetivo é eliminar os lobisomens e ajudar os aldeões a vencerem o jogo.",
       {
         name: "Atirar",
         description:

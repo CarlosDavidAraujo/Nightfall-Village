@@ -47,7 +47,11 @@ export default function RoleCard({
 
   return (
     <ThemeProvider theme={invertTheme(dark)}>
-      <CardContainer onPress={onPress} style={{ height: "auto" }}>
+      <CardContainer 
+      onPress={onPress} 
+      disabled={role.getName() === 'Zumbi'}
+      style={{ height: "auto" }}
+      >
         <InfoButton onPress={() => setIsModalVisible(true)}>
           <DefaultText theme={dark}>i</DefaultText>
         </InfoButton>

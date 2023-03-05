@@ -13,7 +13,7 @@ export default class Scientist extends Role {
       "Human",
       false,
       scientistImg,
-      "ajudar a eliminar os lobisomens, mas tudo que você faz é imprevisível.",
+      "Seu objetivo é ajudar a erradicar os lobisomens, mas tudo que você faz é imprevisível.",
       {
         name: "Experimento",
         description:

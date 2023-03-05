@@ -12,7 +12,7 @@ export class WereWolf extends Role {
       'Wolf',
       false,
       werewolfImg, //imagem
-      'eliminar todos os aldões. Haja como se fosse um aldeão.', //objetivo
+      'Seu objetivo é eliminar todos os aldeões. Haja como se fosse um aldeão.', 
       {
         name: 'Devorar',
         description: 'Você e outros lobisomens votam em um jogador para elimina-lo do jogo. Em caso de empate, a vítima é aleatória.',

@@ -42,14 +42,14 @@ export default function App() {
   } else {
     return (
       <GameProvider>
-        <StatusBar backgroundColor={'black'} />
+        <StatusBar backgroundColor={dark.bg} />
         <NavigationContainer >
           <Stack.Navigator
             initialRouteName='GameMenu'
             screenOptions={({ route }) => ({
               animation: 'none',
               title: "",
-              headerStyle: { backgroundColor: 'black' },
+              headerStyle: { backgroundColor: dark.bg },
               headerRightContainerStyle: { backgroundColor: dark.bg },
               headerLeft: () => getHeaderLeft(route),
               headerBackVisible: false,

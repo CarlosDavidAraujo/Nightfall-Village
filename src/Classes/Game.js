@@ -6,14 +6,16 @@ import News from "./News";
 import Player from "./Player";
 import Scientist from "./Roles/Scientist";
 import Seer from "./Roles/Seer";
-import {Villager, OldMan} from "./Roles/Villager";
+import { Villager, OldMan } from "./Roles/Villager";
 import { LonelyWerewolf, WereWolf } from "./Roles/Werewolf";
 import Witch from "./Roles/Witch";
 import Necromancer from "./Roles/Necromancer";
 import Undead from "./Roles/Undead";
+import Assassin from "./Roles/Assassin";
 import DeathManager from "./DeathManager";
 import VotingManager from "./VotingManager";
 import WinConditionManager from "./WinConditionManager";
+import Priest from "./Roles/Priest";
 
 export default class Game {
   constructor() {
@@ -30,12 +32,14 @@ export default class Game {
       new Villager(),
       new Seer(),
       new WereWolf(),
+      new Assassin(),
       new Crusader(),
       new Doctor(),
       new Hunter(),
       new LonelyWerewolf(),
       new Necromancer(),
       new OldMan(),
+      new Priest(),
       new Scientist(),
       new Witch(),
       new Undead(),
@@ -102,7 +106,7 @@ export default class Game {
       this.currentPlayerIndex = 0;
       result = true;
     }
-    return result;
+    return result || this.alivePlayers.length === 0;
   }
 
   //----------FUÇÕES AVANÇADAS DE CONFIGURAÇAO DA CLASSE------------//
@@ -131,7 +135,7 @@ export default class Game {
   //--------------GERENCIAMENTO DE FIM DE TURNO------------------//
 
   resetAllPlayersStates() {
-    this.alivePlayers.forEach(player => {
+    this.alivePlayers.forEach((player) => {
       player.resetAllStates();
     });
   }
@@ -149,5 +153,5 @@ export default class Game {
     this.advanceTurn();
     this.deathManager.removePlayers();
     this.deathManager.revivePlayers();
-  }  
+  }
 }

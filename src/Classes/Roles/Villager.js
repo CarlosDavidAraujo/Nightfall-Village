@@ -62,8 +62,9 @@ export class Villager extends Role {
 export class OldMan extends Villager {
   constructor() {
     super();
-    this.name = 'Velho Caduco';
-    this.objective = "Você é um aldeão comum, mas sempre que usar uma habilidade ela será bloqueada pro 2 turnos.";
+    this.name = "Velho Caduco";
+    this.objective =
+      "Você é um aldeão comum, mas sempre que usar uma habilidade ela será bloqueada por 2 turnos.";
     this.roleImg = oldManImg;
   }
 

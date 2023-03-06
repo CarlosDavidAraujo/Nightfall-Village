@@ -26,11 +26,11 @@ export default class Role {
     this.secondSkill = secondSkill;
     this.disabledSkills = {
       1: {
-        duration: 0,
+        enableTurn: -1,
         turnItWasDisabled: -1,
       },
       2: {
-        duration: 0,
+        enableTurn: -1,
         turnItWasDisabled: -1,
       },
     };
@@ -131,18 +131,21 @@ export default class Role {
   }
 
   disableSkill(skill, duration) {
-    const currentDuration = this.disabledSkills[skill].duration;
-    const newDuration = duration * 2;//multiplica por 2 para cobrir as 2 fazes do turno (dia e noite)
-    this.disabledSkills[skill].duration = newDuration > currentDuration ? newDuration : currentDuration;
-    this.disabledSkills[skill].turnItWasDisabled = this.currentGame.getCurrentTurn();
+    const currentTurn = this.currentGame.getCurrentTurn();
+    const { enableTurn } = this.disabledSkills[skill];
+    const newEnableTurn = duration * 2 + currentTurn;
+    const longestDurationActive = enableTurn > newEnableTurn;
+    this.disabledSkills[skill].enableTurn = longestDurationActive
+      ? enableTurn
+      : newEnableTurn;
+    this.disabledSkills[skill].turnItWasDisabled = currentTurn;
   }
 
   isSkillDisabled(skill) {
-    const { duration, turnItWasDisabled } = this.disabledSkills[skill];
+    const { enableTurn, turnItWasDisabled } = this.disabledSkills[skill];
     const currentTurn = this.currentGame.getCurrentTurn();
-    const hasNotBeenDisabledThisTurn = turnItWasDisabled < currentTurn;
-    const isInTheDisableRange = currentTurn <= turnItWasDisabled + duration;
-    return hasNotBeenDisabledThisTurn && isInTheDisableRange;
+    const inDisableRange = enableTurn >= currentTurn;
+    return inDisableRange && turnItWasDisabled != currentTurn;
   }
 
   skillHasInvalidTargetOn(targetPlayer, chosenSkill) {

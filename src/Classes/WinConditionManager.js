@@ -5,10 +5,11 @@ export default class WinConditionManager {
 
     getWinnerTeam() {
         const remainingWerewolves = this.game.alivePlayers.filter(player => player.isWolf());
+        const onlyWerewolvesAlive = this.game.alivePlayers.every(player => player.belongsToWerewolvesTeam());
 
         const victoryConditions = {
             "villagers": () => !this.game.alivePlayers.some(player => !player.belongsToVillagersTeam()),
-            "werewolves": () => !this.game.alivePlayers.some(player => !player.belongsToWerewolvesTeam()),
+            "werewolves": () => onlyWerewolvesAlive,
             "solitaryWerewolf": () => remainingWerewolves.length === 1 && remainingWerewolves[0].isLonelyWolf(),
             "undeads": () => this.game.alivePlayers.every(player => player.isInfected() || player.belongsToUndeadsTeam()),
         };

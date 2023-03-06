@@ -17,7 +17,12 @@ import { dark } from "../Themes/Dark";
 
 export default function PlayerAction({ navigation }) {
   const { currentGame } = useContext(GameContext);
-  const playerList = currentGame.getAlivePlayers();
+  const alivePlayers = currentGame.getAlivePlayers();
+
+  if (alivePlayers.length === 0) {
+    navigation.replace("VillageNews", { previousScreen: "PlayerAction" });
+    return null;
+  }
   const deadPlayers = currentGame.getDeadPlayers();
   const currentPlayer = currentGame.getCurrentPlayer();
   const role = currentPlayer.getRole();
@@ -91,8 +96,8 @@ export default function PlayerAction({ navigation }) {
           <RoleImage source={role.getRoleImg()} />
         </RoleImageContainer>
 
-        <ConditionalMessage 
-          showChooseSkill={!chosenSkill} 
+        <ConditionalMessage
+          showChooseSkill={!chosenSkill}
           showSelectPlayer={showPlayers}
           selectPlayerMessage={
             chosenSkill === 1
@@ -101,7 +106,7 @@ export default function PlayerAction({ navigation }) {
               ? messages.secondSkill
               : messages.alert && messages.alert
           }
-          showAlert={discoveredPlayer} 
+          showAlert={discoveredPlayer}
           alertMessage={discoveredPlayer}
         />
 
@@ -141,8 +146,8 @@ export default function PlayerAction({ navigation }) {
         )}
 
         {showPlayers && (
-          <PlayersButtonList 
-            playerList={playerList}
+          <PlayersButtonList
+            playerList={alivePlayers}
             currentPlayer={currentPlayer}
             targetPlayer={targetPlayer}
             setTargetPlayer={setTargetPlayer}
@@ -162,11 +167,11 @@ export default function PlayerAction({ navigation }) {
           />
         )}
       </FlexStartContainer>
-      <ActionButtons 
+      <ActionButtons
         showPass={passCondition}
         passText="Passar a vez"
         onPass={() => passTurn()}
-        showConfirm={targetPlayer} 
+        showConfirm={targetPlayer}
         confirmText="Confirmar"
         onConfirm={
           chosenSkill === 1

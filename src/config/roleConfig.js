@@ -56,6 +56,29 @@ export default function useRoleConfig(
         alert: discoveredPlayer,
       },
     },
+    "Assassino em Série": {
+      methods: {
+        useFirstSkill: () => {
+          role.assassinar(targetPlayer);
+          setTargetPlayer(null);
+          passTurn();
+        },
+        useSecondSkill: () => {
+          role.sequestrar(targetPlayer);
+          setTargetPlayer(null);
+          passTurn();
+        },
+        useSkillTarget: (skill) => {
+          setChosenSkill(skill);
+          handleShowPlayers();
+        },
+      },
+      messages: {
+        firstSkill: "Selecione um jogador para eliminá-lo.",
+        secondSkill: "Selecione um jogador para sequestrá-lo",
+        alert: discoveredPlayer,
+      },
+    },
     Caçador: {
       methods: {
         useFirstSkill: () => {
@@ -227,12 +250,31 @@ export default function useRoleConfig(
         },
       },
       messages: {
-        firstSkill: "Selecione quem deseja proteger",
+        firstSkill: "Selecione um zumbi para prologar a vida dele.",
         secondSkill: "Selecione quem será transformado em zumbi",
         alert: "",
       },
     },
-    'Velho Caduco': {
+    Padre: {
+      methods: {
+        useFirstSkill: () => {
+          role.exorcizar(targetPlayer);
+          setTargetPlayer(null);
+          passTurn();
+        },
+        useSecondSkill: null,
+        useSkillTarget: (skill) => {
+          setChosenSkill(skill);
+          handleShowPlayers();
+        },
+      },
+      messages: {
+        firstSkill: "Selecione um jogador para exorcizar.",
+        secondSkill: "",
+        alert: "",
+      },
+    },
+    "Velho Caduco": {
       methods: {
         useFirstSkill: () => {
           setChosenSkill(1);

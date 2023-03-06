@@ -12,6 +12,7 @@ export default class Player {
     this.confused = false;
     this.protected = false;
     this.protector = null;
+    this.protectionBarrier = false;
     this.infected = false;
     this.deathTurn = null;
     this.resurrectTurn = null;
@@ -81,6 +82,14 @@ export default class Player {
 
   hasProtector() {
     return this.protector !== null;
+  }
+
+  hasProtectionBarrier() {
+    this.protectionBarrier === true;
+  }
+
+  setProtectionBarrier(value) {
+    this.protectionBarrier = value;
   }
 
   setInfected(value) {
@@ -153,14 +162,22 @@ export default class Player {
 
   shouldDie() {
     const currentTurn = this.currentGame.getCurrentTurn();
-    return currentTurn === this.deathTurn && !this.isProtected() && !this.isInfected();
+    return (
+      currentTurn === this.deathTurn &&
+      !this.isProtected() &&
+      !this.isInfected()
+    );
   }
 
   dieAfterManyTurns(turns) {
+    if (this.getRole().protectionBarrier) {
+      return (this.getRole().protectionBarrier = false);
+    }
     const currentTurn = this.currentGame.getCurrentTurn();
     const currentDeathTurn = this.deathTurn;
     const newDeathTurn = turns * 2 + currentTurn - 1;
-    this.deathTurn = newDeathTurn > currentDeathTurn ? newDeathTurn : currentDeathTurn;
+    this.deathTurn =
+      newDeathTurn > currentDeathTurn ? newDeathTurn : currentDeathTurn;
   }
 
   sendDeathMessage() {
@@ -172,7 +189,9 @@ export default class Player {
 
   sendLynchingMessage() {
     const news = this.currentGame.getNews();
-    news.addNews(`A vila linchou ${this.name}. Deve ficar calado até o fim do jogo.`);
+    news.addNews(
+      `A vila linchou ${this.name}. Deve ficar calado até o fim do jogo.`
+    );
   }
 
   //----------MÉTODOS DE RESSURREIÇÃO------------//
@@ -201,12 +220,13 @@ export default class Player {
     const undead = new Undead();
     undead.setCurrentGame(this.currentGame);
     undead.setPlayer(this);
-    this.setRole(undead); 
+    this.setRole(undead);
   }
 
   shouldBecomeUndead() {
     const currentTurn = this.currentGame.getCurrentTurn();
-    const isAboutToDie = currentTurn + 1 === this.deathTurn && !this.isProtected();
+    const isAboutToDie =
+      currentTurn + 1 === this.deathTurn && !this.isProtected();
     return isAboutToDie && this.isInfected();
   }
 }

@@ -118,9 +118,9 @@ export default function PlayerAction({ navigation }) {
                   ? () => methods.useSkillTarget(1)
                   : handleUseFirstSkill
               }
-              skillIcon={role.getFirstSkillIcon()}
-              skillName={role.getFirstSkillName()}
-              skillDescription={role.getFirstSkillDescription()}
+              skillIcon={role.getSkillIcon(1)}
+              skillName={role.getSkillName(1)}
+              skillDescription={role.getSkillDescription(1)}
               disabled={role.isSkillDisabled(1)}
               showOpacity={role.isSkillDisabled(1)}
             />
@@ -130,9 +130,9 @@ export default function PlayerAction({ navigation }) {
                   ? () => methods.useSkillTarget(2)
                   : handleUseSecondSkill
               }
-              skillIcon={role.getSecondSkillIcon()}
-              skillName={role.getSecondSkillName()}
-              skillDescription={role.getSecondSkillDescription()}
+              skillIcon={role.getSkillIcon(2)}
+              skillName={role.getSkillName(2)}
+              skillDescription={role.getSkillDescription(2)}
               disabled={
                 role.isSkillDisabled(2) ||
                 role.cantInteractWithDeadPlayers(currentGame)

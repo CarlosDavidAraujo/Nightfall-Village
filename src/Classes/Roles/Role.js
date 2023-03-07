@@ -6,8 +6,7 @@ export default class Role {
     interactWithDeadPlayers,
     roleImg,
     objective,
-    firstSkill,
-    secondSkill
+    skills
   ) {
     this.currentGame = null;
     this.player = null;
@@ -22,18 +21,7 @@ export default class Role {
     this.interactWithDeadPlayers = interactWithDeadPlayers;
     this.roleImg = roleImg;
     this.objective = objective;
-    this.firstSkill = firstSkill;
-    this.secondSkill = secondSkill;
-    this.disabledSkills = {
-      1: {
-        enableTurn: -1,
-        turnItWasDisabled: -1,
-      },
-      2: {
-        enableTurn: -1,
-        turnItWasDisabled: -1,
-      },
-    };
+    this.skills = skills;
   }
 
   //------------GETTERS E SETTERS BÁSICOS--------------//
@@ -70,28 +58,16 @@ export default class Role {
     return this.objective;
   }
 
-  getFirstSkillName() {
-    return this.firstSkill.name;
+  getSkillName(skill) {
+    return this.skills[skill].name;
   }
 
-  getFirstSkillDescription() {
-    return this.firstSkill.description;
+  getSkillDescription(skill) {
+    return this.skills[skill].description;
   }
 
-  getFirstSkillIcon() {
-    return this.firstSkill.icon;
-  }
-
-  getSecondSkillName() {
-    return this.secondSkill.name;
-  }
-
-  getSecondSkillDescription() {
-    return this.secondSkill.description;
-  }
-
-  getSecondSkillIcon() {
-    return this.secondSkill.icon;
+  getSkillIcon(skill) {
+    return this.skills[skill].icon;
   }
 
   cantInteractWithDeadPlayers() {
@@ -125,24 +101,24 @@ export default class Role {
 
   getSkillType() {
     return {
-      isFirstSkillTargetType: this.firstSkill.isTargetType,
-      isSecondSkillTargetType: this.secondSkill.isTargetType,
+      isFirstSkillTargetType: this.skills[1].isTargetType,
+      isSecondSkillTargetType: this.skills[2].isTargetType,
     };
   }
 
   disableSkill(skill, duration) {
     const currentTurn = this.currentGame.getCurrentTurn();
-    const { enableTurn } = this.disabledSkills[skill];
+    const { enableTurn } = this.skills[skill];
     const newEnableTurn = duration * 2 + currentTurn;
     const longestDurationActive = enableTurn > newEnableTurn;
-    this.disabledSkills[skill].enableTurn = longestDurationActive
+    this.skills[skill].enableTurn = longestDurationActive
       ? enableTurn
       : newEnableTurn;
-    this.disabledSkills[skill].turnItWasDisabled = currentTurn;
+    this.skills[skill].turnItWasDisabled = currentTurn;
   }
 
   isSkillDisabled(skill) {
-    const { enableTurn, turnItWasDisabled } = this.disabledSkills[skill];
+    const { enableTurn, turnItWasDisabled } = this.skills[skill];
     const currentTurn = this.currentGame.getCurrentTurn();
     const inDisableRange = enableTurn >= currentTurn;
     return inDisableRange && turnItWasDisabled != currentTurn;

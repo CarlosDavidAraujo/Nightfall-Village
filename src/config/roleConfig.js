@@ -274,6 +274,21 @@ export default function useRoleConfig(
         alert: "",
       },
     },
+    Valentão: {
+      methods: {
+        useFirstSkill: () => {
+          role.intimidar();
+          passTurn();
+        },
+        useSecondSkill: null,
+        useSkillTarget: null,
+      },
+      messages: {
+        firstSkill: "",
+        secondSkill: "Selecione um jogador para tentar protege-lo",
+        alert: discoveredPlayer,
+      },
+    },
     "Velho Caduco": {
       methods: {
         useFirstSkill: () => {

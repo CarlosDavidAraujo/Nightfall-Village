@@ -13,16 +13,24 @@ export default class Necromancer extends Role {
       necroImg,
       "Seu objetivo é agir em conjunto com o zumbi para infectar toda a aldeia. Vocês vencerão quando todos estiverem infectados.",
       {
-        name: "Perpetuar",
-        description: "Escolha um zumbi alvo, a vida dele é extendida por mais 1 turno. Isso nao previne dele ser morto na votação",
-        isTargetType: true,
-        icon: firstSkillIcon,
-      },
-      {
-        name: "Recompor",
-        description: "Uma vez por jogo você escolhe um jogador eliminado, ele volta ao jogo como um zumbi com habilidades próprias.",
-        isTargetType: true,
-        icon: secondSkillIcon,
+        1: {
+          name: "Perpetuar",
+          description:
+            "Escolha um zumbi alvo, a vida dele é extendida por mais 1 turno. Isso nao previne dele ser morto na votação",
+          isTargetType: true,
+          enableTurn: -1,
+          turnItWasDisabled: -1,
+          icon: firstSkillIcon,
+        },
+        2: {
+          name: "Recompor",
+          description:
+            "Uma vez por jogo você escolhe um jogador eliminado, ele volta ao jogo como um zumbi com habilidades próprias.",
+          isTargetType: true,
+          enableTurn: -1,
+          turnItWasDisabled: -1,
+          icon: secondSkillIcon,
+        },
       }
     );
   }
@@ -42,7 +50,8 @@ export default class Necromancer extends Role {
   }
 
   isSkillDisabled(skill) {
-    const hasNoZombiesToTarget = this.currentGame.deathManager.noExistingZombies() && skill === 1; 
+    const hasNoZombiesToTarget =
+      this.currentGame.deathManager.noExistingZombies() && skill === 1;
     return super.isSkillDisabled(skill) || hasNoZombiesToTarget;
   }
 }

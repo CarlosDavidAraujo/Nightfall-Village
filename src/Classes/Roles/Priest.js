@@ -13,31 +13,26 @@ export default class Priest extends Role {
       priestImg,
       "Seu objetivo é ajudar os aldeões a eliminarem os lobisomens.",
       {
-        name: "Exorcismo",
-        description:
-          "Uma vez por jogo você escolhe um jogador. Se for um lobisomem ele é eliminado, se for um aldeão você é eliminado.",
-        isTargetType: true,
-        icon: firstSkillIcon,
-      },
-      {
-        name: "Proteção divina",
-        description:
-          "Passivo: A primeira vez que os lobisomens tentarem te matar você sobreviverá.",
-        isTargetType: true,
-        icon: secondSkillIcon,
+        1: {
+          name: "Exorcismo",
+          description:
+            "Uma vez por jogo você escolhe um jogador. Se for um lobisomem ele é eliminado, se for um aldeão você é eliminado.",
+          isTargetType: true,
+          enableTurn: -1,
+          turnItWasDisabled: -1,
+          icon: firstSkillIcon,
+        },
+        2: {
+          name: "Abençoado",
+          description:
+            "Passivo: A primeira vez que os lobisomens tentarem te matar você sobreviverá.",
+          isTargetType: false,
+          enableTurn: 1000, 
+          turnItWasDisabled: -1,
+          icon: secondSkillIcon,
+        },
       }
     );
-    this.disabledSkills = {
-      1: {
-        duration: 0,
-        turnItWasDisabled: -1,
-      },
-      2: {
-        duration: 10000,
-        turnItWasDisabled: -1,
-      },
-    };
-    this.protectionBarrier = true;
   }
 
   exorcizar(targetPlayer) {

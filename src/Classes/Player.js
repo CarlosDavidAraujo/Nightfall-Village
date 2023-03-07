@@ -7,14 +7,16 @@ export default class Player {
     this.role = null;
     this.currentGame = currentGame;
     this.votesCount = 0;
-    this.disabledVoteDuration = 0;
+    this.disabledVoteDuration = -1;
     this.duplicatedVote = false;
     this.confused = false;
-    this.protected = false;
+    this.protectionDuration = -1;
     this.protector = null;
     this.protectionBarrier = false;
     this.infected = false;
+    this.taunt = false;
     this.deathTurn = null;
+    this.inevitableDeath = false;
     this.resurrectTurn = null;
   }
 
@@ -64,12 +66,23 @@ export default class Player {
     return this.confused === true;
   }
 
-  setProtected(value) {
-    this.protected = this.isUndead() ? false : value;
+  setInevitableDeath(value) {
+    this.inevitableDeath = value;
+  }
+
+  hasInevitableDeath() {
+    return this.inevitableDeath === true;
+  }
+
+  setProtectedTurnsDuration(duration) {
+    if (this.hasInevitableDeath()) return;
+    const currentTurn = this.currentGame.getCurrentTurn();
+    this.protectionDuration = duration * 2 + currentTurn;
   }
 
   isProtected() {
-    return this.protected === true;
+    const currentTurn = this.currentGame.getCurrentTurn();
+    return this.protectionDuration >= currentTurn;
   }
 
   getProtector() {
@@ -98,6 +111,14 @@ export default class Player {
 
   isInfected() {
     return this.infected === true;
+  }
+  
+  setTaunt(value) {
+    this.taunt = value;
+  }
+  
+  hasTaunt() {
+    return this.taunt === true;
   }
 
   belongsToWerewolvesTeam() {
@@ -162,11 +183,7 @@ export default class Player {
 
   shouldDie() {
     const currentTurn = this.currentGame.getCurrentTurn();
-    return (
-      currentTurn === this.deathTurn &&
-      !this.isProtected() &&
-      !this.isInfected()
-    );
+    return currentTurn === this.deathTurn && !this.isProtected();
   }
 
   dieAfterManyTurns(turns) {

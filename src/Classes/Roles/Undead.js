@@ -13,28 +13,26 @@ export default class Undead extends Role {
       undeadImg,
       "Seu objetivo é infectar o máximo de pessoas e agir em conjunto com o necromante. Quando todos estiverem infectados vocês vencem.",
       {
-        name: "Mordida",
-        description: "Morde um jogador infectando-o pelo restante da partida.",
-        isTargetType: true,
-        icon: firstSkillIcon,
-      },
-      {
-        name: "Decompor-se",
-        description: "Passivo: Você nâo pode votar nem ser morto durante a noite, mas sua vida só dura 1 turno e o necromante pode prolongá-la.",
-        isTargetType: true,
-        icon: secondSkillIcon,
+        1: {
+          name: "Mordida",
+          description:
+            "Morde um jogador infectando-o pelo restante da partida.",
+          isTargetType: true,
+          enableTurn: -1,
+          turnItWasDisabled: -1,
+          icon: firstSkillIcon,
+        },
+        2: {
+          name: "Pútrido",
+          description:
+            "Passivo: Sua vida só dura um turno, apenas o necromante pode prolongá-la. Você nâo pode votar nem ser morto durante a noite, .",
+          isTargetType: false,
+          enableTurn: 1000,
+          turnItWasDisabled: -1,
+          icon: secondSkillIcon,
+        },
       }
     );
-    this.disabledSkills = {
-      1: {
-        duration: 0,
-        turnItWasDisabled: -1,
-      },
-      2: {
-        duration: 10000, //faz com que a habilidade seja passiva
-        turnItWasDisabled: -1,
-      },
-    };
   }
 
   morder(targetPlayer) {

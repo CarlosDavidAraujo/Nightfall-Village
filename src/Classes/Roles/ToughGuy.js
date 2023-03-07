@@ -1,7 +1,7 @@
 import Role from "./Role";
 import toughGuyImg from "../../../assets/images/toughGuy.png";
 import firstSkillIcon from "../../../assets/images/target.png";
-import secondSkillIcon from "../../../assets/images/trap.png";
+import secondSkillIcon from "../../../assets/images/muscle.png";
 
 export default class ToughGuy extends Role {
   constructor() {
@@ -16,7 +16,7 @@ export default class ToughGuy extends Role {
         1: {
           name: "Último Ato",
           description:
-            "Uma vez por jogo você intimida os lobisomens forçando-os a te matarem. Há 20% de chance de um deles morrer com você.",
+            "Uma vez por jogo você provoca os lobisomens forçando-os a te matarem. Há 20% de chance de um deles morrer com você.",
           isTargetType: false,
           enableTurn: -1,
           turnItWasDisabled: -1,
@@ -25,7 +25,7 @@ export default class ToughGuy extends Role {
         2: {
           name: "Parrudo",
           description:
-            "Quando você for atacado por lobisomens, você sobreviverá até o próximo dia.",
+            "Passivo: Quando você for atacado por lobisomens, você sobreviverá até o próximo dia.",
           isTargetType: false,
           enableTurn: 1000,
           turnItWasDisabled: -1,

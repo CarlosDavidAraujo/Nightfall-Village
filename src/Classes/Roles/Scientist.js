@@ -15,18 +15,24 @@ export default class Scientist extends Role {
       scientistImg,
       "Seu objetivo é ajudar a erradicar os lobisomens, mas tudo que você faz é imprevisível.",
       {
-        name: "Experimento",
-        description:
-          "Uma vez por jogo escolha um jogador. Se for um lobisomem, transforme-o em aldeão. Se for aldeão transforme-o em lobisomem.",
-        isTargetType: true,
-        icon: firstSkillIcon,
-      },
-      {
-        name: "Alquimia",
-        description:
-          'Crie 1 de 3 poções aleatórias (pavor, confusão ou manipulação), sem repetir a mesma poção a cada turno. Bloqueia "Alquimia" após 3 usos.',
-        isTargetType: true,
-        icon: secondSkillIcon,
+        1: {
+          name: "Experimento",
+          description:
+            "Uma vez por jogo escolha um jogador. Se for um lobisomem, transforme-o em aldeão. Se for aldeão transforme-o em lobisomem.",
+          isTargetType: true,
+          enableTurn: -1,
+          turnItWasDisabled: -1,
+          icon: firstSkillIcon,
+        },
+        2: {
+          name: "Alquimia",
+          description:
+            'Crie 1 de 3 poções aleatórias (pavor, confusão ou manipulação), sem repetir a mesma poção a cada turno. Bloqueia "Alquimia" após 3 usos.',
+          isTargetType: true,
+          enableTurn: -1,
+          turnItWasDisabled: -1,
+          icon: secondSkillIcon,
+        },
       }
     );
     this.potionsEffects = {

@@ -13,17 +13,23 @@ export default class Assassin extends Role {
       killerImg,
       "Seu objetivo é eliminar todos os jogadores. Quando todos forem eliminados você vence.",
       {
-        name: "Assassinato",
-        description: "Todo turno você escolhe um jogador para eliminar.",
-        isTargetType: true,
-        icon: firstSkillIcon,
-      },
-      {
-        name: "Sequestro",
-        description:
-          "Uma vez por jogo você pode sequestrar um jogador. Ele é impedido de usar habilidades por 2 turnos.",
-        isTargetType: true,
-        icon: secondSkillIcon,
+        1: {
+          name: "Assassinato",
+          description: "Todo turno você escolhe um jogador para eliminar.",
+          isTargetType: true,
+          icon: firstSkillIcon,
+          enableTurn: -1,
+          turnItWasDisabled: -1,
+        },
+        2: {
+          name: "Sequestro",
+          description:
+            "Uma vez por jogo você pode sequestrar um jogador. Ele é impedido de usar habilidades por 2 turnos.",
+          isTargetType: true,
+          icon: secondSkillIcon,
+          enableTurn: -1,
+          turnItWasDisabled: -1,
+        },
       }
     );
   }

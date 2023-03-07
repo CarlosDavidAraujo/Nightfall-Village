@@ -21,15 +21,15 @@ export default function RoleInfoModal({ isVisible, onClose, role }) {
                     <SubTitle style={{ marginTop: '5%' }}>Habilidades</SubTitle>
                     <SkillsContainer>
                         <SkillButton
-                            skillName={role.getFirstSkillName()}
-                            skillIcon={role.getFirstSkillIcon()}
-                            skillDescription={role.getFirstSkillDescription()}
+                            skillName={role.getSkillName(1)}
+                            skillIcon={role.getSkillIcon(1)}
+                            skillDescription={role.getSkillDescription(1)}
                             disabled={true}
                         />
                         <SkillButton
-                            skillName={role.getSecondSkillName()}
-                            skillIcon={role.getSecondSkillIcon()}
-                            skillDescription={role.getSecondSkillDescription()}
+                            skillName={role.getSkillName(2)}
+                            skillIcon={role.getSkillIcon(2)}
+                            skillDescription={role.getSkillDescription(2)}
                             disabled={true}
                         />
                     </SkillsContainer>

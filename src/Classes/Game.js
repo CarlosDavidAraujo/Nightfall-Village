@@ -16,6 +16,7 @@ import DeathManager from "./DeathManager";
 import VotingManager from "./VotingManager";
 import WinConditionManager from "./WinConditionManager";
 import Priest from "./Roles/Priest";
+import ToughGuy from "./Roles/ToughGuy";
 
 export default class Game {
   constructor() {
@@ -41,8 +42,9 @@ export default class Game {
       new OldMan(),
       new Priest(),
       new Scientist(),
-      new Witch(),
+      new ToughGuy(),
       new Undead(),
+      new Witch(),
     ];
   }
 
@@ -109,7 +111,7 @@ export default class Game {
     return result || this.alivePlayers.length === 0;
   }
 
-  //----------FUÇÕES AVANÇADAS DE CONFIGURAÇAO DA CLASSE------------//
+  //----------SETTERS DE PLAYERS E ROLES------------//
 
   setRoles(selectedRoles) {
     this.currentRoles = [];

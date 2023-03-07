@@ -14,18 +14,24 @@ export class Villager extends Role {
       villagerImg,
       "Seu objetivo é descobrir quem são os lobisomens e tentar proteger seus aliados.",
       {
-        name: "Espiar",
-        description:
-          "Você tem 5% de chance de descobrir um lobisomem. Se conseguir, há 15% de chance dele te matar.",
-        isTargetType: false,
-        icon: firstSkillIcon,
-      },
-      {
-        name: "Rezar",
-        description:
-          "Escolha outro jogador. Ele tem 5% de chance de ser protegido.",
-        isTargetType: true,
-        icon: secondSkillIcon,
+        1: {
+          name: "Espiar",
+          description:
+            "Você tem 5% de chance de descobrir um lobisomem. Se conseguir, há 15% de chance dele te matar.",
+          isTargetType: false,
+          enableTurn: -1,
+          turnItWasDisabled: -1,
+          icon: firstSkillIcon,
+        },
+        2: {
+          name: "Rezar",
+          description:
+            "Escolha outro jogador. Ele tem 5% de chance de ser protegido.",
+          isTargetType: true,
+          enableTurn: -1,
+          turnItWasDisabled: -1,
+          icon: secondSkillIcon,
+        },
       }
     );
   }
@@ -54,7 +60,7 @@ export class Villager extends Role {
     const protectingChance = 0.05;
     const randomNumber = Math.random();
     if (randomNumber <= protectingChance) {
-      targetPlayer.setProtected(true);
+      targetPlayer.setProtectedTurnsDuration(1);
     }
   }
 }

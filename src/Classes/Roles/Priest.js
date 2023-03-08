@@ -1,6 +1,6 @@
 import Role from "./Role";
 import priestImg from "../../../assets/images/priest.png";
-import firstSkillIcon from "../../../assets/images/target.png";
+import firstSkillIcon from "../../../assets/images/cross.png";
 import secondSkillIcon from "../../../assets/images/trap.png";
 
 export default class Priest extends Role {

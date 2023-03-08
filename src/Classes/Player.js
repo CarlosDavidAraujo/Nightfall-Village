@@ -148,6 +148,10 @@ export default class Player {
   isUndead() {
     return this.role.getSpecies() === "Undead";
   }
+  
+  isAssassin() {
+    return this.getRoleName() === "Assassino em Série";
+  }
 
   resetAllStates() {
     this.votesCount = 0;

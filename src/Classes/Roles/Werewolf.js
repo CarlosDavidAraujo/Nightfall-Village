@@ -55,7 +55,7 @@ export class LonelyWerewolf extends WereWolf {
     super();
     this.name = "Lobisomem Solitário";
     this.objective =
-      "eliminar todos os aldeões, mas você só vencerá se for o último lobisomem vivo.";
+      "Seu objeitvo é eliminar todos os aldeões, mas você só vencerá se for o último lobisomem vivo.";
     this.roleImg = loneWolfImg;
   }
 

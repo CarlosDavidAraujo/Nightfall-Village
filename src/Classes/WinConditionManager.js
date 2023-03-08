@@ -17,10 +17,10 @@ export default class WinConditionManager {
     const atLeastOneUndeadAlive = this.game.alivePlayers.some((player) =>
       player.belongsToUndeadsTeam()
     );
-    const onlyOnePlayerAlive = this.game.alivePlayers.length === 1;
+    const lastPlayerAlive = this.game.alivePlayers.length === 1;
     const atLeastOnePlayerAlive = this.game.alivePlayers.length >= 1;
-    const allNonAssassinPlayersDied = this.game.alivePlayers.every(
-      (player) => player.getRoleName() === "Assassino em Série"
+    const isAssassin = this.game.alivePlayers.some((player) =>
+      player.isAssassin()
     );
     const everyPlayerIsDead = this.game.alivePlayers.length === 0;
 
@@ -34,7 +34,7 @@ export default class WinConditionManager {
         this.game.alivePlayers.every(
           (player) => player.isInfected() || player.belongsToUndeadsTeam()
         ) && atLeastOneUndeadAlive,
-      assassin: () => onlyOnePlayerAlive && allNonAssassinPlayersDied,
+      assassin: () => lastPlayerAlive && isAssassin,
       allDied: () => everyPlayerIsDead,
     };
 

@@ -25,7 +25,7 @@ export default class Crusader extends Role {
         2: {
           name: "Julgamento",
           description:
-            "Escolha um jogador. Se for um lobisomem, ele será exposto, se for um aldeão, por 2 rodadas você não pode votar e julgamento é bloqueado.",
+            "Escolha um jogador. Se for um lobisomem, ele será exposto e julgamento é bloqueado permanentemente, se for um aldeão, julgamento e seus votos são bloqueados por 2 rodadas.",
           isTargetType: true,
           enableTurn: -1,
           turnItWasDisabled: -1,
@@ -36,7 +36,6 @@ export default class Crusader extends Role {
   }
 
   sacrificar(targetPlayer) {
-    //targetPlayer.setProtected(true);
     targetPlayer.setProtectedTurnsDuration(1);
     targetPlayer.setProtector(this.player);
   }
@@ -46,6 +45,7 @@ export default class Crusader extends Role {
     if (targetPlayerTeam === "Lobisomens") {
       const news = this.currentGame.getNews();
       news.addNews(`${targetPlayer.getName()} é um lobisomem entre nós!`);
+      this.disableSkill(2, 1000);
     } else {
       this.disableSkill(2, 2);
       this.player.setDisabledVoteDuration(2);

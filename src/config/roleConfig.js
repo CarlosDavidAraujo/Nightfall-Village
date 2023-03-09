@@ -274,6 +274,25 @@ export default function useRoleConfig(
         alert: "",
       },
     },
+    Pistoleiro: {
+      methods: {
+        useFirstSkill: () => {
+          role.atirar(targetPlayer);
+          setTargetPlayer(null);
+          passTurn();
+        },
+        useSecondSkill: null,
+        useSkillTarget: (skill) => {
+          setChosenSkill(skill);
+          handleShowPlayers();
+        },
+      },
+      messages: {
+        firstSkill: "Selecione um jogador para eliminar.",
+        secondSkill: "",
+        alert: "",
+      },
+    },
     Valentão: {
       methods: {
         useFirstSkill: () => {

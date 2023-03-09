@@ -17,6 +17,7 @@ import VotingManager from "./VotingManager";
 import WinConditionManager from "./WinConditionManager";
 import Priest from "./Roles/Priest";
 import ToughGuy from "./Roles/ToughGuy";
+import Gunslinger from "./Roles/Gunslinger";
 
 export default class Game {
   constructor() {
@@ -36,6 +37,7 @@ export default class Game {
       new Assassin(),
       new Crusader(),
       new Doctor(),
+      new Gunslinger(),
       new Hunter(),
       new LonelyWerewolf(),
       new Necromancer(),

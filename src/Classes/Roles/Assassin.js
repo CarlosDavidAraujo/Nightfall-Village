@@ -1,7 +1,7 @@
 import Role from "./Role";
 import killerImg from "../../../assets/images/assassin.png";
 import firstSkillIcon from "../../../assets/images/dagger.png";
-import secondSkillIcon from "../../../assets/images/trap.png";
+import secondSkillIcon from "../../../assets/images/string.png";
 
 export default class Assassin extends Role {
   constructor() {
@@ -11,11 +11,11 @@ export default class Assassin extends Role {
       "Human",
       false,
       killerImg,
-      "Seu objetivo é eliminar todos os jogadores. Você vence se for o último jogador vivo.",   
+      "Seu objetivo é eliminar todos os jogadores. Você vence se for o último jogador vivo.",
       {
         1: {
           name: "Assassinato",
-          description: "Todo turno você escolhe um jogador para eliminar.",   
+          description: "Todo turno você escolhe um jogador para eliminar.",
           isTargetType: true,
           icon: firstSkillIcon,
           enableTurn: -1,
@@ -23,7 +23,8 @@ export default class Assassin extends Role {
         },
         2: {
           name: "Sequestro",
-          description: "Uma vez por jogo você pode sequestrar um jogador. Ele é impedido de usar habilidades por 2 turnos.",   
+          description:
+            "Uma vez por jogo você pode sequestrar um jogador. Ele é impedido de usar habilidades por 2 turnos.",
           isTargetType: true,
           icon: secondSkillIcon,
           enableTurn: -1,

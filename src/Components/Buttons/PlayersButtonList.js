@@ -37,7 +37,10 @@ export default function PlayersButtonList({
               title={item.getName()}
               showWolfIcon={item.isWolf() && currentPlayer.isWolf()}
               showVotesIcon={!item.isWolf() && canSeeVotes()}
-              showUndeadIcon={item.isUndead() && currentPlayer.isUndead()}
+              showUndeadIcon={
+                item.belongsToUndeadsTeam() &&
+                currentPlayer.belongsToUndeadsTeam()
+              }
               voteCount={item.getVotesCount()}
               style={{ height: 50 }}
             />

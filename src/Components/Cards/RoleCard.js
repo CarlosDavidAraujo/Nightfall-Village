@@ -47,10 +47,10 @@ export default function RoleCard({
 
   return (
     <ThemeProvider theme={invertTheme(dark)}>
-      <CardContainer 
-      onPress={onPress} 
-      disabled={role.getName() === 'Zumbi'}
-      style={{ height: "auto" }}
+      <CardContainer
+        onPress={onPress}
+        disabled={role.getName() === "Zumbi"}
+        style={{ height: "auto" }}
       >
         <InfoButton onPress={() => setIsModalVisible(true)}>
           <DefaultText theme={dark}>i</DefaultText>
@@ -66,11 +66,11 @@ export default function RoleCard({
 
         {selected && (
           <AmountController>
-            <ButtonContainer onPress={onDecrease} style={{ border: "none" }}>
+            <ButtonContainer onPress={onDecrease} border={false}>
               <Icon source={minusIcon} />
             </ButtonContainer>
             <DefaultText>{count}</DefaultText>
-            <ButtonContainer onPress={onIncrease} style={{ border: "none" }}>
+            <ButtonContainer onPress={onIncrease} border={false}>
               <Icon source={plusIcon} />
             </ButtonContainer>
           </AmountController>

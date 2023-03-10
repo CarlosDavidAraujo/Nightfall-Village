@@ -67,7 +67,6 @@ export default function DefinePlayers({ navigation }) {
     <ThemeProvider theme={invertTheme(dark)}>
       <BackgroundImage source={bgImg}>
         <SpaceBetweenContainer>
-          <SubTitle>Adicione jogadores</SubTitle>
           <ScrollView style={{ width: "100%" }}>
             <SimpleGrid
               itemDimension={90}

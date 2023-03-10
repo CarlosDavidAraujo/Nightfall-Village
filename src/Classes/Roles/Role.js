@@ -70,10 +70,10 @@ export default class Role {
     return this.skills[skill].icon;
   }
 
-  cantInteractWithDeadPlayers() {
+  canInteractWithDeadPlayers() {
     return (
       this.interactWithDeadPlayers === true &&
-      this.currentGame.getDeadPlayers().length === 0
+      this.currentGame.getDeadPlayers().length > 0
     );
   }
 

@@ -2,7 +2,12 @@ import React, { useContext } from "react";
 import Game from "../Classes/Game";
 import { GameContext } from "../Context/GameContext";
 import DefaultButton from "../Components/Buttons/DefaultButton";
-import { FlexStartContainer, SpaceAroundContainer, SubTitle } from "../Styles";
+import {
+  DefaultText,
+  FlexStartContainer,
+  SpaceAroundContainer,
+  SubTitle,
+} from "../Styles";
 import { dark, invertTheme } from "../Themes/Dark";
 
 export default function VillageNews({ route, navigation }) {
@@ -38,7 +43,14 @@ export default function VillageNews({ route, navigation }) {
         ))}
       </FlexStartContainer>
       {winner ? (
-        <DefaultButton onPress={() => handleEndGame()} title="Novo jogo" />
+        <>
+          {currentGame.allPlayers.map((player, i) => (
+            <DefaultText
+              key={i}
+            >{`${player.name}: ${player.role.name}`}</DefaultText>
+          ))}
+          <DefaultButton onPress={() => handleEndGame()} title="Novo jogo" />
+        </>
       ) : previousScreen === "PlayerAction" ? (
         <DefaultButton
           onPress={() => gatherVillagers()}

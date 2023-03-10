@@ -1,5 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
-import SkillButton from "../Components/Buttons/SkillButton";
+import React, { useContext, useState } from "react";
 import PlayersButtonList from "../Components/Buttons/PlayersButtonList";
 import { GameContext } from "../Context/GameContext";
 import ActionButtons from "../Components/Buttons/ActionButtons";
@@ -8,12 +7,12 @@ import {
   FlexStartContainer,
   RoleImage,
   RoleImageContainer,
-  SkillsContainer,
   SpaceBetweenContainer,
   Title,
 } from "../Styles";
 import useRoleConfig from "../config/roleConfig";
 import { dark } from "../Themes/Dark";
+import SkillsChoiceContainer from "../Components/Buttons/SkillChoiceContainer";
 
 export default function PlayerAction({ navigation }) {
   const { currentGame } = useContext(GameContext);
@@ -27,8 +26,6 @@ export default function PlayerAction({ navigation }) {
   const currentPlayer = currentGame.getCurrentPlayer();
   const role = currentPlayer.getRole();
   const roleName = role.getName();
-  const { isFirstSkillTargetType, isSecondSkillTargetType } =
-    role.getSkillType();
   const [passCondition, setPassCondition] = useState(true);
   const [targetPlayer, setTargetPlayer] = useState();
   const [discoveredPlayer, setDiscoveredPlayer] = useState();
@@ -54,14 +51,6 @@ export default function PlayerAction({ navigation }) {
   );
   const methods = roleConfig[roleName].methods;
   const messages = roleConfig[roleName].messages;
-
-  function handleUseFirstSkill() {
-    methods.useFirstSkill();
-  }
-
-  function handleUseSecondSkill() {
-    methods.useSecondSkill();
-  }
 
   function handleShowPlayers() {
     setShowPlayers(true);
@@ -111,38 +100,7 @@ export default function PlayerAction({ navigation }) {
         />
 
         {!chosenSkill && (
-          <SkillsContainer>
-            <SkillButton
-              onPress={
-                isFirstSkillTargetType
-                  ? () => methods.useSkillTarget(1)
-                  : handleUseFirstSkill
-              }
-              skillIcon={role.getSkillIcon(1)}
-              skillName={role.getSkillName(1)}
-              skillDescription={role.getSkillDescription(1)}
-              disabled={role.isSkillDisabled(1)}
-              showOpacity={role.isSkillDisabled(1)}
-            />
-            <SkillButton
-              onPress={
-                isSecondSkillTargetType
-                  ? () => methods.useSkillTarget(2)
-                  : handleUseSecondSkill
-              }
-              skillIcon={role.getSkillIcon(2)}
-              skillName={role.getSkillName(2)}
-              skillDescription={role.getSkillDescription(2)}
-              disabled={
-                role.isSkillDisabled(2) ||
-                role.cantInteractWithDeadPlayers(currentGame)
-              }
-              showOpacity={
-                role.isSkillDisabled(2) ||
-                role.cantInteractWithDeadPlayers(currentGame)
-              }
-            />
-          </SkillsContainer>
+          <SkillsChoiceContainer role={role} methods={methods} />
         )}
 
         {showPlayers && (
@@ -175,8 +133,8 @@ export default function PlayerAction({ navigation }) {
         confirmText="Confirmar"
         onConfirm={
           chosenSkill === 1
-            ? handleUseFirstSkill
-            : chosenSkill === 2 && handleUseSecondSkill
+            ? methods.useFirstSkill
+            : chosenSkill === 2 && methods.useSecondSkill
         }
       />
     </SpaceBetweenContainer>

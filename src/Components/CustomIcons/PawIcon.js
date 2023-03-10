@@ -1,21 +1,12 @@
-import styled from "styled-components/native";
+import { IconContainer } from "../../Styles";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faPaw } from "@fortawesome/free-solid-svg-icons";
+import { invertTheme } from "../../Themes/Dark";
 
-export default function PawIcon({theme}) {
-    return (
-        <IconContainer theme={theme}>
-            <FontAwesomeIcon icon={faPaw} color={theme.color}/>
-        </IconContainer>
-    );
+export default function PawIcon({ theme }) {
+  return (
+    <IconContainer theme={invertTheme(theme)}>
+      <FontAwesomeIcon icon={faPaw} color={theme.bg} />
+    </IconContainer>
+  );
 }
-
-const IconContainer = styled.View`
-    width: 20px;
-    height: 20px;
-    align-self: flex-end;
-    align-items: center;
-    margin-top: 0px;
-    margin-right: -10px;
-    border-radius: 50;
-`;

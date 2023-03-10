@@ -8,7 +8,7 @@ export default class Necromancer extends Role {
     super(
       "Necromante",
       "Undeads",
-      "Undead",
+      "Human",
       true,
       necroImg,
       "Seu objetivo é agir em conjunto com o zumbi para infectar toda a aldeia. Vocês vencerão quando todos estiverem infectados.",
@@ -50,8 +50,14 @@ export default class Necromancer extends Role {
   }
 
   isSkillDisabled(skill) {
-    const hasNoZombiesToTarget =
-      this.currentGame.deathManager.noExistingZombies() && skill === 1;
-    return super.isSkillDisabled(skill) || hasNoZombiesToTarget;
+    if (skill === 1) {
+      const hasZombiesToTarget = this.currentGame.alivePlayers.some((player) =>
+        player.isUndead()
+      );
+      return super.isSkillDisabled(skill) || !hasZombiesToTarget;
+    }
+    if (skill === 2) {
+      return super.isSkillDisabled(skill) || !this.canInteractWithDeadPlayers();
+    }
   }
 }

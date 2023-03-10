@@ -1,5 +1,4 @@
 import styled from "styled-components/native";
-import { dark } from "./Themes/Dark";
 
 export const ButtonContainer = styled.TouchableOpacity`
   background-color: ${(props) => props.theme.bg};
@@ -22,6 +21,20 @@ export const VoteButtonsContainer = styled.View`
   flex-direction: row;
   justify-content: space-evenly;
   width: 100%;
+`;
+
+export const IconContainer = styled.View`
+  position: absolute;
+  align-self: flex-end;
+  align-items: center;
+  justify-content: center;
+  margin-top: -40px;
+  margin-right: -20px;
+  aspect-ratio: 1;
+  border-radius: 50;
+  width: 25px;
+  padding: 5px;
+  background-color: ${(props) => props.theme.bg};
 `;
 
 export const DefaultText = styled.Text`

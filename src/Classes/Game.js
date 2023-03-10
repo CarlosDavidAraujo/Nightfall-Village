@@ -21,6 +21,7 @@ import Gunslinger from "./Roles/Gunslinger";
 
 export default class Game {
   constructor() {
+    this.allPlayers = []
     this.alivePlayers = [];
     this.deadPlayers = [];
     this.news = new News();
@@ -134,6 +135,7 @@ export default class Game {
       player.setRole(roleCopy);
       roleCopy.setPlayer(player);
     });
+    this.allPlayers = this.alivePlayers;
   }
 
   //--------------GERENCIAMENTO DE FIM DE TURNO------------------//

@@ -1,24 +1,18 @@
-import { View } from "react-native"
-import { SubTitle } from "../../Styles";
+import { View } from "react-native";
+import { DefaultText } from "../../Styles";
 
-export default function ConditionalMessage({ showChooseSkill, showSelectPlayer, selectPlayerMessage, showAlert, alertMessage }) {
-    return (
-        <View>
-            {showChooseSkill &&
-                <SubTitle >
-                    Selecione uma habilidade
-                </SubTitle>
-            }
-            {showSelectPlayer &&
-                <SubTitle >
-                    {selectPlayerMessage}
-                </SubTitle>
-            }
-            {showAlert &&
-                <SubTitle >
-                    {alertMessage}
-                </SubTitle>
-            }
-        </View>
-    )
+export default function ConditionalMessage({
+  showChooseSkill,
+  showSelectPlayer,
+  selectPlayerMessage,
+  showAlert,
+  alertMessage,
+}) {
+  return (
+    <View>
+      {showChooseSkill && <DefaultText>Selecione uma habilidade</DefaultText>}
+      {showSelectPlayer && <DefaultText>{selectPlayerMessage}</DefaultText>}
+      {showAlert && <DefaultText>{alertMessage}</DefaultText>}
+    </View>
+  );
 }

@@ -42,4 +42,8 @@ export default class Seer extends Role {
   contactar(targetPlayer) {
     return `A verdade foi revelada! ${targetPlayer.getName()} era ${targetPlayer.getRoleName()}.`;
   }
+
+  isSkillDisabled(skill) {
+    return super.isSkillDisabled(skill) || (!this.canInteractWithDeadPlayers() && skill === 2);
+  }
 }

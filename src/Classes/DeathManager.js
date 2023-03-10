@@ -60,13 +60,4 @@ export default class DeathManager {
     insertPlayerInAlivePlayers(insertionPosition, player) {
         this.game.alivePlayers.splice(insertionPosition, 0, player);
     }
-
-    //-----GERENCIADOR DE ZUMBIS------//
-    
-    noExistingZombies() {
-        const zombies = this.game.alivePlayers.filter(player => player.getRoleName() === 'Zumbi');
-        const noZombies = zombies.length === 0;
-        return noZombies;
-    }
-
 }

@@ -14,23 +14,18 @@ export default function DefaultButton({
   showWolfIcon,
   showVotesIcon,
   showUndeadIcon,
-  voteCount
+  voteCount,
 }) {
-
-  const theme = inverted ? invertTheme(dark) : dark
+  const theme = inverted ? invertTheme(dark) : dark;
 
   return (
     <ThemeProvider theme={theme}>
-      <ButtonContainer
-        onPress={onPress}
-        style={style}
-        disabled={disabled}
-      >
-        {showWolfIcon && <PawIcon theme={theme}/>}
-        {showVotesIcon && <VoteIcon>{voteCount}</VoteIcon>}
-        {showUndeadIcon && <SkullIcon theme={theme}/>}
-        <DefaultText >{title}</DefaultText>
+      <ButtonContainer onPress={onPress} style={style} disabled={disabled}>
+        {showWolfIcon && <PawIcon theme={theme} />}
+        {showVotesIcon && <VoteIcon theme={theme}>{voteCount}</VoteIcon>}
+        {showUndeadIcon && <SkullIcon theme={theme} />}
+        <DefaultText>{title}</DefaultText>
       </ButtonContainer>
     </ThemeProvider>
-  )
-};
+  );
+}

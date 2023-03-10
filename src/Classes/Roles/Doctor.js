@@ -37,7 +37,6 @@ export default class Doctor extends Role {
   }
 
   curar(targetPlayer) {
-    // targetPlayer.setProtected(true);
     targetPlayer.setProtectedTurnsDuration(1);
     this.lastHealedTarget = targetPlayer;
     this.lastTurnOfHealUse = this.currentGame.getCurrentTurn();
@@ -55,5 +54,9 @@ export default class Doctor extends Role {
   reanimar(targetPlayer) {
     targetPlayer.resurrectAfterManyTurns(1);
     this.disableSkill(2, 1000);
+  }
+  
+  isSkillDisabled(skill) {
+    return super.isSkillDisabled(skill) || (!this.canInteractWithDeadPlayers() && skill === 2);
   }
 }

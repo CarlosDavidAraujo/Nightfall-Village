@@ -66,11 +66,11 @@ export default function RoleCard({
 
         {selected && (
           <AmountController>
-            <ButtonContainer onPress={onDecrease} border={false}>
+            <ButtonContainer onPress={onDecrease} style={{borderWidth: 0}}>
               <Icon source={minusIcon} />
             </ButtonContainer>
             <DefaultText>{count}</DefaultText>
-            <ButtonContainer onPress={onIncrease} border={false}>
+            <ButtonContainer onPress={onIncrease} style={{borderWidth: 0}}>
               <Icon source={plusIcon} />
             </ButtonContainer>
           </AmountController>

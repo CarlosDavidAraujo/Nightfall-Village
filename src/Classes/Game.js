@@ -31,23 +31,46 @@ export default class Game {
     this.currentPlayerIndex = 0;
     this.currentTurn = 0; //noites acontecem em turnos pares e dias em turnos ímpares
     this.currentRoles = [];
-    this.roleMap = [
+    this.rolePreset = [
       new Villager(),
       new Seer(),
       new WereWolf(),
-      new Assassin(),
-      new Crusader(),
-      new Doctor(),
-      new Gunslinger(),
-      new Hunter(),
-      new LonelyWerewolf(),
-      new Necromancer(),
-      new OldMan(),
-      new Priest(),
-      new Scientist(),
-      new ToughGuy(),
-      new Undead(),
-      new Witch(),
+    ]
+    this.roleMap = [
+      {
+        team: 'Aldeões',
+        data: [
+          new Villager(),
+          new Seer(),
+          new Doctor(),
+          new Crusader(),
+          new Gunslinger(),
+          new Hunter(),
+          new OldMan(),
+          new Priest(),
+          new Scientist(),
+          new ToughGuy(),
+        ]
+      },
+      {
+        team: 'Lobisomens',
+        data: [
+          new WereWolf(),
+          new LonelyWerewolf(),
+          new Witch(),
+        ]
+      },
+      {
+        team: 'Mortos-vivos',
+        data: [
+          new Necromancer(),
+          new Undead(),
+        ]
+      },
+      {
+        team: 'Solo',
+        data: [new Assassin(),]
+      }
     ];
   }
 
@@ -75,6 +98,10 @@ export default class Game {
 
   getRoleMap() {
     return this.roleMap;
+  }
+
+  getRolePreset() {
+    return this.rolePreset;
   }
 
   getAlivePlayers() {

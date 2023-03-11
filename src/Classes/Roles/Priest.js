@@ -1,7 +1,7 @@
 import Role from "./Role";
 import priestImg from "../../../assets/images/priest.png";
 import firstSkillIcon from "../../../assets/images/cross.png";
-import secondSkillIcon from "../../../assets/images/trap.png";
+import secondSkillIcon from "../../../assets/images/sun.png";
 
 export default class Priest extends Role {
   constructor() {
@@ -23,7 +23,7 @@ export default class Priest extends Role {
           icon: firstSkillIcon,
         },
         2: {
-          name: "Abençoado",
+          name: "Iluminado",
           description:
             "Passivo: A primeira vez que os lobisomens tentarem te matar você sobreviverá.",
           isTargetType: false,

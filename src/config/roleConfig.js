@@ -296,7 +296,7 @@ export default function useRoleConfig(
     Valentão: {
       methods: {
         useFirstSkill: () => {
-          role.intimidar();
+          role.provocar();
           passTurn();
         },
         useSecondSkill: null,

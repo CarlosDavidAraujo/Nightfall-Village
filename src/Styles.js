@@ -28,13 +28,14 @@ export const IconContainer = styled.View`
   align-self: flex-end;
   align-items: center;
   justify-content: center;
-  margin-top: -40px;
-  margin-right: -20px;
+  top: -13px;
+  right: -8px;
   aspect-ratio: 1;
   border-radius: 50;
-  width: 25px;
-  padding: 5px;
+  width: 28px;
+  padding: 4px;
   background-color: ${(props) => props.theme.bg};
+  border: 2px solid ${(props) => props.theme.color};
 `;
 
 export const DefaultText = styled.Text`

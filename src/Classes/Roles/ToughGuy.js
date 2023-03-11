@@ -1,6 +1,6 @@
 import Role from "./Role";
 import toughGuyImg from "../../../assets/images/toughGuy.png";
-import firstSkillIcon from "../../../assets/images/target.png";
+import firstSkillIcon from "../../../assets/images/roar.png";
 import secondSkillIcon from "../../../assets/images/muscle.png";
 
 export default class ToughGuy extends Role {
@@ -14,7 +14,7 @@ export default class ToughGuy extends Role {
       "Seu objetivo é eliminar os lobisomens e ajudar os aldeões a vencerem o jogo.",
       {
         1: {
-          name: "Último Ato",
+          name: "Provocar",
           description:
             "Uma vez por jogo você provoca os lobisomens forçando-os a te matarem. Há 20% de chance de um deles morrer com você.",
           isTargetType: false,
@@ -35,7 +35,7 @@ export default class ToughGuy extends Role {
     );
   }
 
-  intimidar() {
+  provocar() {
     this.player.setTaunt(true);
     this.disableSkill(1, 1000);
     this.killRandomWerewolf();

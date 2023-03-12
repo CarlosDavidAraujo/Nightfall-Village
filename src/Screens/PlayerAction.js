@@ -127,10 +127,8 @@ export default function PlayerAction({ navigation }) {
       </FlexStartContainer>
       <ActionButtons
         showPass={passCondition}
-        passText="Passar a vez"
         onPass={() => passTurn()}
         showConfirm={targetPlayer}
-        confirmText="Confirmar"
         onConfirm={
           chosenSkill === 1
             ? methods.useFirstSkill

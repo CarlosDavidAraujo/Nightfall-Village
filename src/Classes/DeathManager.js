@@ -7,7 +7,13 @@ export default class DeathManager {
 
     removePlayers() {
         this.game.alivePlayers.forEach((player) => {
-            if (player.shouldDie()) {
+            if (player.shouldDie() && player.hasProtector()) {
+                const protector = player.getProtector();
+                this.game.deadPlayers.push(protector);
+                protector.resetAllStates();
+                protector.sendDeathMessage();
+            }
+            else if (player.shouldDie()) {
                 this.game.deadPlayers.push(player);
                 player.resetAllStates();
                 player.sendDeathMessage();

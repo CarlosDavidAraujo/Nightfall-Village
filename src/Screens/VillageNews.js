@@ -21,14 +21,14 @@ export default function VillageNews({ route, navigation }) {
     navigation.navigate("GameMenu");
   }
 
-  function gatherVillagers() {
+  function startDayPhase() {
     currentGame.clearTurnNews();
     navigation.navigate("Clock", {
       previousScreen: "VillageNews",
     });
   }
 
-  function nightFall() {
+  function startNightPhase() {
     currentGame.clearTurnNews();
     navigation.navigate("PassToPlayer", {
       previousScreen: "VillageNews",
@@ -53,11 +53,11 @@ export default function VillageNews({ route, navigation }) {
         </>
       ) : previousScreen === "PlayerAction" ? (
         <DefaultButton
-          onPress={() => gatherVillagers()}
+          onPress={() => startDayPhase()}
           title="Reunir a vila"
         />
       ) : previousScreen === "Votes" ? (
-        <DefaultButton onPress={() => nightFall()} title="Adormecer" />
+        <DefaultButton onPress={() => startNightPhase()} title="Adormecer" />
       ) : null}
     </SpaceAroundContainer>
   );

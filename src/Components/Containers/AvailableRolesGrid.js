@@ -17,8 +17,8 @@ export default function AvailableRolesGrid({ roleMap, selectedRoles, setSelected
 
     function addRole(roleToAdd) {
         const roleIndex = selectedRoles.findIndex((selectedRole) => selectedRole.role.name === roleToAdd.name);
-        const notInSelectedRoleYet = roleIndex < 0;
-        notInSelectedRoleYet && setSelectedRoles([...selectedRoles, { role: roleToAdd, count: 1 }]);
+        const notSelectedYet = roleIndex < 0;
+        notSelectedYet && setSelectedRoles([...selectedRoles, { role: roleToAdd, count: 1 }]);
     }
 
     return (

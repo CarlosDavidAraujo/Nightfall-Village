@@ -16,7 +16,7 @@ export default class Crusader extends Role {
         1: {
           name: "Sacrifício",
           description:
-            "Escolha um jogador. Se ele iria morrer esta noite você morre no lugar dele.",
+            "Escolha um jogador. Se ele morreria esta noite você morre no lugar dele.",
           isTargetType: true,
           enableTurn: -1,
           turnItWasDisabled: -1,
@@ -36,7 +36,7 @@ export default class Crusader extends Role {
   }
 
   sacrificar(targetPlayer) {
-    targetPlayer.setProtectedTurnsDuration(1);
+    //targetPlayer.setProtectedTurnsDuration(1);
     targetPlayer.setProtector(this.player);
   }
 

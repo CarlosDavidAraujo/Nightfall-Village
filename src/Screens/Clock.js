@@ -24,7 +24,7 @@ export default function Clock({ navigation }) {
         <ThemeProvider theme={dark}>
             <BackgroundImage source={village}>
                 <SpaceAroundContainer>
-                    <SubTitle>Tempo restante: {seconds} segundos</SubTitle>
+                    <SubTitle>Tempo para discussão: {seconds} segundos</SubTitle>
                     <DefaultButton
                         inverted={true}
                         title="Iniciar votação"

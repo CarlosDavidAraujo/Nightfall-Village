@@ -2,6 +2,7 @@ import Role from "./Role";
 import hunterImg from "../../../assets/images/hunter.png";
 import firstSkillIcon from "../../../assets/images/target.png";
 import secondSkillIcon from "../../../assets/images/trap.png";
+import Player from "../Player";
 
 export default class Hunter extends Role {
   constructor() {
@@ -35,15 +36,15 @@ export default class Hunter extends Role {
     );
   }
 
-  atirar(targetPlayer) {
+  public atirar(targetPlayer: Player): void {
     targetPlayer.dieAfterManyTurns(1);
     this.disableSkill(1, 1000);
   }
 
-  capturar(targetPlayer) {
+  public capturar(targetPlayer: Player): void {
     const targetPlayerRole = targetPlayer.getRole();
-    targetPlayerRole.disableSkill(1, 1);
-    targetPlayerRole.disableSkill(2, 1);
+    targetPlayerRole!.disableSkill(1, 1);
+    targetPlayerRole!.disableSkill(2, 1);
     this.disableSkill(2, 2);
   }
 }

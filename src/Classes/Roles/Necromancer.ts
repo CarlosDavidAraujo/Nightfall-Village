@@ -2,6 +2,7 @@ import Role from "./Role";
 import necroImg from "../../../assets/images/necromancer.png";
 import firstSkillIcon from "../../../assets/images/deathClock.png";
 import secondSkillIcon from "../../../assets/images/deadHand.png";
+import Player from "../Player";
 
 export default class Necromancer extends Role {
   constructor() {
@@ -35,23 +36,26 @@ export default class Necromancer extends Role {
     );
   }
 
-  perpetuar(targetPlayer) {
+  public perpetuar(targetPlayer: Player): void {
     targetPlayer.dieAfterManyTurns(2);
   }
 
-  recompor(targetPlayer) {
+  public recompor(targetPlayer: Player): void {
     targetPlayer.resurrectAfterManyTurns(1);
     targetPlayer.transformInUndead();
     this.disableSkill(2, 1000);
   }
 
-  skillHasInvalidTargetOn(targetPlayer, chosenSkill) {
+  public skillHasInvalidTargetOn(
+    targetPlayer: Player,
+    chosenSkill: number
+  ): boolean {
     return !targetPlayer.isUndead() && chosenSkill === 1;
   }
 
-  isSkillDisabled(skill) {
+  public isSkillDisabled(skill: number): boolean {
     if (skill === 1) {
-      const hasZombiesToTarget = this.currentGame.alivePlayers.some((player) =>
+      const hasZombiesToTarget = this.currentGame!.alivePlayers.some((player) =>
         player.isUndead()
       );
       return super.isSkillDisabled(skill) || !hasZombiesToTarget;
@@ -59,5 +63,6 @@ export default class Necromancer extends Role {
     if (skill === 2) {
       return super.isSkillDisabled(skill) || !this.canInteractWithDeadPlayers();
     }
+    return super.isSkillDisabled(skill);
   }
 }

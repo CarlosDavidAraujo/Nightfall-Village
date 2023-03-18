@@ -1,11 +1,15 @@
+import Game from './Game';
+import Player from './Player';
+
 export default class DeathManager {
-    constructor(game) {
+    public game: Game;
+    constructor(game: Game) {
         this.game = game;
     }
 
     //-----REMOÇÃO DE JOGADORES-----//
-
-    removePlayers() {
+    
+    public removePlayers() {
         this.game.alivePlayers.forEach((player) => {
             if (player.shouldDie() && player.hasProtector()) {
                 const protector = player.getProtector();
@@ -22,7 +26,7 @@ export default class DeathManager {
         this.updateAlivePlayers();
     }
 
-    updateAlivePlayers() {
+    public updateAlivePlayers() {
         const remainingAlivePlayers = this.game.alivePlayers.filter(
             (player) => !this.game.deadPlayers.includes(player)
         );
@@ -34,8 +38,8 @@ export default class DeathManager {
     }
 
     //-----RESSURREIÇÃO DE JOGADORES-----//
-
-    revivePlayers() {
+    
+    public revivePlayers() {
         this.game.deadPlayers.forEach((player) => {
             if (player.shouldResurrect()) {
                 const insertionPosition = this.getInsertionPositionOfResurrected(player);
@@ -47,11 +51,11 @@ export default class DeathManager {
         this.updateDeadPlayers();
     }
 
-    updateDeadPlayers() {
+    public updateDeadPlayers() {
         this.game.deadPlayers = this.game.deadPlayers.filter(player => !player.shouldResurrect());
     }
 
-    getInsertionPositionOfResurrected(player) {
+    public getInsertionPositionOfResurrected(player: Player): number {
         const originalPlayerPositionInQueue = player.getID();
         const nearestPlayerPosition = this.game.alivePlayers.findIndex(
             (p) => p.getID() > originalPlayerPositionInQueue
@@ -63,7 +67,7 @@ export default class DeathManager {
         return insertionIndex;
     }
 
-    insertPlayerInAlivePlayers(insertionPosition, player) {
+    public insertPlayerInAlivePlayers(insertionPosition: number, player: Player) {
         this.game.alivePlayers.splice(insertionPosition, 0, player);
     }
 }

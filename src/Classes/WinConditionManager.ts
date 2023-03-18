@@ -3,9 +3,46 @@ import AssassinStrategy from "./TeamStrategy/AssassinStrategy";
 import UndeadsStrategy from "./TeamStrategy/UndeadsStrategy";
 import VillagersStrategy from "./TeamStrategy/VillagersStrategy";
 import { SolitaryWerewolfStrategy, WerewolvesStrategy } from "./TeamStrategy/WerewolvesStrategy";
+import Game from './Game';
+
+interface VictoryConditions {
+  villagers: {
+    winCondition: () => boolean;
+    victoryMessage: () => string;
+  };
+  werewolves: {
+    winCondition: () => boolean;
+    victoryMessage: () => string;
+  };
+  solitaryWerewolf: {
+    winCondition: () => boolean;
+    victoryMessage: () => string;
+  };
+  undeads: {
+    winCondition: () => boolean;
+    victoryMessage: () => string;
+  };
+  assassin: {
+    winCondition: () => boolean;
+    victoryMessage: () => string;
+  };
+  allDied: {
+    winCondition: () => boolean;
+    victoryMessage: () => string;
+  };
+}
 
 export default class WinConditionManager {
-  constructor(game) {
+  private game: Game;
+  private villagersStrategy: VillagersStrategy;
+  private werewolvesStrategy: WerewolvesStrategy;
+  private solitaryWerewolfStrategy: SolitaryWerewolfStrategy;
+  private undeadsStrategy: UndeadsStrategy;
+  private assassinStratagy: AssassinStrategy;
+  private allDiedStrategy: AllDiedStrategy;
+  private victoryConditions: VictoryConditions; 
+
+  constructor(game: Game) {
     this.game = game;
     this.villagersStrategy = new VillagersStrategy(game);
     this.werewolvesStrategy = new WerewolvesStrategy(game);
@@ -42,7 +79,7 @@ export default class WinConditionManager {
     };
   }
 
-  getWinnerTeam() {
+  public getWinnerTeam() {
     for (const [team, checkVictoryCondition] of Object.entries(this.victoryConditions)) {
       if (checkVictoryCondition.winCondition()) {
         const victoryMessage = this.getVictoryMessage(team);
@@ -53,7 +90,7 @@ export default class WinConditionManager {
     return null;
   }
 
-  getVictoryMessage(team) {
+  private getVictoryMessage(team: string): string {
     return this.victoryConditions[team].victoryMessage();
   }
 }

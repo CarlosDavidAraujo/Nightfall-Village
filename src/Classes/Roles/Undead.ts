@@ -2,6 +2,7 @@ import Role from "./Role";
 import undeadImg from "../../../assets/images/zombie.png";
 import firstSkillIcon from "../../../assets/images/denture.png";
 import secondSkillIcon from "../../../assets/images/desintegration.png";
+import Player from '../Player';
 
 export default class Undead extends Role {
   constructor() {
@@ -35,7 +36,7 @@ export default class Undead extends Role {
     );
   }
 
-  morder(targetPlayer) {
+  public morder(targetPlayer: Player): void {
     targetPlayer.setInfected(true);
   }
 }

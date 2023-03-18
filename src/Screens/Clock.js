@@ -37,6 +37,3 @@ export default function Clock({ navigation }) {
         </ThemeProvider>
     )
 }
-
-
-

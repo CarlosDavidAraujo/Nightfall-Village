@@ -15,5 +15,5 @@ export function GameProvider({ children }) {
       {children}
     </GameContext.Provider>
   );
-}
+} 
 

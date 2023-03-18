@@ -2,8 +2,12 @@ import Role from "./Role";
 import witchImg from "../../../assets/images/witch.png";
 import firstSkillIcon from "../../../assets/images/darkPotion.png";
 import secondSkillIcon from "../../../assets/images/crystalBall.png";
+import Player from "../Player";
 
 export default class Witch extends Role {
+  private lastCursedTarget: Player | null;
+  private lastTurnOfCurseUse: number;
+
   constructor() {
     super(
       "Bruxa",
@@ -37,15 +41,15 @@ export default class Witch extends Role {
     this.lastTurnOfCurseUse = -1;
   }
 
-  amaldicoar(targetPlayer) {
+  public amaldicoar(targetPlayer: Player): void {
     const targetPlayerRole = targetPlayer.getRole();
     const randomSkill = Math.floor(Math.random() * 2) + 1;
-    targetPlayerRole.disableSkill(randomSkill, 1);
+    targetPlayerRole!.disableSkill(randomSkill, 1);
     this.lastCursedTarget = targetPlayer;
-    this.lastTurnOfCurseUse = this.currentGame.getCurrentTurn();
+    this.lastTurnOfCurseUse = this.currentGame!.getCurrentTurn();
   }
 
-  prever(targetPlayer) {
+  public prever(targetPlayer: Player): string {
     const isSeer = targetPlayer.getRoleName() === "Vidente";
     const isWerewolf = targetPlayer.isWolf();
     if (isSeer) {
@@ -54,15 +58,16 @@ export default class Witch extends Role {
     if (isWerewolf) {
       return `A visão é clara! ${targetPlayer.getName()} é um ${targetPlayer.getRoleName()}.`;
     }
-    if (!isWerewolf && !isSeer) {
-      return `${targetPlayer.getName()} não é vidente nem lobisomem.`;
-    }
+    return `${targetPlayer.getName()} não é vidente nem lobisomem.`;
   }
 
-  hasInvalidTargetOn(targetPlayer, chosenSkill) {
+  public hasInvalidTargetOn(
+    targetPlayer: Player,
+    chosenSkill: number
+  ): boolean {
     const usingOnSameTarget = this.lastCursedTarget === targetPlayer;
     const curseWasUsedLastTurn =
-      this.lastTurnOfCurseUse === this.currentGame.getCurrentTurn() - 1;
+      this.lastTurnOfCurseUse === this.currentGame!.getCurrentTurn() - 1;
     return (
       usingOnSameTarget && curseWasUsedLastTurn && chosenSkill === 1 //somente para a habilidade amaldiçoar
     );

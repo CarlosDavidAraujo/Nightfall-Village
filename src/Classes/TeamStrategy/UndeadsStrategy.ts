@@ -1,7 +1,7 @@
 import TeamStrategy from "./TeamStrategy";
 
 export default class UndeadsStrategy extends TeamStrategy{
-    checkVictory() {
+   public checkVictory(): boolean {
       const atLeastOneUndeadAlive = this.game.alivePlayers.some((player) =>
         player.belongsToUndeadsTeam()
       );
@@ -11,7 +11,7 @@ export default class UndeadsStrategy extends TeamStrategy{
       return everyPlayerIsInfected && atLeastOneUndeadAlive;
     }
 
-    getVictoryMessage() {
+    public getVictoryMessage(): string {
         return 'Os mortos-vivos venceram!';
     }
   }

@@ -3,9 +3,12 @@ import scientistImg from "../../../assets/images/scientist.png";
 import firstSkillIcon from "../../../assets/images/tube.png";
 import secondSkillIcon from "../../../assets/images/potion.png";
 import { WereWolf } from "./Werewolf";
-import Villager from "./Villager";
+import {Villager} from "./Villager";
+import Player from "../Player";
 
 export default class Scientist extends Role {
+  private potionsEffects: Record<string, (targetPlayer: Player) => void>;
+
   constructor() {
     super(
       "Cientista Maluco",
@@ -36,13 +39,13 @@ export default class Scientist extends Role {
       }
     );
     this.potionsEffects = {
-      pavor: (targetPlayer) => targetPlayer.disableVote(1),
+      pavor: (targetPlayer) => targetPlayer.setDisabledVoteDuration(1),
       confusão: (targetPlayer) => targetPlayer.setConfused(true),
       manipulação: (targetPlayer) => targetPlayer.setDuplicatedVote(true),
     };
   }
 
-  experimentar(targetPlayer) {
+  public experimentar(targetPlayer: Player): void {
     if (targetPlayer.belongsToVillagersTeam()) {
       const werewolf = new WereWolf();
       targetPlayer.setRole(werewolf);
@@ -55,7 +58,7 @@ export default class Scientist extends Role {
     this.disableSkill(1, 1000);
   }
 
-  usarPocao(targetPlayer, potion) {
+  public usarPocao(targetPlayer: Player, potion: string): void {
     const usePotionEffectOn = this.potionsEffects[potion];
     usePotionEffectOn(targetPlayer);
     delete this.potionsEffects[potion];
@@ -64,14 +67,14 @@ export default class Scientist extends Role {
     }
   }
 
-  gerarPocao() {
+  public gerarPocao(): string {
     const potions = Object.keys(this.potionsEffects);
     const randomIndex = Math.floor(Math.random() * potions.length);
     const potion = potions[randomIndex];
     return potion;
   }
 
-  hasPotions() {
+  private hasPotions(): boolean {
     return Object.keys(this.potionsEffects).length > 0;
   }
 }

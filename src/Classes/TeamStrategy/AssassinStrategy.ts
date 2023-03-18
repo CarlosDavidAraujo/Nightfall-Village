@@ -1,14 +1,14 @@
 import TeamStrategy from "./TeamStrategy";
 
 export default class AssassinStrategy extends TeamStrategy {
-    checkVictory() {
+    public checkVictory(): boolean {
         const onePlayerAlive = this.game.alivePlayers.length === 1;
         const lastPlayerAlive = this.game.alivePlayers[0];
         return lastPlayerAlive.isAssassin() && onePlayerAlive;
     }
 
-    getVictoryMessage() {
+    public getVictoryMessage(): string {
         const lastPlayerAlive = this.game.alivePlayers[0];
-        return `${lastPlayerAlive.name} venceu!`;
+        return `${lastPlayerAlive.getName()} venceu!`;
     }
 }

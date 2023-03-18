@@ -2,6 +2,7 @@ import Role from "./Role";
 import killerImg from "../../../assets/images/assassin.png";
 import firstSkillIcon from "../../../assets/images/dagger.png";
 import secondSkillIcon from "../../../assets/images/string.png";
+import Player from "../Player";
 
 export default class Assassin extends Role {
   constructor() {
@@ -34,14 +35,14 @@ export default class Assassin extends Role {
     );
   }
 
-  assassinar(targetPlayer) {
+  public assassinar(targetPlayer: Player): void {
     targetPlayer.dieAfterManyTurns(1);
   }
 
-  sequestrar(targetPlayer) {
+  public sequestrar(targetPlayer: Player): void {
     const targetPlayerRole = targetPlayer.getRole();
-    targetPlayerRole.disableSkill(1, 2);
-    targetPlayerRole.disableSkill(2, 2);
+    targetPlayerRole!.disableSkill(1, 2);
+    targetPlayerRole!.disableSkill(2, 2);
     this.disableSkill(2, 1000);
   }
 }

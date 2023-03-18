@@ -1,11 +1,10 @@
 import { ThemeProvider } from "styled-components/native";
 import bgImg from "../../assets/images/homeScreen.png";
 import DefaultButton from "../Components/Buttons/DefaultButton";
-import { SpaceAroundContainer, Title } from "../Styles";
-import { BackgroundImage } from "../Styles";
+import { SpaceAroundContainer, Title, BackgroundImage } from "../Styles";
 import { dark } from "../Themes/Dark";
 
-export default function GameMenu({ navigation }) {
+function GameMenu({ navigation }) {
   return (
     <BackgroundImage source={bgImg}>
       <SpaceAroundContainer>
@@ -20,3 +19,5 @@ export default function GameMenu({ navigation }) {
     </BackgroundImage>
   );
 }
+
+export default GameMenu;

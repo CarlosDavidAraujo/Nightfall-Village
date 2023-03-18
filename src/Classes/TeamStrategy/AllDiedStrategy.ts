@@ -1,11 +1,11 @@
 import TeamStrategy from "./TeamStrategy";
 
 export default class AllDiedStrategy extends TeamStrategy {
-    checkVictory() {
+    public checkVictory(): boolean {
       return this.game.alivePlayers.length === 0;
     }
 
-    getVictoryMessage() {
+    public getVictoryMessage(): string {
         return 'Todos morreram!';
     }
 }

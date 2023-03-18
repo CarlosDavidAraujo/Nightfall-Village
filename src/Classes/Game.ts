@@ -4,6 +4,7 @@ import Doctor from "./Roles/Doctor";
 import Hunter from "./Roles/Hunter";
 import News from "./News";
 import Player from "./Player";
+import Role from "../Classes/Roles/Role";
 import Scientist from "./Roles/Scientist";
 import Seer from "./Roles/Seer";
 import { Villager, OldMan } from "./Roles/Villager";
@@ -19,9 +20,31 @@ import Priest from "./Roles/Priest";
 import ToughGuy from "./Roles/ToughGuy";
 import Gunslinger from "./Roles/Gunslinger";
 
+interface RoleData {
+  team: string;
+  data: Role[];
+}
+
+interface SelectedRole {
+  role: Role;
+  count: number;
+}
+
 export default class Game {
+  public allPlayers: Player[];
+  public alivePlayers: Player[];
+  public deadPlayers: Player[];
+  public news: News;
+  public deathManager: DeathManager;
+  public votingManager: VotingManager;
+  public winConditionManager: WinConditionManager;
+  private currentPlayerIndex: number;
+  private currentTurn: number;
+  public currentRoles: Role[];
+  public rolePreset: Role[];
+  public roleMap: RoleData[];
   constructor() {
-    this.allPlayers = []
+    this.allPlayers = [];
     this.alivePlayers = [];
     this.deadPlayers = [];
     this.news = new News();
@@ -31,14 +54,10 @@ export default class Game {
     this.currentPlayerIndex = 0;
     this.currentTurn = 0; //noites acontecem em turnos pares e dias em turnos ímpares
     this.currentRoles = [];
-    this.rolePreset = [
-      new Villager(),
-      new Seer(),
-      new WereWolf(),
-    ]
+    this.rolePreset = [new Villager(), new Seer(), new WereWolf()];
     this.roleMap = [
       {
-        team: 'Aldeões',
+        team: "Aldeões",
         data: [
           new Villager(),
           new Seer(),
@@ -50,89 +69,82 @@ export default class Game {
           new Priest(),
           new Scientist(),
           new ToughGuy(),
-        ]
+        ],
       },
       {
-        team: 'Lobisomens',
-        data: [
-          new WereWolf(),
-          new LonelyWerewolf(),
-          new Witch(),
-        ]
+        team: "Lobisomens",
+        data: [new WereWolf(), new LonelyWerewolf(), new Witch()],
       },
       {
-        team: 'Mortos-vivos',
-        data: [
-          new Necromancer(),
-          new Undead(),
-        ]
+        team: "Mortos-vivos",
+        data: [new Necromancer(), new Undead()],
       },
       {
-        team: 'Solo',
-        data: [new Assassin(),]
-      }
+        team: "Solo",
+        data: [new Assassin()],
+      },
     ];
   }
 
   //--------GETTERS E SETTERS BÁSICOS---------//
 
-  getNews() {
+  public getNews(): News {
     return this.news;
   }
 
-  getTurnNews() {
+  public getTurnNews(): string[] {
     return this.news.getNews();
   }
 
-  clearTurnNews() {
+  public clearTurnNews(): void {
     this.news.clearNews();
   }
 
-  getCurrentTurn() {
+  public getCurrentTurn(): number {
     return this.currentTurn;
   }
 
-  advanceTurn() {
+  public advanceTurn() {
     this.currentTurn = this.currentTurn + 1;
   }
 
-  getRoleMap() {
+  public getRoleMap(): RoleData[] {
     return this.roleMap;
   }
 
-  getRolePreset() {
+  public getRolePreset(): Role[] {
     return this.rolePreset;
   }
 
-  getAlivePlayers() {
+  public getAlivePlayers(): Player[] {
     return this.alivePlayers;
   }
 
-  setAlivePlayers(players) {
+  public setAlivePlayers(players: string[]) {
     this.alivePlayers = [];
-    players.forEach((player, index) => {
+    players.forEach((player: string, index) => {
       this.alivePlayers.push(new Player(player, index, this));
     });
   }
 
-  getRandomPlayer() {
+  public getRandomPlayer(): Player {
     const randomIndex = Math.floor(Math.random() * this.alivePlayers.length);
     return this.alivePlayers[randomIndex];
   }
 
-  getDeadPlayers() {
+  public getDeadPlayers(): Player[] {
     return this.deadPlayers;
   }
 
-  getCurrentPlayer() {
+  public getCurrentPlayer(): Player {
     return this.alivePlayers[this.currentPlayerIndex];
   }
 
-  incrementCurrentPlayerIndex() {
+  public incrementCurrentPlayerIndex() {
     this.currentPlayerIndex++;
   }
 
-  noNextPlayer() {
+  public noNextPlayer(): boolean {
     let result = false;
     if (this.currentPlayerIndex > this.alivePlayers.length - 1) {
       this.currentPlayerIndex = 0;
@@ -143,7 +155,7 @@ export default class Game {
 
   //----------SETTERS DE PLAYERS E ROLES------------//
 
-  setRoles(selectedRoles) {
+  public setRoles(selectedRoles: SelectedRole[]) {
     this.currentRoles = [];
     selectedRoles.forEach((selectedRole) => {
       const { role, count } = selectedRole;
@@ -154,7 +166,7 @@ export default class Game {
     this.currentRoles = _.shuffle(this.currentRoles);
   }
 
-  assignRoleToPlayer(selectedRoles) {
+  public assignRoleToPlayer(selectedRoles: SelectedRole[]) {
     this.setRoles(selectedRoles);
     this.alivePlayers.forEach((player, i) => {
       const roleCopy = _.cloneDeep(this.currentRoles[i]);
@@ -167,22 +179,20 @@ export default class Game {
 
   //--------------GERENCIAMENTO DE FIM DE TURNO------------------//
 
-  resetAllPlayersStates() {
+  public resetAllPlayersStates() {
     this.alivePlayers.forEach((player) => {
       player.resetAllStates();
     });
   }
 
-  endDay() {
+  public endDay() {
     this.votingManager.removeMostVotedPlayer();
-    this.votingManager.clearPlayersVotes();
     this.resetAllPlayersStates();
     this.advanceTurn();
   }
 
-  endNight() {
-    this.votingManager.removeWerewolfsVictim();
-    this.votingManager.clearPlayersVotes();
+  public endNight() {
+    this.votingManager.setWerewolfsVictim();
     this.advanceTurn();
     this.deathManager.removePlayers();
     this.deathManager.revivePlayers();

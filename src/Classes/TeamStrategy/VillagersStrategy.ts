@@ -1,7 +1,7 @@
 import TeamStrategy from "./TeamStrategy";
 
 export default class VillagersStrategy extends TeamStrategy {
-    checkVictory() {
+    public checkVictory(): boolean {
         const allEnemysDead = !this.game.alivePlayers.some(
             (player) => player.isWolf() || player.getRoleName() === "Assassino em Série"
         );
@@ -9,7 +9,7 @@ export default class VillagersStrategy extends TeamStrategy {
         return allEnemysDead && villagersStillAlive;
     }
 
-    getVictoryMessage() {
+    public getVictoryMessage(): string {
         return 'Os aldeões venceram';
     }
 }

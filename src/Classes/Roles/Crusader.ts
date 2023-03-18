@@ -2,6 +2,7 @@ import Role from "./Role";
 import crusaderImg from "../../../assets/images/crusader.png";
 import firstSkillIcon from "../../../assets/images/shield.png";
 import secondSkillIcon from "../../../assets/images/balance.png";
+import Player from "../Player";
 
 export default class Crusader extends Role {
   constructor() {
@@ -35,20 +36,19 @@ export default class Crusader extends Role {
     );
   }
 
-  sacrificar(targetPlayer) {
-    //targetPlayer.setProtectedTurnsDuration(1);
-    targetPlayer.setProtector(this.player);
+  public sacrificar(targetPlayer: Player): void {
+    targetPlayer.setProtector(this.player!);
   }
 
-  julgar(targetPlayer) {
-    const targetPlayerTeam = targetPlayer.getRole().getTeam();
+  public julgar(targetPlayer: Player): void {
+    const targetPlayerTeam = targetPlayer.getRole()!.getTeam();
     if (targetPlayerTeam === "Lobisomens") {
-      const news = this.currentGame.getNews();
+      const news = this.currentGame!.getNews();
       news.addNews(`${targetPlayer.getName()} é um lobisomem entre nós!`);
       this.disableSkill(2, 1000);
     } else {
       this.disableSkill(2, 2);
-      this.player.setDisabledVoteDuration(2);
+      this.player!.setDisabledVoteDuration(2);
     }
   }
 }

@@ -2,6 +2,7 @@ import Role from "./Role";
 import seerImg from "../../../assets/images/seer3.png";
 import firstSkillIcon from "../../../assets/images/seerEye.png";
 import secondSkillIcon from "../../../assets/images/tarot.png";
+import Player from "../Player";
 
 export default class Seer extends Role {
   constructor() {
@@ -33,17 +34,20 @@ export default class Seer extends Role {
     );
   }
 
-  revelar(targetPlayer) {
+  public revelar(targetPlayer: Player): string {
     return `A verdade foi revelada! ${targetPlayer.getName()} é ${targetPlayer
-      .getRole()
+      .getRole()!
       .getFakeName()}. Fique atento à sua jogada!`;
   }
 
-  contactar(targetPlayer) {
+  public contactar(targetPlayer: Player): string {
     return `A verdade foi revelada! ${targetPlayer.getName()} era ${targetPlayer.getRoleName()}.`;
   }
 
-  isSkillDisabled(skill) {
-    return super.isSkillDisabled(skill) || (!this.canInteractWithDeadPlayers() && skill === 2);
+  public isSkillDisabled(skill: number): boolean {
+    return (
+      super.isSkillDisabled(skill) ||
+      (!this.canInteractWithDeadPlayers() && skill === 2)
+    );
   }
 }

@@ -2,6 +2,7 @@ import Role from "./Role";
 import toughGuyImg from "../../../assets/images/toughGuy.png";
 import firstSkillIcon from "../../../assets/images/roar.png";
 import secondSkillIcon from "../../../assets/images/muscle.png";
+import Player from "../Player";
 
 export default class ToughGuy extends Role {
   constructor() {
@@ -35,20 +36,20 @@ export default class ToughGuy extends Role {
     );
   }
 
-  provocar() {
-    this.player.setTaunt(true);
+  public provocar(): void {
+    this.player!.setTaunt(true);
     this.disableSkill(1, 1000);
     this.killRandomWerewolf();
   }
 
-  killRandomWerewolf() {
-    const werewolf = this.currentGame.alivePlayers.find((player) =>
+  public killRandomWerewolf(): void {
+    const werewolf: Player | undefined = this.currentGame!.alivePlayers.find((player) =>
       player.isWolf()
     );
     const deathNumber = Math.random();
     const deathChance = 0.2;
-    if (deathNumber <= deathChance) {
-      werewolf.dieAfterManyTurns(1);
-    }
+   if (werewolf && deathNumber <= deathChance) {
+    werewolf.dieAfterManyTurns(1);
+  }
   }
 }

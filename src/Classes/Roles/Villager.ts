@@ -3,6 +3,8 @@ import villagerImg from "../../../assets/images/villager.png";
 import oldManImg from "../../../assets/images/oldMan.png";
 import firstSkillIcon from "../../../assets/images/keyhole.png";
 import secondSkillIcon from "../../../assets/images/pray.png";
+import Player from '../Player';
+
 
 export class Villager extends Role {
   constructor() {
@@ -36,19 +38,19 @@ export class Villager extends Role {
     );
   }
 
-  espiar() {
-    const alivePlayers = this.currentGame.getAlivePlayers();
+  public espiar(): string {
+    const alivePlayers = this.currentGame!.getAlivePlayers();
     const deathChance = 0.15;
     const discoverWerewolfChance = 0.05;
     const randomNumber = Math.random();
     let alert = "";
     let discoveredWereWolf = alivePlayers.find(
-      (player) => player.getRole().getFakeName() === "Lobisomem"
+      (player) => player.getRole()!.getFakeName() === "Lobisomem"
     );
     if (randomNumber <= discoverWerewolfChance) {
       const deathNumber = Math.random();
       if (deathNumber <= deathChance) {
-        this.player.setMarkedForDeath(true);
+        this.player!.dieAfterManyTurns(1);
       } else if (discoveredWereWolf) {
         alert = `${discoveredWereWolf.getName()} é um lobisomem entre nós!`;
       }
@@ -56,7 +58,7 @@ export class Villager extends Role {
     return alert;
   }
 
-  orar(targetPlayer) {
+  public orar(targetPlayer: Player): void {
     const protectingChance = 0.05;
     const randomNumber = Math.random();
     if (randomNumber <= protectingChance) {
@@ -74,12 +76,12 @@ export class OldMan extends Villager {
     this.roleImg = oldManImg;
   }
 
-  espiar() {
-    super.espiar();
+  public espiar(): string {
     this.disableSkill(1, 2);
+    return super.espiar();
   }
 
-  orar(targetPlayer) {
+  public orar(targetPlayer: Player): void {
     super.orar(targetPlayer);
     this.disableSkill(2, 2);
   }

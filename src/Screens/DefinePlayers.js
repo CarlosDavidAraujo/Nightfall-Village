@@ -1,11 +1,6 @@
 import React, { useContext, useState } from "react";
 import { GameContext } from "../Context/GameContext";
-import {
-  BackgroundImage,
-  DefaultText,
-  SpaceBetweenContainer,
-  SubTitle,
-} from "../Styles";
+import { BackgroundImage, DefaultText, SpaceBetweenContainer } from "../Styles";
 import AddPlayerButton from "../Components/Buttons/AddPlayerButton";
 import bgImg from "../../assets/images/playersUnited.png";
 import PlayerCard from "../Components/Cards/PlayerCard";

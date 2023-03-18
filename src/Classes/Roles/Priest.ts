@@ -2,6 +2,7 @@ import Role from "./Role";
 import priestImg from "../../../assets/images/priest.png";
 import firstSkillIcon from "../../../assets/images/cross.png";
 import secondSkillIcon from "../../../assets/images/sun.png";
+import Player from "../Player";
 
 export default class Priest extends Role {
   constructor() {
@@ -27,7 +28,7 @@ export default class Priest extends Role {
           description:
             "Passivo: A primeira vez que os lobisomens tentarem te matar você sobreviverá.",
           isTargetType: false,
-          enableTurn: 1000, 
+          enableTurn: 1000,
           turnItWasDisabled: -1,
           icon: secondSkillIcon,
         },
@@ -35,13 +36,13 @@ export default class Priest extends Role {
     );
   }
 
-  exorcizar(targetPlayer) {
+  public exorcizar(targetPlayer: Player): void {
     this.disableSkill(1, 1000);
     if (targetPlayer.isWolf()) {
       return targetPlayer.dieAfterManyTurns(1);
     }
     if (targetPlayer.belongsToVillagersTeam()) {
-      return this.player.dieAfterManyTurns(1);
+      return this.player!.dieAfterManyTurns(1);
     }
   }
 }

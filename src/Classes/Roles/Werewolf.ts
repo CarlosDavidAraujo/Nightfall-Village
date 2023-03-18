@@ -3,15 +3,16 @@ import werewolfImg from "../../../assets/images/werewolf.png";
 import firstSkillIcon from "../../../assets/images/bite.png";
 import secondtSkillIcon from "../../../assets/images/transmute.png";
 import loneWolfImg from "../../../assets/images/loneWolf.png";
+import Player from "../Player";
 
 export class WereWolf extends Role {
   constructor() {
     super(
-      "Lobisomem", //nome
-      "Lobisomens", //time
+      "Lobisomem",
+      "Lobisomens",
       "Wolf",
       false,
-      werewolfImg, //imagem
+      werewolfImg,
       "Seu objetivo é eliminar todos os aldeões. Haja como se fosse um aldeão.",
       {
         1: {
@@ -36,16 +37,16 @@ export class WereWolf extends Role {
     );
   }
 
-  devorar(targetPlayer) {
-    this.player.voteOn(targetPlayer);
+  public devorar(targetPlayer: Player): void {
+    this.player!.voteOn(targetPlayer);
   }
 
-  transmutar() {
+  public transmutar(): void {
     this.setFakeName("Aldeão", 1);
     this.disableSkill(1, 1);
   }
 
-  skillHasInvalidTargetOn(targetPlayer) {
+  public skillHasInvalidTargetOn(targetPlayer: Player): boolean {
     return targetPlayer.isWolf();
   }
 }
@@ -57,15 +58,5 @@ export class LonelyWerewolf extends WereWolf {
     this.objective =
       "Seu objeitvo é eliminar todos os aldeões, mas você só vencerá se for o último lobisomem vivo.";
     this.roleImg = loneWolfImg;
-  }
-
-  isLastWolfStanding(werewolfPlayers) {
-    const aliveWerewolfPlayers = werewolfPlayers.filter(
-      (p) => p.isAlive() && p.getRole().getName() === "Lobisomem"
-    );
-    return (
-      aliveWerewolfPlayers.length === 1 &&
-      aliveWerewolfPlayers[0] === this.player
-    );
   }
 }

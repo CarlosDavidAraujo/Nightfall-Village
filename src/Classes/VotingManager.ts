@@ -1,14 +1,19 @@
+import Game from './Game';
+import Player from './Player';
+
 export default class VotingManager {
-  constructor(game) {
+  private game: Game;
+  private mostVotedPlayers: Player[];
+  constructor(game: Game) {
     this.game = game;
     this.mostVotedPlayers = [];
   }
 
-  clearPlayersVotes() {
+  public clearPlayersVotes() {
     this.game.alivePlayers.forEach((player) => player.clearVotes());
   }
 
-  updateMostVotedPlayers() {
+  private updateMostVotedPlayers() {
     let maxVotes = 0;
     this.game.alivePlayers.forEach((player) => {
       if (player.getVotesCount() > maxVotes) {
@@ -22,7 +27,7 @@ export default class VotingManager {
 
   //-----------VOTAÇÃO DA VILA---------//
 
-  removeMostVotedPlayer() {
+  public removeMostVotedPlayer() {
     this.updateMostVotedPlayers();
     if (this.didVoteTie()) {
       return this.game.news.setNews("A aldeia ficou indecisa!");
@@ -32,13 +37,14 @@ export default class VotingManager {
     this.updateAlivePlayers(mostVotedPlayer);
     this.game.deadPlayers.push(mostVotedPlayer);
     this.mostVotedPlayers = [];
+    this.clearPlayersVotes();
   }
 
-  didVoteTie() {
+  private didVoteTie(): boolean {
     return this.mostVotedPlayers.length != 1;
   }
 
-  updateAlivePlayers(mostVotedPlayer) {
+  private updateAlivePlayers(mostVotedPlayer: Player) {
     this.game.alivePlayers = this.game.alivePlayers.filter(
       (player) => player.getID() !== mostVotedPlayer.getID()
     );
@@ -46,7 +52,7 @@ export default class VotingManager {
 
   //------------VOTAÇÃO DOS LOBISOMENS-------------//
 
-  removeWerewolfsVictim() {
+  public setWerewolfsVictim() {
     this.updateMostVotedPlayers();
     if (this.mostVotedPlayers.length === 0) {
       return;
@@ -55,22 +61,22 @@ export default class VotingManager {
     const tauntingPlayer = this.game.alivePlayers.find((player) =>
       player.hasTaunt()
     );
-    const mostVotedPlayer = tauntingPlayer
-      ? tauntingPlayer
-      : this.mostVotedPlayers[0];
+    const mostVotedPlayer = tauntingPlayer? tauntingPlayer : this.mostVotedPlayers[0];
     if (
       mostVotedPlayer.getRoleName() === "Valentão" &&
       !mostVotedPlayer.isProtected()
     ) {
       mostVotedPlayer.dieAfterManyTurns(2);
       mostVotedPlayer.setInevitableDeath(true);
-      return (this.mostVotedPlayers = []);
+      this.mostVotedPlayers = [];
+      return;
     }
     mostVotedPlayer.dieAfterManyTurns(1);
     this.mostVotedPlayers = [];
+    this.clearPlayersVotes();
   }
 
-  resolveTieBreak() {
+  private resolveTieBreak() {
     if (this.mostVotedPlayers.length > 1) {
       const randomIndex = Math.floor(
         Math.random() * this.mostVotedPlayers.length

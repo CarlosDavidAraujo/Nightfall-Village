@@ -2,12 +2,10 @@ import { useContext, useState } from "react";
 import { ScrollView } from "react-native";
 import { GameContext } from "../Context/GameContext";
 import bgImg from "../../assets/images/playersUnited.png";
-import RoleCard from "../Components/Cards/RoleCard";
 import { ThemeProvider } from "styled-components/native";
 import DefaultButton from "../Components/Buttons/DefaultButton";
-import { BackgroundImage, DefaultText, SpaceBetweenContainer, SubTitle } from "../Styles";
+import { BackgroundImage, DefaultText, SpaceBetweenContainer} from "../Styles";
 import { dark } from "../Themes/Dark";
-import { SimpleGrid, SectionGrid } from "react-native-super-grid";
 import SelectedRolesGrid from "../Components/Containers/SelectedRolesGrid";
 import AvailableRolesGrid from "../Components/Containers/AvailableRolesGrid";
 

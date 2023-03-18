@@ -1,3 +1,4 @@
+import React from "react";
 import { ThemeProvider } from "styled-components/native";
 import { dark, invertTheme } from "../../Themes/Dark";
 import { DefaultText, ButtonContainer } from "../../Styles";
@@ -29,3 +30,4 @@ export default function DefaultButton({
     </ThemeProvider>
   );
 }
+

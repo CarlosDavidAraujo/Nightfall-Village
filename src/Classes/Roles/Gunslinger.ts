@@ -2,8 +2,11 @@ import Role from "./Role";
 import gunslingerImg from "../../../assets/images/gunslinger.png";
 import firstSkillIcon from "../../../assets/images/revolver.png";
 import secondSkillIcon from "../../../assets/images/bang.png";
+import Player from "../Player";
 
 export default class Gunslinger extends Role {
+  private charges: number;
+
   constructor() {
     super(
       "Pistoleiro",
@@ -35,10 +38,10 @@ export default class Gunslinger extends Role {
     this.charges = 2;
   }
 
-  atirar(targetPlayer) {
+  public atirar(targetPlayer: Player): void {
     targetPlayer.dieAfterManyTurns(1);
     if (this.charges === 2) {
-      this.currentGame.news.addNews(`${this.player.name} é um pistoleiro.`);
+      this.currentGame!.news.addNews(`${this.player!.getName()} é um pistoleiro.`);
     }
     this.charges--;
     if (this.charges === 0) {

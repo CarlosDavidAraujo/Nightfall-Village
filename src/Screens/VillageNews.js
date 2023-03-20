@@ -1,14 +1,9 @@
 import React, { useContext } from "react";
 import Game from "../Classes/Game";
 import { GameContext } from "../Context/GameContext";
-import DefaultButton from "../Components/Buttons/DefaultButton";
-import {
-  DefaultText,
-  FlexStartContainer,
-  SpaceAroundContainer,
-  SubTitle,
-} from "../Styles";
-import { dark, invertTheme } from "../Themes/Dark";
+import Column from "../Styles/elements/Column";
+import Text from "../Styles/elements/Text";
+import Button from "../Styles/elements/Button";
 
 export default function VillageNews({ route, navigation }) {
   const { currentGame, setCurrentGame } = useContext(GameContext);
@@ -36,29 +31,30 @@ export default function VillageNews({ route, navigation }) {
   }
 
   return (
-    <SpaceAroundContainer style={{ backgroundColor: invertTheme(dark).bg }}>
-      <FlexStartContainer>
+    <Column modifiers={['grow', 'spaceAround', 'primary']}>
+      <Column modifiers='start'>
         {currentGame.getTurnNews().map((message, i) => (
-          <SubTitle key={i}>{message}</SubTitle>
+          <Text modifiers='medium' key={i}>{message}</Text>
         ))}
-      </FlexStartContainer>
+      </Column>
       {winner ? (
         <>
           {currentGame.allPlayers.map((player, i) => (
-            <DefaultText
-              key={i}
-            >{`${player.name}: ${player.role.name}`}</DefaultText>
+            <Text key={i}>{`${player.name}: ${player.role.name}`}</Text>
           ))}
-          <DefaultButton onPress={() => handleEndGame()} title="Novo jogo" />
+          <Button onPress={() => handleEndGame()}>
+            <Button.Text>Novo jogo</Button.Text>
+          </Button>
         </>
       ) : previousScreen === "PlayerAction" ? (
-        <DefaultButton
-          onPress={() => startDayPhase()}
-          title="Reunir a vila"
-        />
+        <Button onPress={() => startDayPhase()}>
+          <Button.Text>Reunir vila</Button.Text>
+        </Button>
       ) : previousScreen === "Votes" ? (
-        <DefaultButton onPress={() => startNightPhase()} title="Adormecer" />
+        <Button onPress={() => startNightPhase()}>
+          <Button.Text>Adormecer</Button.Text>
+        </Button>
       ) : null}
-    </SpaceAroundContainer>
+    </Column>
   );
 }

@@ -1,7 +1,7 @@
 import { IconContainer } from "../../Styles";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faPaw } from "@fortawesome/free-solid-svg-icons";
-import { invertTheme } from "../../Themes/Dark";
+import { invertTheme } from "../../Styles/Theme";
 
 export default function PawIcon({ theme }) {
   return (

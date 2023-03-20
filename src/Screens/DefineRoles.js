@@ -3,11 +3,13 @@ import { ScrollView } from "react-native";
 import { GameContext } from "../Context/GameContext";
 import bgImg from "../../assets/images/playersUnited.png";
 import { ThemeProvider } from "styled-components/native";
-import DefaultButton from "../Components/Buttons/DefaultButton";
-import { BackgroundImage, DefaultText, SpaceBetweenContainer} from "../Styles";
-import { dark } from "../Themes/Dark";
+import BackgroundImage from "../Styles/elements/BackgroundImage";
 import SelectedRolesGrid from "../Components/Containers/SelectedRolesGrid";
 import AvailableRolesGrid from "../Components/Containers/AvailableRolesGrid";
+import Column from "../Styles/elements/Column";
+import Button from "../Styles/elements/Button";
+import Text from "../Styles/elements/Text";
+import { invertTheme, theme } from "../Styles/Theme";
 
 export default function DefineRoles({ navigation }) {
   const { currentGame } = useContext(GameContext);
@@ -39,20 +41,20 @@ export default function DefineRoles({ navigation }) {
 
   return (
     <BackgroundImage source={bgImg}>
-      <SpaceBetweenContainer>
+      <Column modifiers={['grow', 'spaceBetween']}>
         <ScrollView style={{ width: "100%" }}>
           <SelectedRolesGrid selectedRoles={selectedRoles} setSelectedRoles={setSelectedRoles} />
           <AvailableRolesGrid roleMap={roleMap} selectedRoles={selectedRoles} setSelectedRoles={setSelectedRoles} />
         </ScrollView>
-        <ThemeProvider theme={dark}>
-          <DefaultText>{errorMessage}</DefaultText>
+        <ThemeProvider theme={invertTheme(theme)}>
+          <Text style={{ marginTop: 20 }}>{errorMessage}</Text>
         </ThemeProvider>
-        <DefaultButton
-          title="Confirmar" s
-          onPress={() => startGame()}
-          style={{ width: "100%", marginTop: 20 }}
-        />
-      </SpaceBetweenContainer>
+        <Button onPress={() => startGame()}
+          modifiers='grow'
+          style={{ marginTop: 20 }}>
+          <Button.Text>Confirmar</Button.Text>
+        </Button>
+      </Column>
     </BackgroundImage>
   );
 }

@@ -1,8 +1,6 @@
 import { useState } from "react";
-import { ThemeProvider } from "styled-components/native";
 import styled from "styled-components/native";
-import { DefaultText, CardContainer } from "../../Styles";
-import { dark, invertTheme } from "../../Themes/Dark";
+import Card from "../../Styles/blocks/Card";
 
 const AddIcon = styled.Text`
   font-family: "NewRocker_400Regular";
@@ -17,16 +15,14 @@ export default function AddPlayer({ onPress }) {
   const [isPressed, setIsPressed] = useState(false);
 
   return (
-    <ThemeProvider theme={invertTheme(dark)}>
-      <CardContainer
-        style={{ opacity: isPressed ? 0.6 : 0.8 }}
-        onPress={onPress}
-        onPressIn={() => setIsPressed(true)}
-        onPressOut={() => setIsPressed(false)}
-      >
-        <AddIcon>+</AddIcon>
-        <DefaultText>Adicionar jogador</DefaultText>
-      </CardContainer>
-    </ThemeProvider>
+    <Card
+      style={{ opacity: isPressed ? 0.6 : 0.8 }}
+      onPress={onPress}
+      onPressIn={() => setIsPressed(true)}
+      onPressOut={() => setIsPressed(false)}
+    >
+      <AddIcon>+</AddIcon>
+      <Card.Text>Adicionar jogador</Card.Text>
+    </Card>
   );
 }

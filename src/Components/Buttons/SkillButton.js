@@ -1,5 +1,5 @@
 import styled from "styled-components/native";
-import { SmallText } from "../../Styles";
+import Text from "../../Styles/elements/Text";
 import ButtonWithShadow from "./ButtonWithShadow";
 
 export default function SkillButton({ onPress, skillName, skillDescription, skillIcon, disabled, showOpacity }) {
@@ -7,9 +7,9 @@ export default function SkillButton({ onPress, skillName, skillDescription, skil
         <ButtonWithShadow onPress={onPress} inverted={true} disabled={disabled} showOpacity={showOpacity}> 
                 <IconContainer>
                     <Image source={skillIcon} />
-                    <SmallText>{skillName}</SmallText>
+                    <Text>{skillName}</Text>
                 </IconContainer>
-                <SmallText style={{ flexShrink: 1, textAlign: 'justify' }}>{skillDescription}</SmallText>   
+                <Text style={{ flexShrink: 1, textAlign: 'justify' }}>{skillDescription}</Text>   
         </ButtonWithShadow>
     );
 };

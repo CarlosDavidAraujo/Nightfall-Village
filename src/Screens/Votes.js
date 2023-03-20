@@ -1,16 +1,14 @@
 import { useContext, useState } from "react";
 import { GameContext } from "../Context/GameContext";
-import {
-  BackgroundImage,
-  SpaceAroundContainer,
-  SubTitle,
-  VoteButtonsContainer,
-} from "../Styles";
-import DefaultButton from "../Components/Buttons/DefaultButton";
+import BackgroundImage from "../Styles/elements/BackgroundImage";
 import PlayersButtonList from "../Components/Buttons/PlayersButtonList";
 import votationImg from "../../assets/images/votation2.png";
 import { ThemeProvider } from "styled-components/native";
-import { dark } from "../Themes/Dark";
+import { invertTheme, theme } from "../Styles/Theme";
+import Column from "../Styles/elements/Column";
+import Text from "../Styles/elements/Text";
+import Button from "../Styles/elements/Button";
+import Row from "../Styles/elements/Row";
 
 export default function Votes({ navigation }) {
   const { currentGame } = useContext(GameContext);
@@ -38,49 +36,42 @@ export default function Votes({ navigation }) {
   }
 
   return (
-    <BackgroundImage source={votationImg}>
-      <SpaceAroundContainer>
-        <ThemeProvider theme={dark}>
+    <ThemeProvider theme={invertTheme(theme)}>
+      <BackgroundImage source={votationImg}>
+        <Column modifiers={['spaceAround', 'grow']}>
           {currentPlayer.hasDisabledVote(currentTurn) ? (
             <>
-              <SubTitle style={{ marginTop: 160 }}>
+              <Text modifiers='medium' style={{ marginTop: 160 }}>
                 Seus votos estão bloqueados neste turno
-              </SubTitle>
-              <DefaultButton
-                title="Passar a vez"
-                onPress={() => passVotation()}
-                inverted={true}
-              />
+              </Text>
+              <Button onPress={() => passVotation()}>
+                <Button.Text>Passar a vez</Button.Text>
+              </Button>
             </>
           ) : (
             <>
-              <SubTitle style={{ marginTop: 160 }}>
+              <Text modifiers='medium' style={{ marginTop: 160 }}>
                 {currentPlayer.getName()}, escolha seu voto
-              </SubTitle>
+              </Text>
               <PlayersButtonList
                 playerList={playerList}
                 currentPlayer={currentPlayer}
                 targetPlayer={targetPlayer}
                 setTargetPlayer={setTargetPlayer}
-                inverted={false}
+                inverted={true}
               />
-              <VoteButtonsContainer>
-                <DefaultButton
-                  title="Abster-se"
-                  onPress={() => passVotation()}
-                  inverted={true}
-                />
-                <DefaultButton
-                  title="Confirmar"
-                  onPress={() => handleVote()}
-                  disabled={!targetPlayer}
-                  inverted={true}
-                />
-              </VoteButtonsContainer>
-            </>
+              <Row modifiers={['grow', 'spaceAround']}>
+                <Button onPress={() => passVotation()}>
+                  <Button.Text>Abster-se</Button.Text>
+                </Button>
+                <Button onPress={() => handleVote()} disabled={!targetPlayer}>
+                  <Button.Text>Confirmar</Button.Text>
+                </Button>
+              </Row>
+            </> 
           )}
-        </ThemeProvider>
-      </SpaceAroundContainer>
-    </BackgroundImage>
+        </Column>
+      </BackgroundImage>
+    </ThemeProvider >
   );
 }

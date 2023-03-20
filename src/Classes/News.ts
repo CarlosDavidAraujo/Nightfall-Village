@@ -1,23 +1,24 @@
 export default class News {
+    public news: string[];
     constructor() {
       this.news = [];
     }
   
-    getNews() {
+    public getNews(): string[] {
       return this.news;
     }
   
-    setNews(message) {
+    public setNews(message: string) {
       this.news = [message];
     }
   
-    addNews(message) {
+    public addNews(message: string) {
       if (!this.news.includes(message)) {
         this.news.push(message);
       }
     }
   
-    clearNews() {
+    public clearNews() {
       this.news = [];
     }
   }

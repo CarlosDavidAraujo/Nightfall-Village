@@ -1,39 +1,11 @@
 import { useState } from "react";
-import styled, { ThemeProvider } from "styled-components/native";
-import { DefaultText, CardContainer, ButtonContainer } from "../../Styles";
-import { dark, invertTheme } from "../../Themes/Dark";
+import { ThemeProvider } from "styled-components/native";
+import { theme, invertTheme } from "../../Styles/Theme";
 import RoleInfoModal from "../Modals/RoleInfoModal";
 import minusIcon from "../../../assets/images/minus.png";
 import plusIcon from "../../../assets/images/plus.png";
-
-const InfoButton = styled.TouchableOpacity`
-  background-color: ${(props) => props.theme.bg};
-  border: none;
-  width: 23px;
-  align-self: flex-end;
-  justify-content: center;
-  background-color: black;
-  border-radius: 50;
-  aspect-ratio: 1/1;
-`;
-
-const RoleImg = styled.Image`
-  width: 70px;
-  height: 70px;
-`;
-
-const Icon = styled.Image`
-  width: 20px;
-  height: 20px;
-`;
-
-const AmountController = styled.View`
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  margin-top: 10;
-`;
+import Card from "../../Styles/blocks/Card";
+import Button from "../../Styles/elements/Button";
 
 export default function RoleCard({
   count,
@@ -46,42 +18,48 @@ export default function RoleCard({
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   return (
-    <ThemeProvider theme={invertTheme(dark)}>
-      <CardContainer
-        onPress={onPress}
-        disabled={role.getName() === "Zumbi"}
-        style={{ height: "auto" }}
-      >
-        <InfoButton onPress={() => setIsModalVisible(true)}>
-          <DefaultText theme={dark}>i</DefaultText>
-        </InfoButton>
-        <RoleImg source={role.getRoleImg()} />
-        <DefaultText
+    <Card
+      onPress={onPress}
+      disabled={role.getName() === "Zumbi"}
+      style={{ height: "auto" }}
+    >
+      <Card.Header modifiers={['end', 'grow']}>
+        <ThemeProvider theme={invertTheme(theme)}>
+          <Button onPress={() => setIsModalVisible(true)} modifiers='round'>
+            <Button.Text>i</Button.Text>
+          </Button>
+        </ThemeProvider>
+      </Card.Header>
+
+      <Card.Body>
+        <Card.Image source={role.getRoleImg()} />
+        <Card.Text
+          modifiers='small'
           numberOfLines={1}
           ellipsizeMode="tail"
           style={{ maxWidth: 50 * 2 }}
         >
           {role.getName()}
-        </DefaultText>
+        </Card.Text>
+      </Card.Body>
 
-        {selected && (
-          <AmountController>
-            <ButtonContainer onPress={onDecrease} style={{borderWidth: 0}}>
-              <Icon source={minusIcon} />
-            </ButtonContainer>
-            <DefaultText>{count}</DefaultText>
-            <ButtonContainer onPress={onIncrease} style={{borderWidth: 0}}>
-              <Icon source={plusIcon} />
-            </ButtonContainer>
-          </AmountController>
-        )}
+      {selected && (
+        <Card.Footer modifiers={['spaceBetween', 'grow']}>
+          <Button onPress={onDecrease} style={{ borderWidth: 0 }}>
+            <Button.Image source={minusIcon} />
+          </Button>
+          <Card.Text>{count}</Card.Text>
+          <Button onPress={onIncrease} style={{ borderWidth: 0 }}>
+            <Button.Image source={plusIcon} />
+          </Button>
+        </Card.Footer>
+      )}
 
-        <RoleInfoModal
-          isVisible={isModalVisible}
-          onClose={() => setIsModalVisible(false)}
-          role={role}
-        />
-      </CardContainer>
-    </ThemeProvider>
+      <RoleInfoModal
+        isVisible={isModalVisible}
+        onClose={() => setIsModalVisible(false)}
+        role={role}
+      />
+    </Card>
   );
 }

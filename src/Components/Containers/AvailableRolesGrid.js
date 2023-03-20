@@ -2,7 +2,7 @@ import { SectionGrid } from "react-native-super-grid";
 import RoleCard from "../Cards/RoleCard";
 import { SubTitle } from "../../Styles";
 import { ThemeProvider } from "styled-components/native";
-import { dark } from "../../Themes/Dark";
+import { theme, invertTheme } from "../../Styles/Theme";
 
 export default function AvailableRolesGrid({ roleMap, selectedRoles, setSelectedRoles }) {
 
@@ -33,7 +33,7 @@ export default function AvailableRolesGrid({ roleMap, selectedRoles, setSelected
                     />
                 )}
                 renderSectionHeader={({ section }) => (
-                    <ThemeProvider theme={dark}>
+                    <ThemeProvider theme={invertTheme(theme)}>
                         <SubTitle style={{ marginTop: 50, marginBottom: 10}}>
                             {section.team}
                         </SubTitle>

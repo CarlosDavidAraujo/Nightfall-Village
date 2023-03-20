@@ -1,14 +1,16 @@
 import React, { useContext, useState } from "react";
 import { GameContext } from "../Context/GameContext";
-import { BackgroundImage, DefaultText, SpaceBetweenContainer } from "../Styles";
+import Text from "../Styles/elements/Text";
+import BackgroundImage from "../Styles/elements/BackgroundImage";
 import AddPlayerButton from "../Components/Buttons/AddPlayerButton";
 import bgImg from "../../assets/images/playersUnited.png";
 import PlayerCard from "../Components/Cards/PlayerCard";
 import { ThemeProvider } from "styled-components/native";
-import DefaultButton from "../Components/Buttons/DefaultButton";
-import { dark, invertTheme } from "../Themes/Dark";
+import { invertTheme, theme } from "../Styles/Theme";
 import { ScrollView } from "react-native";
 import { SimpleGrid } from "react-native-super-grid";
+import Button from "../Styles/elements/Button";
+import Column from "../Styles/elements/Column";
 
 export default function DefinePlayers({ navigation }) {
   const { currentGame } = useContext(GameContext);
@@ -59,9 +61,8 @@ export default function DefinePlayers({ navigation }) {
   };
 
   return (
-    <ThemeProvider theme={invertTheme(dark)}>
       <BackgroundImage source={bgImg}>
-        <SpaceBetweenContainer>
+        <Column modifiers={['grow','spaceBetween']}>
           <ScrollView style={{ width: "100%" }}>
             <SimpleGrid
               itemDimension={90}
@@ -81,18 +82,15 @@ export default function DefinePlayers({ navigation }) {
               }
             />
           </ScrollView>
-          <ThemeProvider theme={dark}>
-            <DefaultText style={{ marginBottom: 10 }}>
+          <ThemeProvider theme={invertTheme(theme)}>
+            <Text style={{ marginTop: 20 }}>
               {errorMessage}
-            </DefaultText>
+            </Text>
           </ThemeProvider>
-          <DefaultButton
-            title="Confirmar"
-            onPress={() => handleDefinePlayers()}
-            style={{ width: "100%" }}
-          />
-        </SpaceBetweenContainer>
+          <Button onPress={() => handleDefinePlayers()} modifiers='grow' style={{ marginTop: 20 }}>
+            <Button.Text>Confirmar</Button.Text>
+          </Button>
+        </Column>
       </BackgroundImage>
-    </ThemeProvider>
   );
 }

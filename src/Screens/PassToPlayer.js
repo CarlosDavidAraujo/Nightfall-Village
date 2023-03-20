@@ -1,16 +1,13 @@
 import { useContext, useState, useEffect } from "react";
 import { ThemeProvider } from "styled-components/native";
-import DefaultButton from "../Components/Buttons/DefaultButton";
 import { GameContext } from "../Context/GameContext";
 import bgImg from "../../assets/images/passTo.png";
 import door from "../../assets/images/door.png";
-import {
-  BackgroundImage,
-  RotatedText,
-  SpaceAroundContainer,
-  Title,
-} from "../Styles";
-import { dark } from "../Themes/Dark";
+import BackgroundImage from "../Styles/elements/BackgroundImage";
+import { invertTheme, theme } from "../Styles/Theme";
+import Column from "../Styles/elements/Column";
+import Button from "../Styles/elements/Button";
+import Text from "../Styles/elements/Text";
 
 export default function PassToPlayer({ navigation, route }) {
   const { currentGame } = useContext(GameContext);
@@ -28,39 +25,38 @@ export default function PassToPlayer({ navigation, route }) {
 
   return (
     <BackgroundImage source={ready ? door : bgImg}>
-      <SpaceAroundContainer>
+      <Column modifiers={['grow', 'spaceAround']}>
         {ready ? (
           <>
-            <ThemeProvider theme={dark}>
-              <Title>{currentPlayerName}</Title>
+            <ThemeProvider theme={invertTheme(theme)}>
+              <Text modifiers='large'>{currentPlayerName}</Text>
             </ThemeProvider>
-            <DefaultButton
-              inverted={true}
-              title="Mostrar função"
-              onPress={() => navigation.navigate("PlayerAction")}
+            <Button onPress={() => navigation.navigate("PlayerAction")}
               style={{ position: "absolute", bottom: "20%" }}
-            />
+            >
+              <Button.Text>Mostra função</Button.Text>
+            </Button>
           </>
         ) : (
           <>
-            <ThemeProvider theme={dark}>
-              <RotatedText style={{ position: "absolute", top: "35.5%" }}>
-                Passe para {currentPlayerName}
-              </RotatedText>
+            <ThemeProvider theme={invertTheme(theme)}>
+              <Text modifiers={['medium', 'rotated']}
+                style={{ position: "absolute", top: "35%" }}
+              >
+                Passe para {currentPlayerName}</Text>
+              <Button
+                style={{ position: "absolute", bottom: "20%" }}
+                onPress={
+                  previousScreen === "Votes" || previousScreen === "Clock"
+                    ? () => passVoteToNextPlayer()
+                    : () => setReady(true)
+                }>
+                <Button.Text>Clique quando estiver pronto</Button.Text>
+              </Button>
             </ThemeProvider>
-            <DefaultButton
-              inverted={true}
-              title="Clique quando estiver pronto"
-              onPress={
-                previousScreen === "Votes" || previousScreen === "Clock"
-                  ? () => passVoteToNextPlayer()
-                  : () => setReady(true)
-              }
-              style={{ position: "absolute", bottom: "20%" }}
-            />
           </>
         )}
-      </SpaceAroundContainer>
+      </Column>
     </BackgroundImage>
   );
 }

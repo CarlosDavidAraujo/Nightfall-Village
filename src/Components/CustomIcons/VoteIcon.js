@@ -1,6 +1,6 @@
 import { ThemeProvider } from "styled-components/native";
 import { IconContainer, SmallText } from "../../Styles";
-import { invertTheme } from "../../Themes/Dark";
+import { invertTheme } from "../../Styles/Theme";
 
 export default function VoteIcon({ children, theme }) {
   return (

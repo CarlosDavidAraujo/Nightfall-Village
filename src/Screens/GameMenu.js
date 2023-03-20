@@ -1,21 +1,22 @@
 import { ThemeProvider } from "styled-components/native";
 import bgImg from "../../assets/images/homeScreen.png";
-import DefaultButton from "../Components/Buttons/DefaultButton";
-import { SpaceAroundContainer, Title, BackgroundImage } from "../Styles";
-import { dark } from "../Themes/Dark";
+import BackgroundImage from "../Styles/elements/BackgroundImage";
+import Button from "../Styles/elements/Button";
+import Column from "../Styles/elements/Column";
+import Text from "../Styles/elements/Text";
+import { invertTheme, theme } from "../Styles/Theme";
 
 function GameMenu({ navigation }) {
   return (
     <BackgroundImage source={bgImg}>
-      <SpaceAroundContainer>
-        <ThemeProvider theme={dark}>
-          <Title>Nightfall Village</Title>
-          <DefaultButton
-            onPress={() => navigation.navigate("DefinePlayers")}
-            title="Iniciar Novo Jogo"
-          />
+      <Column modifiers={['grow', 'spaceAround']}>
+        <ThemeProvider theme={invertTheme(theme)}>
+          <Text modifiers='large'>Nightfall Village</Text>
         </ThemeProvider>
-      </SpaceAroundContainer>
+        <Button onPress={() => navigation.navigate("DefinePlayers")}>
+          <Button.Text>Iniciar Novo Jogo</Button.Text>
+        </Button>
+      </Column>
     </BackgroundImage>
   );
 }

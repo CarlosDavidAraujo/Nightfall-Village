@@ -1,6 +1,5 @@
 import { useState } from "react";
-import styled, { ThemeProvider } from "styled-components/native";
-import { dark, invertTheme } from "../../Themes/Dark";
+import styled from "styled-components/native";
 
 export default function ButtonWithShadow({
   onPress,
@@ -11,24 +10,21 @@ export default function ButtonWithShadow({
   showOpacity,
 }) {
   const [isPressed, setIsPressed] = useState(false);
-  const theme = inverted ? invertTheme(dark) : dark;
 
   return (
-    <ThemeProvider theme={theme}>
-      <Container
-        style={style}
-        isPressed={isPressed}
-        disabled={disabled}
-        showOpacity={showOpacity}
-        inverted={inverted}
-        onPress={onPress}
-        onPressIn={() => setIsPressed(true)}
-        onPressOut={() => setIsPressed(false)}
-      >
-        {!isPressed && !disabled && <Shadow />}
-        <Content>{children}</Content>
-      </Container>
-    </ThemeProvider>
+    <Container
+      style={style}
+      isPressed={isPressed}
+      disabled={disabled}
+      showOpacity={showOpacity}
+      inverted={inverted}
+      onPress={onPress}
+      onPressIn={() => setIsPressed(true)}
+      onPressOut={() => setIsPressed(false)}
+    >
+      {!isPressed && !disabled && <Shadow />}
+      <Content>{children}</Content>
+    </Container>
   );
 }
 
@@ -46,15 +42,15 @@ const Content = styled.View`
   align-items: center;
   justify-content: center;
   border-radius: 4px;
-  border: 2px solid ${(props) => props.theme.color};
-  background-color: ${(props) => props.theme.bg};
+  border: 2px solid ${(props) => props.theme.colors.secondary};
+  background-color: ${(props) => props.theme.colors.primary};
   width: 100%;
   height: 100%;
   padding: 5px;
 `;
 
 const Shadow = styled.View`
-  background-color: ${(props) => props.theme.color};
+  background-color: ${(props) => props.theme.colors.secondary};
   transform: translate(5px, 5px);
   position: absolute;
   width: 100%;

@@ -2,7 +2,7 @@ import RoleCard from "../Cards/RoleCard";
 import { SimpleGrid } from "react-native-super-grid";
 import { ThemeProvider } from "styled-components/native";
 import { SubTitle } from "../../Styles";
-import { dark } from "../../Themes/Dark";
+import { invertTheme, theme } from "../../Styles/Theme";
 
 export default function SelectedRolesGrid({ selectedRoles, setSelectedRoles }) {
 
@@ -25,7 +25,7 @@ export default function SelectedRolesGrid({ selectedRoles, setSelectedRoles }) {
 
     return (
         <>
-            <ThemeProvider theme={dark}>
+            <ThemeProvider theme={invertTheme(theme)}>
                 <SubTitle>Papéis Selecionados</SubTitle>
             </ThemeProvider>
             <SimpleGrid

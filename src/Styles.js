@@ -1,8 +1,8 @@
 import styled from "styled-components/native";
 
 export const ButtonContainer = styled.TouchableOpacity`
-  background-color: ${(props) => props.theme.bg};
-  border: 2px solid ${(props) => props.theme.color};
+  background-color: ${(props) => props.theme.colors.secondary};
+  border: 2px solid ${(props) => props.theme.colors.primary};
   border-radius: 2px;
   padding: 5px 10px;
   align-items: center;
@@ -34,59 +34,59 @@ export const IconContainer = styled.View`
   border-radius: 50;
   width: 28px;
   padding: 4px;
-  background-color: ${(props) => props.theme.bg};
-  border: 2px solid ${(props) => props.theme.color};
+  background-color: ${(props) => props.theme.colors.primary};
+  border: 2px solid ${(props) => props.theme.colors.secondary};
 `;
 
 export const DefaultText = styled.Text`
-  color: ${(props) => props.theme.color};
+  color: ${(props) => props.theme.colors.primary};
   font-size: 18px;
-  font-family: "NewRocker_400Regular";
+  font-family: "GermaniaOne_400Regular";
   text-align: center;
 `;
 
 export const SmallText = styled.Text`
-  color: ${(props) => props.theme.color};
+  color: ${(props) => props.theme.colors.primary};
   font-size: 16px;
-  font-family: "NewRocker_400Regular";
+  font-family: "GermaniaOne_400Regular";
   text-align: justify;
   flex-shrink: 1;
 `;
 
 export const RotatedText = styled.Text`
   transform: rotateX(30deg) rotateY(-20deg) rotateZ(-13deg);
-  color: ${(props) => props.theme.color};
+  color: ${(props) => props.theme.colors.secondary};
   font-size: 30px;
-  font-family: "NewRocker_400Regular";
+  font-family: "GermaniaOne_400Regular";
 `;
 
 export const Title = styled.Text`
-  color: ${(props) => props.theme.color};
+  color: ${(props) => props.theme.colors.secondary};
   font-size: 40px;
   font-family: "NewRocker_400Regular";
   text-align: center;
 `;
 
 export const SubTitle = styled.Text`
-  color: ${(props) => props.theme.color};
+  color: ${(props) => props.theme.colors.secondary};
   font-size: 30px;
   font-family: "NewRocker_400Regular";
   text-align: center;
 `;
 
 export const TextInput = styled.TextInput`
-  font-family: "NewRocker_400Regular";
+  font-family: "GermaniaOne_400Regular";
   font-size: 18px;
-  color: ${(props) => props.theme.color};
+  color: ${(props) => props.theme.colors.secondary};
 `;
 
 export const CardContainer = styled.Pressable`
   align-items: center;
-  background-color: ${(props) => props.theme.bg};
+  background-color: ${(props) => props.theme.colors.primary};
   height: 180px;
   padding: 10px 5px;
   border-radius: 4px;
-  border: 3px solid ${(props) => props.theme.color};
+  border: 3px solid ${(props) => props.theme.colors.secondary};
 `;
 
 export const BackgroundImage = styled.ImageBackground`

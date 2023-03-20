@@ -11,8 +11,10 @@ import {
   Title,
 } from "../Styles";
 import useRoleConfig from "../config/roleConfig";
-import { dark } from "../Themes/Dark";
+import { theme } from "../Styles/Theme";
 import SkillsChoiceContainer from "../Components/Buttons/SkillChoiceContainer";
+import Column from "../Styles/elements/Column";
+import Text from "../Styles/elements/Text";
 
 export default function PlayerAction({ navigation }) {
   const { currentGame } = useContext(GameContext);
@@ -78,9 +80,9 @@ export default function PlayerAction({ navigation }) {
   }
 
   return (
-    <SpaceBetweenContainer style={{ backgroundColor: dark.color }}>
-      <FlexStartContainer style={{ backgroundColor: dark.color }}>
-        <Title>{role.getName()}</Title>
+    <Column modifiers={['spaceBetween', 'grow', 'primary']} style={{paddingHorizontal: 10}}>
+      <Column modifiers='start'>
+        <Text modifiers='large'>{role.getName()}</Text>
         <RoleImageContainer>
           <RoleImage source={role.getRoleImg()} />
         </RoleImageContainer>
@@ -124,7 +126,7 @@ export default function PlayerAction({ navigation }) {
             inverted={true}
           />
         )}
-      </FlexStartContainer>
+      </Column>
       <ActionButtons
         showPass={passCondition}
         onPass={() => passTurn()}
@@ -135,6 +137,6 @@ export default function PlayerAction({ navigation }) {
             : chosenSkill === 2 && methods.useSecondSkill
         }
       />
-    </SpaceBetweenContainer>
+    </Column>
   );
 }
